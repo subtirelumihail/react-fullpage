@@ -1,0 +1,64 @@
+import React from 'react';
+
+const Section = React.createClass({
+  propTypes: {
+    color: React.PropTypes.string
+  },
+  
+  contextTypes: {
+    verticalAlign: React.PropTypes.bool
+  },
+  
+  getInitialState: function() {
+    return {
+      windowHeight: window.innerHeight
+    };
+  },
+  
+  handleResize: function() {
+    this.setState({
+      windowHeight: window.innerHeight
+    });
+  },
+
+  componentDidMount: function() {
+    window.addEventListener('resize', this.handleResize);
+  },
+
+  componentWillUnmount: function() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  
+  render() {
+    let alignVertical = this.props.verticalAlign || this.context.verticalAlign;
+    
+    let sectionStyle = {
+      backgroundColor: this.props.color || 'green',
+      height: this.state.windowHeight,
+      width: '100%',
+      display: alignVertical ? 'table' : 'block'
+    };
+    
+    return (
+      <div className="Section" style={sectionStyle}>
+        {alignVertical ? this._renderVerticalAlign() : this.props.children}
+      </div>
+    );
+  },
+  
+  _renderVerticalAlign() {
+    let verticalAlignStyle = {
+      display: 'table-cell',
+      verticalAlign: 'middle',
+      width: '100%'
+    };
+    
+    return (
+      <div style={verticalAlignStyle}>
+        {this.props.children}
+      </div>
+    );
+  }
+});
+
+export default Section;
