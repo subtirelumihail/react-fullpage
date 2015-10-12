@@ -5,6 +5,7 @@ module.exports = {
 	entry: [
 		__dirname + '/demo'
 	],
+	publicPath: __dirname,
 	output: {
 		path: __dirname,
 		filename: 'bundle.js'
@@ -14,6 +15,10 @@ module.exports = {
 			test: /\.js$/,
 			exclude: /(node_modules|bower_components)/,
 			loader: 'babel'
-		}]
+		},
+		{
+			test: /\.css$/, loader: 'css-loader' 
+		}
+		]
 	}
 };

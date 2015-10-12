@@ -6,7 +6,8 @@ const Section = React.createClass({
   },
   
   contextTypes: {
-    verticalAlign: React.PropTypes.bool
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string
   },
   
   getInitialState: function() {
@@ -38,9 +39,9 @@ const Section = React.createClass({
       width: '100%',
       display: alignVertical ? 'table' : 'block'
     };
-    
+
     return (
-      <div className="Section" style={sectionStyle}>
+      <div className={this.context.sectionClassName} id={this.props.id} style={sectionStyle}>
         {alignVertical ? this._renderVerticalAlign() : this.props.children}
       </div>
     );

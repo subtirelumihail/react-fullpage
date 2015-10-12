@@ -1,4 +1,30 @@
 html,
 body {
 	margin: 0;
+  font-family: arial,helvetica;
+}
+
+header,
+footer {
+  padding: 10px;
+}
+
+header {
+  background-color:rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid gray;
+  color: #fff;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  margin-right: 25px;
+  color: inherit;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+a:hover {
+  color: green;
 }

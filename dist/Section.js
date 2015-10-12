@@ -18,7 +18,8 @@ var Section = _react2['default'].createClass({
   },
 
   contextTypes: {
-    verticalAlign: _react2['default'].PropTypes.bool
+    verticalAlign: _react2['default'].PropTypes.bool,
+    sectionClassName: _react2['default'].PropTypes.string
   },
 
   getInitialState: function getInitialState() {
@@ -53,7 +54,7 @@ var Section = _react2['default'].createClass({
 
     return _react2['default'].createElement(
       'div',
-      { className: 'Section', style: sectionStyle },
+      { className: this.context.sectionClassName, id: this.props.id, style: sectionStyle },
       alignVertical ? this._renderVerticalAlign() : this.props.children
     );
   },

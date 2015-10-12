@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var SectionsContainer = React.createClass({
+const SectionsContainer = React.createClass({
   
   propTypes: {
-    delay: React.PropTypes.number,
-    verticalAlign: React.PropTypes.bool,
+    delay:            React.PropTypes.number,
+    verticalAlign:    React.PropTypes.bool,
+    scrollBar:        React.PropTypes.bool,
+    className:        React.PropTypes.string,
+    sectionClassName: React.PropTypes.string,
   },
   
   childContextTypes: {
-     verticalAlign: React.PropTypes.bool
+     verticalAlign:    React.PropTypes.bool,
+     sectionClassName: React.PropTypes.string
   },
   
   getInitialState() {
@@ -17,40 +21,70 @@ var SectionsContainer = React.createClass({
       activeSection: 0,
       scrollingStarted: false,
       sectionScrolledPosition: 0,
-      windowHeight: window.innerHeight
+      windowHeight: window.innerHeight,
     };
   },
   
   getDefaultProps() {
     return {
       delay: 1000,
-      verticalAlign: false
+      verticalAlign: false,
+      scrollBar: false,
+      className: 'SectionContainer',
+      sectionClassName: 'Section',
+      anchors: [],
     };
   },
   
-  getChildContext: function() {
+  getChildContext() {
      return {
-       verticalAlign: this.props.verticalAlign
+       verticalAlign: this.props.verticalAlign,
+       sectionClassName: this.props.sectionClassName
      };
   },
   
-  componentWillMount() {
-    document.querySelector('body').style.overflow = 'hidden';
-  },
-  
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this._handleResize);
   },
   
   componentDidMount() {
     window.addEventListener('resize', this._handleResize);
+    
+    if (!this.props.scrollBar) {
+      this._addCSS3Scroll();
+      this._handleAnchor(); //Go to anchor in case we found it in the URL
+      window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
+    }
+  },
+  
+  _addCSS3Scroll() {
+    this._addOverflowToBody();
     this._addHeightToParents();
     this._addMouseWheelEventHandlers();
   },
   
+  _addAnchorsToChildren() {
+    var index = 0;
+    return React.Children.map(this.props.children, function (child) {
+      let id = this.props.anchors[index];
+      index++;
+      if (id) {
+        return React.cloneElement(child, {
+          id: id
+        });
+      } else {
+        return child;
+      }
+    }.bind(this));
+  },
+  
+  _addOverflowToBody() {
+    document.querySelector('body').style.overflow = 'hidden';
+  },
+  
   _addHeightToParents() {
-    var child = ReactDOM.findDOMNode(this);
-    var previousParent = child.parentNode;
+    let child = ReactDOM.findDOMNode(this);
+    let previousParent = child.parentNode;
     
     while (previousParent) {
       if ('style' in previousParent) {
@@ -75,15 +109,19 @@ var SectionsContainer = React.createClass({
   _mouseWheelHandler() {
     this._removeMouseWheelEventHandlers();
     
-    let e = window.event || e; // old IE support
-	  let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    let e             = window.event || e; // old IE support
+	  let delta         = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    let position      = this.state.sectionScrolledPosition + (delta * this.state.windowHeight);
     let activeSection = this.state.activeSection - delta;
-    let position = this.state.sectionScrolledPosition + (delta * this.state.windowHeight);
-    let maxPosition =  0 - (this.props.children.length * this.state.windowHeight);
+    let maxPosition   = 0 - (this.props.children.length * this.state.windowHeight);
 
     if (position > 0 || maxPosition === position  || this.state.scrollingStarted) {
-      this._addMouseWheelEventHandlers();
-      return false;
+      return this._addMouseWheelEventHandlers();
+    }
+    
+    let index = this.props.anchors[activeSection];
+    if (!this.props.anchors.length || index) {
+      window.location.hash = '#' + index;
     }
     
     this.setState({
@@ -100,7 +138,7 @@ var SectionsContainer = React.createClass({
     }, this.props.delay + 300);
   },
   
-  _handleResize: function() {
+  _handleResize() {
     let position = 0 - (this.state.activeSection * window.innerHeight);
     this.setState({
       windowHeight: window.innerHeight,
@@ -108,17 +146,35 @@ var SectionsContainer = React.createClass({
     });
   },
   
+  _handleAnchor() {
+    let hash = window.location.hash.substring(1);
+    let index = this.props.anchors.indexOf(hash);
+    let position = 0 - (index * this.state.windowHeight);
+    
+    if (!this.props.anchors.length || index === -1) {
+      return false;
+    }
+    
+    this.setState({
+      activeSection: index,
+      sectionScrolledPosition: position
+    });
+    
+  //  history.pushState(null, null, window.location);
+  },
+  
   render() {
-    var containerStyle = {
-      transform: `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
+    let containerStyle = {
+      height:     '100%',
+      width:      '100%',
+      position:   'relative',
+      transform:  `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
       transition: `all ${this.props.delay}ms ease`,
-      height: '100%',
-      width: '100%'
     };
     
     return (
-      <div className='SectionContainer' style={containerStyle}>
-        {this.props.children}
+      <div className={this.props.className} style={containerStyle}>
+        {this.props.scrollBar ? this._addAnchorsToChildren() : this.props.children}
       </div>
     );
   },
