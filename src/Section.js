@@ -7,7 +7,9 @@ const Section = React.createClass({
   
   contextTypes: {
     verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop:      React.PropTypes.string,
+    sectionPaddingBottom:   React.PropTypes.string,
   },
   
   getInitialState: function() {
@@ -34,14 +36,18 @@ const Section = React.createClass({
     let alignVertical = this.props.verticalAlign || this.context.verticalAlign;
     
     let sectionStyle = {
-      backgroundColor: this.props.color || 'green',
-      height: this.state.windowHeight,
-      width: '100%',
-      display: alignVertical ? 'table' : 'block'
+      width:            '100%',
+      display:          alignVertical ? 'table' : 'block',
+      height:           this.state.windowHeight,
+      maxHeight:        this.state.windowHeight,
+      overflow:         'scroll',
+      backgroundColor:  this.props.color || 'green',
+      paddingTop:       this.context.sectionPaddingTop,
+      paddingBottom:    this.context.sectionPaddingBottom,
     };
 
     return (
-      <div className={this.context.sectionClassName} id={this.props.id} style={sectionStyle}>
+      <div className={this.context.sectionClassName + (this.props.className ? ` ${this.props.className}` : '')} id={this.props.id} style={sectionStyle}>
         {alignVertical ? this._renderVerticalAlign() : this.props.children}
       </div>
     );

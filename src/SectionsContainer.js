@@ -4,16 +4,25 @@ import ReactDOM from 'react-dom';
 const SectionsContainer = React.createClass({
   
   propTypes: {
-    delay:            React.PropTypes.number,
-    verticalAlign:    React.PropTypes.bool,
-    scrollBar:        React.PropTypes.bool,
-    className:        React.PropTypes.string,
-    sectionClassName: React.PropTypes.string,
+    delay:                  React.PropTypes.number,
+    verticalAlign:          React.PropTypes.bool,
+    scrollBar:              React.PropTypes.bool,
+    navigation:             React.PropTypes.bool,
+    className:              React.PropTypes.string,
+    sectionClassName:       React.PropTypes.string,
+    navigationClass:        React.PropTypes.string,
+    navigationAnchorClass:  React.PropTypes.string,
+    activeClass:            React.PropTypes.string,
+    sectionPaddingTop:      React.PropTypes.string,
+    sectionPaddingBottom:   React.PropTypes.string,
+    arrowNavigation:        React.PropTypes.bool,
   },
   
   childContextTypes: {
      verticalAlign:    React.PropTypes.bool,
-     sectionClassName: React.PropTypes.string
+     sectionClassName: React.PropTypes.string,
+     sectionPaddingTop:      React.PropTypes.string,
+     sectionPaddingBottom:   React.PropTypes.string,
   },
   
   getInitialState() {
@@ -27,19 +36,26 @@ const SectionsContainer = React.createClass({
   
   getDefaultProps() {
     return {
-      delay: 1000,
-      verticalAlign: false,
-      scrollBar: false,
-      className: 'SectionContainer',
-      sectionClassName: 'Section',
-      anchors: [],
+      delay:                1000,
+      verticalAlign:        false,
+      scrollBar:            false,
+      navigation:           true,
+      className:            'SectionContainer',
+      sectionClassName:     'Section',
+      anchors:              [],
+      activeClass:          'active',
+      sectionPaddingTop:    '0',
+      sectionPaddingBottom: '0',
+      arrowNavigation:      true
     };
   },
   
   getChildContext() {
      return {
-       verticalAlign: this.props.verticalAlign,
-       sectionClassName: this.props.sectionClassName
+       verticalAlign:          this.props.verticalAlign,
+       sectionClassName:       this.props.sectionClassName,
+       sectionPaddingTop:      this.props.sectionPaddingTop,
+       sectionPaddingBottom:   this.props.sectionPaddingBottom,
      };
   },
   
@@ -53,7 +69,12 @@ const SectionsContainer = React.createClass({
     if (!this.props.scrollBar) {
       this._addCSS3Scroll();
       this._handleAnchor(); //Go to anchor in case we found it in the URL
+      
       window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
+      
+      if (this.props.arrowNavigation) {
+        window.addEventListener('keydown', this._handleArrowKeys);
+      }
     }
   },
   
@@ -63,7 +84,28 @@ const SectionsContainer = React.createClass({
     this._addMouseWheelEventHandlers();
   },
   
-  _addAnchorsToChildren() {
+  _addActiveClass() {
+    this._removeActiveClass();
+    
+    let hash = window.location.hash.substring(1);
+    let activeLinks = document.querySelectorAll(`a[href="#${hash}"]`);
+    
+    for( let i=0; i < activeLinks.length; i++) {
+      activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ': '') + `${this.props.activeClass}`;
+    }
+    
+    //console.log(allLinks);
+  },
+  
+  _removeActiveClass() {
+    let activeLinks = document.querySelectorAll(`a:not([href="#${this.props.anchors[this.state.activeSection]}"])`);
+    
+    for( let i=0; i < activeLinks.length; i++) {
+      activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
+    }
+  },
+  
+  _addChildrenWithAnchorId() {
     var index = 0;
     return React.Children.map(this.props.children, function (child) {
       let id = this.props.anchors[index];
@@ -146,12 +188,10 @@ const SectionsContainer = React.createClass({
     });
   },
   
-  _handleAnchor() {
-    let hash = window.location.hash.substring(1);
-    let index = this.props.anchors.indexOf(hash);
+  _handleSectionTransition(index) {
     let position = 0 - (index * this.state.windowHeight);
     
-    if (!this.props.anchors.length || index === -1) {
+    if (!this.props.anchors.length || index === -1 || index >= this.props.anchors.length) {
       return false;
     }
     
@@ -159,8 +199,56 @@ const SectionsContainer = React.createClass({
       activeSection: index,
       sectionScrolledPosition: position
     });
+  },
+  
+  _handleArrowKeys(e) {
+    let event     = window.event ? window.event : e;
+    let direction = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : (event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1);
+    let hash      = this.props.anchors[direction];
     
-  //  history.pushState(null, null, window.location);
+    if (!this.props.anchors.length || hash) {
+      window.location.hash = '#' + hash;
+    }
+    
+    this._handleSectionTransition(direction);
+  },
+  
+  _handleAnchor() {
+    let hash  = window.location.hash.substring(1);
+    let index = this.props.anchors.indexOf(hash);
+    
+    this._handleSectionTransition(index);
+    
+    this._addActiveClass();
+  },
+  
+  renderNavigation() {
+    let navigationStyle = {
+      position:   'fixed',
+      zIndex:     '10',
+      right:      '20px',
+      top:        '50%',
+      transform:  'translate(-50%, -50%)',
+    };
+    
+    const anchors = this.props.anchors.map((link, index) => {
+      let anchorStyle = {
+        display:          'block',
+        margin:           '10px',
+        borderRadius:     '100%',
+        backgroundColor:  '#556270',
+        padding:          '5px',
+        transition:       'all 0.2s',
+        transform:        this.state.activeSection === index ? 'scale(1.3)' : 'none'
+      };
+      return <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'} style={this.props.navigationAnchorClass ? null : anchorStyle}></a>;
+    });
+    
+    return (
+      <div className={this.props.navigationClass || 'Navigation'} style={this.props.navigationClass ? null : navigationStyle}>
+        {anchors}
+      </div>
+    );
   },
   
   render() {
@@ -171,10 +259,12 @@ const SectionsContainer = React.createClass({
       transform:  `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
       transition: `all ${this.props.delay}ms ease`,
     };
-    
     return (
-      <div className={this.props.className} style={containerStyle}>
-        {this.props.scrollBar ? this._addAnchorsToChildren() : this.props.children}
+      <div>
+        <div className={this.props.className} style={containerStyle}>
+          {this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children}
+        </div>
+        {this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null}
       </div>
     );
   },

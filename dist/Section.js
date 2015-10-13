@@ -19,7 +19,9 @@ var Section = _react2['default'].createClass({
 
   contextTypes: {
     verticalAlign: _react2['default'].PropTypes.bool,
-    sectionClassName: _react2['default'].PropTypes.string
+    sectionClassName: _react2['default'].PropTypes.string,
+    sectionPaddingTop: _react2['default'].PropTypes.string,
+    sectionPaddingBottom: _react2['default'].PropTypes.string
   },
 
   getInitialState: function getInitialState() {
@@ -46,15 +48,19 @@ var Section = _react2['default'].createClass({
     var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
 
     var sectionStyle = {
-      backgroundColor: this.props.color || 'green',
-      height: this.state.windowHeight,
       width: '100%',
-      display: alignVertical ? 'table' : 'block'
+      display: alignVertical ? 'table' : 'block',
+      height: this.state.windowHeight,
+      maxHeight: this.state.windowHeight,
+      overflow: 'scroll',
+      backgroundColor: this.props.color || 'green',
+      paddingTop: this.context.sectionPaddingTop,
+      paddingBottom: this.context.sectionPaddingBottom
     };
 
     return _react2['default'].createElement(
       'div',
-      { className: this.context.sectionClassName, id: this.props.id, style: sectionStyle },
+      { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''), id: this.props.id, style: sectionStyle },
       alignVertical ? this._renderVerticalAlign() : this.props.children
     );
   },

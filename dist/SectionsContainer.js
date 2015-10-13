@@ -21,13 +21,22 @@ var SectionsContainer = _react2['default'].createClass({
     delay: _react2['default'].PropTypes.number,
     verticalAlign: _react2['default'].PropTypes.bool,
     scrollBar: _react2['default'].PropTypes.bool,
+    navigation: _react2['default'].PropTypes.bool,
     className: _react2['default'].PropTypes.string,
-    sectionClassName: _react2['default'].PropTypes.string
+    sectionClassName: _react2['default'].PropTypes.string,
+    navigationClass: _react2['default'].PropTypes.string,
+    navigationAnchorClass: _react2['default'].PropTypes.string,
+    activeClass: _react2['default'].PropTypes.string,
+    sectionPaddingTop: _react2['default'].PropTypes.string,
+    sectionPaddingBottom: _react2['default'].PropTypes.string,
+    arrowNavigation: _react2['default'].PropTypes.bool
   },
 
   childContextTypes: {
     verticalAlign: _react2['default'].PropTypes.bool,
-    sectionClassName: _react2['default'].PropTypes.string
+    sectionClassName: _react2['default'].PropTypes.string,
+    sectionPaddingTop: _react2['default'].PropTypes.string,
+    sectionPaddingBottom: _react2['default'].PropTypes.string
   },
 
   getInitialState: function getInitialState() {
@@ -44,16 +53,23 @@ var SectionsContainer = _react2['default'].createClass({
       delay: 1000,
       verticalAlign: false,
       scrollBar: false,
+      navigation: true,
       className: 'SectionContainer',
       sectionClassName: 'Section',
-      anchors: []
+      anchors: [],
+      activeClass: 'active',
+      sectionPaddingTop: '0',
+      sectionPaddingBottom: '0',
+      arrowNavigation: true
     };
   },
 
   getChildContext: function getChildContext() {
     return {
       verticalAlign: this.props.verticalAlign,
-      sectionClassName: this.props.sectionClassName
+      sectionClassName: this.props.sectionClassName,
+      sectionPaddingTop: this.props.sectionPaddingTop,
+      sectionPaddingBottom: this.props.sectionPaddingBottom
     };
   },
 
@@ -67,7 +83,12 @@ var SectionsContainer = _react2['default'].createClass({
     if (!this.props.scrollBar) {
       this._addCSS3Scroll();
       this._handleAnchor(); //Go to anchor in case we found it in the URL
+
       window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
+
+      if (this.props.arrowNavigation) {
+        window.addEventListener('keydown', this._handleArrowKeys);
+      }
     }
   },
 
@@ -77,7 +98,28 @@ var SectionsContainer = _react2['default'].createClass({
     this._addMouseWheelEventHandlers();
   },
 
-  _addAnchorsToChildren: function _addAnchorsToChildren() {
+  _addActiveClass: function _addActiveClass() {
+    this._removeActiveClass();
+
+    var hash = window.location.hash.substring(1);
+    var activeLinks = document.querySelectorAll('a[href="#' + hash + '"]');
+
+    for (var i = 0; i < activeLinks.length; i++) {
+      activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + ('' + this.props.activeClass);
+    }
+
+    //console.log(allLinks);
+  },
+
+  _removeActiveClass: function _removeActiveClass() {
+    var activeLinks = document.querySelectorAll('a:not([href="#' + this.props.anchors[this.state.activeSection] + '"])');
+
+    for (var i = 0; i < activeLinks.length; i++) {
+      activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
+    }
+  },
+
+  _addChildrenWithAnchorId: function _addChildrenWithAnchorId() {
     var index = 0;
     return _react2['default'].Children.map(this.props.children, (function (child) {
       var id = this.props.anchors[index];
@@ -162,12 +204,10 @@ var SectionsContainer = _react2['default'].createClass({
     });
   },
 
-  _handleAnchor: function _handleAnchor() {
-    var hash = window.location.hash.substring(1);
-    var index = this.props.anchors.indexOf(hash);
+  _handleSectionTransition: function _handleSectionTransition(index) {
     var position = 0 - index * this.state.windowHeight;
 
-    if (!this.props.anchors.length || index === -1) {
+    if (!this.props.anchors.length || index === -1 || index >= this.props.anchors.length) {
       return false;
     }
 
@@ -175,8 +215,58 @@ var SectionsContainer = _react2['default'].createClass({
       activeSection: index,
       sectionScrolledPosition: position
     });
+  },
 
-    //  history.pushState(null, null, window.location);
+  _handleArrowKeys: function _handleArrowKeys(e) {
+    var event = window.event ? window.event : e;
+    var direction = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
+    var hash = this.props.anchors[direction];
+
+    if (!this.props.anchors.length || hash) {
+      window.location.hash = '#' + hash;
+    }
+
+    this._handleSectionTransition(direction);
+  },
+
+  _handleAnchor: function _handleAnchor() {
+    var hash = window.location.hash.substring(1);
+    var index = this.props.anchors.indexOf(hash);
+
+    this._handleSectionTransition(index);
+
+    this._addActiveClass();
+  },
+
+  renderNavigation: function renderNavigation() {
+    var _this2 = this;
+
+    var navigationStyle = {
+      position: 'fixed',
+      zIndex: '10',
+      right: '20px',
+      top: '50%',
+      transform: 'translate(-50%, -50%)'
+    };
+
+    var anchors = this.props.anchors.map(function (link, index) {
+      var anchorStyle = {
+        display: 'block',
+        margin: '10px',
+        borderRadius: '100%',
+        backgroundColor: '#556270',
+        padding: '5px',
+        transition: 'all 0.2s',
+        transform: _this2.state.activeSection === index ? 'scale(1.3)' : 'none'
+      };
+      return _react2['default'].createElement('a', { href: '#' + link, key: index, className: _this2.props.navigationAnchorClass || 'Navigation-Anchor', style: _this2.props.navigationAnchorClass ? null : anchorStyle });
+    });
+
+    return _react2['default'].createElement(
+      'div',
+      { className: this.props.navigationClass || 'Navigation', style: this.props.navigationClass ? null : navigationStyle },
+      anchors
+    );
   },
 
   render: function render() {
@@ -187,11 +277,15 @@ var SectionsContainer = _react2['default'].createClass({
       transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
       transition: 'all ' + this.props.delay + 'ms ease'
     };
-
     return _react2['default'].createElement(
       'div',
-      { className: this.props.className, style: containerStyle },
-      this.props.scrollBar ? this._addAnchorsToChildren() : this.props.children
+      null,
+      _react2['default'].createElement(
+        'div',
+        { className: this.props.className, style: containerStyle },
+        this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children
+      ),
+      this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null
     );
   }
 
