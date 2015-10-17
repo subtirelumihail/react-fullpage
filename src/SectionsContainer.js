@@ -19,8 +19,8 @@ const SectionsContainer = React.createClass({
   },
   
   childContextTypes: {
-     verticalAlign:    React.PropTypes.bool,
-     sectionClassName: React.PropTypes.string,
+     verticalAlign:          React.PropTypes.bool,
+     sectionClassName:       React.PropTypes.string,
      sectionPaddingTop:      React.PropTypes.string,
      sectionPaddingBottom:   React.PropTypes.string,
   },

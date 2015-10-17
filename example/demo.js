@@ -28,14 +28,14 @@ const Example = React.createClass({
           <a href="#sectionThree">Section Three</a>
         </Header>
         <Footer>
-          <a href="" className="opa">Dcoumentation</a>
+          <a href="">Dcoumentation</a>
           <a href="">Example Source</a>
           <a href="">About</a>
         </Footer>
         <SectionsContainer className="container" {...options}>
-          <Section className="blanuta" verticalAlign="true" color="#69D2E7">Hello</Section>
-          <Section color="#A7DBD8">Hello Boy</Section>
-          <Section color="#E0E4CC">Hello Boy 2</Section>
+          <Section className="custom-section" verticalAlign="true" color="#69D2E7">Page 1</Section>
+          <Section color="#A7DBD8">Page 2</Section>
+          <Section color="#E0E4CC">Page 3</Section>
         </SectionsContainer>
       </div>
     );

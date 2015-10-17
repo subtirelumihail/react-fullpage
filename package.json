@@ -1,7 +1,7 @@
 {
   "name": "react-fullpage",
   "version": "0.1.0",
-  "description": "A react implementation of fullpage.js",
+  "description": "An implementation of fullpage.js in react",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
