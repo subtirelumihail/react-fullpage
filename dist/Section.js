@@ -53,7 +53,7 @@ var Section = _react2['default'].createClass({
       height: this.state.windowHeight,
       maxHeight: this.state.windowHeight,
       overflow: 'scroll',
-      backgroundColor: this.props.color || 'green',
+      backgroundColor: this.props.color,
       paddingTop: this.context.sectionPaddingTop,
       paddingBottom: this.context.sectionPaddingBottom
     };
