@@ -61,7 +61,7 @@ return (
 
 ## Lazyload
 
-Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` instade of `lazy-src` to achieve lazyload funcional.
+Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` instead of `lazy-src` to achieve lazyload funcional.
 
 ```
   <SectionsContainer {...options}>
@@ -73,7 +73,8 @@ Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` in
     <Section>
 	  <img data-src="b.png" />
 	  <img data-src="c.png" />
-	  Page 3</Section>
+	  Page 3
+	</Section>
   </SectionsContainer>
 ```
 
