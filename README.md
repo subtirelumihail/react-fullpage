@@ -59,6 +59,24 @@ return (
 
 ```
 
+## Lazyload
+
+Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` instade of `lazy-src` to achieve lazyload funcional.
+
+```
+  <SectionsContainer {...options}>
+    <Section>Page 1</Section>
+    <Section>
+      <img data-src="a.png" />
+	  Page 2
+	</Section>
+    <Section>
+	  <img data-src="b.png" />
+	  <img data-src="c.png" />
+	  Page 3</Section>
+  </SectionsContainer>
+```
+
 ## Default Props
 Some of this props can be referenced with the [fullpage.js options](https://github.com/alvarotrigo/fullPage.js#options)
 ```javascript

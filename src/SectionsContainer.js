@@ -83,6 +83,13 @@ const SectionsContainer = React.createClass({
     this._addHeightToParents();
     this._addMouseWheelEventHandlers();
   },
+
+  _loadSrc() {
+    let imgs = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('img');
+    for (let i=0; i< imgs.length; i++) {
+      imgs[i].setAttribute('src', imgs[i].getAttribute('data-src'))
+    }
+  },
   
   _addActiveClass() {
     this._removeActiveClass();
@@ -216,6 +223,12 @@ const SectionsContainer = React.createClass({
   _handleAnchor() {
     let hash  = window.location.hash.substring(1);
     let index = this.props.anchors.indexOf(hash);
+
+    this.setState({
+      activeSection: index
+    }, () => {
+      this._loadSrc();
+    });
     
     this._handleSectionTransition(index);
     

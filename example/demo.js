@@ -34,8 +34,15 @@ const Example = React.createClass({
         </Footer>
         <SectionsContainer className="container" {...options}>
           <Section className="custom-section" verticalAlign="true" color="#69D2E7">Page 1</Section>
-          <Section color="#A7DBD8">Page 2</Section>
-          <Section color="#E0E4CC">Page 3</Section>
+          <Section color="#A7DBD8">
+            <img data-src="https://octodex.github.com/images/murakamicat.png" />
+            Page 2
+          </Section>
+          <Section color="#E0E4CC">
+            <img data-src="https://assets-cdn.github.com/images/modules/open_graph/github-octocat.png" />
+            <img data-src="https://assets-cdn.github.com/images/modules/open_graph/github-mark.png" />
+            Page 3
+          </Section>
         </SectionsContainer>
       </div>
     );
