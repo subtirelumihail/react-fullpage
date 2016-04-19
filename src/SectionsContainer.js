@@ -89,10 +89,10 @@ const SectionsContainer = React.createClass({
     for (let i=0; i<imgs.length; i++) {
       imgs[i].setAttribute('src', imgs[i].getAttribute('data-lazy-src'))
     }
-		let eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
-		for (let i=0; i<eles.length; i++) {
-			eles[i].style.backgroundImage = `url(${eles[i].getAttribute('data-lazy-bg')})`;
-		}
+    let eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
+    for (let i=0; i<eles.length; i++) {
+      eles[i].style.backgroundImage = `url(${eles[i].getAttribute('data-lazy-bg')})`;
+    }
   },
   
   _addActiveClass() {

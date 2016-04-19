@@ -35,7 +35,7 @@ const Example = React.createClass({
         <SectionsContainer className="container" {...options}>
           <Section className="custom-section" verticalAlign="true" color="#69D2E7">Page 1</Section>
           <Section color="#A7DBD8">
-						<div data-lazy-bg="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png"></div>
+            <div data-lazy-bg="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png"></div>
             <img data-lazy-src="https://octodex.github.com/images/murakamicat.png" />
             Page 2
           </Section>

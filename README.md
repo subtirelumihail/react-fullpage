@@ -66,18 +66,18 @@ Cause of React doesn't support the attribute `lazy-src`, so we use `data-lazy-sr
 ```javascript
   <SectionsContainer {...options}>
     <Section>Page 1</Section>
-		// `data-lazy-bg` used in a react component will not have effect
+    // `data-lazy-bg` used in a react component will not have effect
     <Section data-lazy-bg="wrong.png">
       <img data-src="a.png" />
-			Page 2
-		</Section>
-		<Section>
-			// `data-lazy-bg` used in a dom element will do lazyload!
-			<div data-lazy-bg="x.png"></div>
-	  	<img data-src="b.png" />
-	  	<img data-src="c.png" />
-	  	Page 3
-		</Section>
+      Page 2
+    </Section>
+    <Section>
+      // `data-lazy-bg` used in a dom element will do lazyload!
+      <div data-lazy-bg="x.png"></div>
+      <img data-src="b.png" />
+      <img data-src="c.png" />
+      Page 3
+    </Section>
   </SectionsContainer>
 ```
 
