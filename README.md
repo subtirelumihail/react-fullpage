@@ -61,20 +61,23 @@ return (
 
 ## Lazyload
 
-Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` instead of `lazy-src` to achieve lazyload funcional.
+Cause of React doesn't support the attribute `lazy-src`, so we use `data-lazy-src` instead of `lazy-src` to achieve lazyload funcional. In addition we also can use `data-lazy-bg` to lazyload background-image for a element, but not for React Components.
 
 ```javascript
   <SectionsContainer {...options}>
     <Section>Page 1</Section>
-    <Section>
+		// `data-lazy-bg` used in a react component will not have effect
+    <Section data-lazy-bg="wrong.png">
       <img data-src="a.png" />
-	  Page 2
-	</Section>
-    <Section>
-	  <img data-src="b.png" />
-	  <img data-src="c.png" />
-	  Page 3
-	</Section>
+			Page 2
+		</Section>
+		<Section>
+			// `data-lazy-bg` used in a dom element will do lazyload!
+			<div data-lazy-bg="x.png"></div>
+	  	<img data-src="b.png" />
+	  	<img data-src="c.png" />
+	  	Page 3
+		</Section>
   </SectionsContainer>
 ```
 

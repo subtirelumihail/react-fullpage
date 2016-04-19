@@ -84,11 +84,15 @@ const SectionsContainer = React.createClass({
     this._addMouseWheelEventHandlers();
   },
 
-  _loadSrc() {
+  _loadLazySrc() {
     let imgs = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('img');
-    for (let i=0; i< imgs.length; i++) {
-      imgs[i].setAttribute('src', imgs[i].getAttribute('data-src'))
+    for (let i=0; i<imgs.length; i++) {
+      imgs[i].setAttribute('src', imgs[i].getAttribute('data-lazy-src'))
     }
+		let eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
+		for (let i=0; i<eles.length; i++) {
+			eles[i].style.backgroundImage = `url(${eles[i].getAttribute('data-lazy-bg')})`;
+		}
   },
   
   _addActiveClass() {
@@ -227,7 +231,7 @@ const SectionsContainer = React.createClass({
     this.setState({
       activeSection: index
     }, () => {
-      this._loadSrc();
+      this._loadLazySrc();
     });
     
     this._handleSectionTransition(index);

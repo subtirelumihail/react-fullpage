@@ -35,12 +35,13 @@ const Example = React.createClass({
         <SectionsContainer className="container" {...options}>
           <Section className="custom-section" verticalAlign="true" color="#69D2E7">Page 1</Section>
           <Section color="#A7DBD8">
-            <img data-src="https://octodex.github.com/images/murakamicat.png" />
+						<div data-lazy-bg="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png"></div>
+            <img data-lazy-src="https://octodex.github.com/images/murakamicat.png" />
             Page 2
           </Section>
           <Section color="#E0E4CC">
-            <img data-src="https://assets-cdn.github.com/images/modules/open_graph/github-octocat.png" />
-            <img data-src="https://assets-cdn.github.com/images/modules/open_graph/github-mark.png" />
+            <img data-lazy-src="https://assets-cdn.github.com/images/modules/open_graph/github-octocat.png" />
+            <img data-lazy-src="https://assets-cdn.github.com/images/modules/open_graph/github-mark.png" />
             Page 3
           </Section>
         </SectionsContainer>

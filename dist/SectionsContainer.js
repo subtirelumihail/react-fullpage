@@ -98,10 +98,14 @@ var SectionsContainer = _react2['default'].createClass({
     this._addMouseWheelEventHandlers();
   },
 
-  _loadSrc: function _loadSrc() {
+  _loadLazySrc: function _loadLazySrc() {
     var imgs = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('img');
     for (var i = 0; i < imgs.length; i++) {
-      imgs[i].setAttribute('src', imgs[i].getAttribute('data-src'));
+      imgs[i].setAttribute('src', imgs[i].getAttribute('data-lazy-src'));
+    }
+    var eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
+    for (var i = 0; i < eles.length; i++) {
+      eles[i].style.backgroundImage = 'url(' + eles[i].getAttribute('data-lazy-bg') + ')';
     }
   },
 
@@ -245,7 +249,7 @@ var SectionsContainer = _react2['default'].createClass({
     this.setState({
       activeSection: index
     }, function () {
-      _this2._loadSrc();
+      _this2._loadLazySrc();
     });
 
     this._handleSectionTransition(index);
