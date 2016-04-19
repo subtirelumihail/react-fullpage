@@ -63,7 +63,7 @@ return (
 
 Cause of React doesn't support the attribute `lazy-src`, so we use `data-src` instead of `lazy-src` to achieve lazyload funcional.
 
-```
+```javascript
   <SectionsContainer {...options}>
     <Section>Page 1</Section>
     <Section>
