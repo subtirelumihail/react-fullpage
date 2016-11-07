@@ -1,19 +1,10 @@
-'use strict';
+import React from 'react';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var Header = _react2['default'].createClass({
+const Header = React.createClass({
   displayName: 'Header',
 
-  render: function render() {
+
+  render() {
     var headerStyle = {
       position: 'fixed',
       width: '100%',
@@ -21,7 +12,7 @@ var Header = _react2['default'].createClass({
       top: '0'
     };
 
-    return _react2['default'].createElement(
+    return React.createElement(
       'header',
       { style: headerStyle },
       this.props.children
@@ -30,5 +21,4 @@ var Header = _react2['default'].createClass({
 
 });
 
-exports['default'] = Header;
-module.exports = exports['default'];
+export default Header;

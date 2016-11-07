@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "./node_modules/babel/bin/babel.js src --out-dir dist",
-    "start": "node example/server.js",
-    "dev": "./node_modules/babel/bin/babel.js src --out-dir dist --watch",
+    "release": "babel src --out-dir dist",
+    "start": "node example\\server.js",
+    "dev": "babel src --out-dir dist --watch",
     "clean": "rm -rf dist && rm example/bundle.js",
-    "build": "npm run clean && npm run release && ./node_modules/webpack/bin/webpack.js --progress --colors --config example/webpack.config.js"
+    "build": "npm run release && node_modules\\webpack\\bin\\webpack.js --progress --colors --config example\\webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -31,8 +31,10 @@
   },
   "devDependencies": {
     "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
+    "babel-preset-react": "^6.16.0",
     "css-loader": "^0.25.0",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"

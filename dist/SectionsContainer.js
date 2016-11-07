@@ -1,45 +1,33 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var SectionsContainer = _react2['default'].createClass({
+const SectionsContainer = React.createClass({
   displayName: 'SectionsContainer',
 
+
   propTypes: {
-    delay: _react2['default'].PropTypes.number,
-    verticalAlign: _react2['default'].PropTypes.bool,
-    scrollBar: _react2['default'].PropTypes.bool,
-    navigation: _react2['default'].PropTypes.bool,
-    className: _react2['default'].PropTypes.string,
-    sectionClassName: _react2['default'].PropTypes.string,
-    navigationClass: _react2['default'].PropTypes.string,
-    navigationAnchorClass: _react2['default'].PropTypes.string,
-    activeClass: _react2['default'].PropTypes.string,
-    sectionPaddingTop: _react2['default'].PropTypes.string,
-    sectionPaddingBottom: _react2['default'].PropTypes.string,
-    arrowNavigation: _react2['default'].PropTypes.bool
+    delay: React.PropTypes.number,
+    verticalAlign: React.PropTypes.bool,
+    scrollBar: React.PropTypes.bool,
+    navigation: React.PropTypes.bool,
+    className: React.PropTypes.string,
+    sectionClassName: React.PropTypes.string,
+    navigationClass: React.PropTypes.string,
+    navigationAnchorClass: React.PropTypes.string,
+    activeClass: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string,
+    arrowNavigation: React.PropTypes.bool
   },
 
   childContextTypes: {
-    verticalAlign: _react2['default'].PropTypes.bool,
-    sectionClassName: _react2['default'].PropTypes.string,
-    sectionPaddingTop: _react2['default'].PropTypes.string,
-    sectionPaddingBottom: _react2['default'].PropTypes.string
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string
   },
 
-  getInitialState: function getInitialState() {
+  getInitialState() {
     return {
       activeSection: 0,
       scrollingStarted: false,
@@ -48,7 +36,7 @@ var SectionsContainer = _react2['default'].createClass({
     };
   },
 
-  getDefaultProps: function getDefaultProps() {
+  getDefaultProps() {
     return {
       delay: 1000,
       verticalAlign: false,
@@ -64,7 +52,7 @@ var SectionsContainer = _react2['default'].createClass({
     };
   },
 
-  getChildContext: function getChildContext() {
+  getChildContext() {
     return {
       verticalAlign: this.props.verticalAlign,
       sectionClassName: this.props.sectionClassName,
@@ -73,11 +61,13 @@ var SectionsContainer = _react2['default'].createClass({
     };
   },
 
-  componentWillUnmount: function componentWillUnmount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this._handleResize);
+    window.removeEventListener('hashchange', this._handleAnchor);
+    this._removeMouseWheelEventHandlers();
   },
 
-  componentDidMount: function componentDidMount() {
+  componentDidMount() {
     window.addEventListener('resize', this._handleResize);
 
     if (!this.props.scrollBar) {
@@ -92,55 +82,55 @@ var SectionsContainer = _react2['default'].createClass({
     }
   },
 
-  _addCSS3Scroll: function _addCSS3Scroll() {
+  _addCSS3Scroll() {
     this._addOverflowToBody();
     this._addHeightToParents();
     this._addMouseWheelEventHandlers();
   },
 
-  _addActiveClass: function _addActiveClass() {
+  _addActiveClass() {
     this._removeActiveClass();
 
-    var hash = window.location.hash.substring(1);
-    var activeLinks = document.querySelectorAll('a[href="#' + hash + '"]');
+    let hash = window.location.hash.substring(1);
+    let activeLinks = document.querySelectorAll(`a[href="#${ hash }"]`);
 
-    for (var i = 0; i < activeLinks.length; i++) {
-      activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + ('' + this.props.activeClass);
+    for (let i = 0; i < activeLinks.length; i++) {
+      activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + `${ this.props.activeClass }`;
     }
 
     //console.log(allLinks);
   },
 
-  _removeActiveClass: function _removeActiveClass() {
-    var activeLinks = document.querySelectorAll('a:not([href="#' + this.props.anchors[this.state.activeSection] + '"])');
+  _removeActiveClass() {
+    let activeLinks = document.querySelectorAll(`a:not([href="#${ this.props.anchors[this.state.activeSection] }"])`);
 
-    for (var i = 0; i < activeLinks.length; i++) {
+    for (let i = 0; i < activeLinks.length; i++) {
       activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
     }
   },
 
-  _addChildrenWithAnchorId: function _addChildrenWithAnchorId() {
+  _addChildrenWithAnchorId() {
     var index = 0;
-    return _react2['default'].Children.map(this.props.children, (function (child) {
-      var id = this.props.anchors[index];
+    return React.Children.map(this.props.children, function (child) {
+      let id = this.props.anchors[index];
       index++;
       if (id) {
-        return _react2['default'].cloneElement(child, {
+        return React.cloneElement(child, {
           id: id
         });
       } else {
         return child;
       }
-    }).bind(this));
+    }.bind(this));
   },
 
-  _addOverflowToBody: function _addOverflowToBody() {
+  _addOverflowToBody() {
     document.querySelector('body').style.overflow = 'hidden';
   },
 
-  _addHeightToParents: function _addHeightToParents() {
-    var child = _reactDom2['default'].findDOMNode(this);
-    var previousParent = child.parentNode;
+  _addHeightToParents() {
+    let child = this.refs;
+    let previousParent = child.parentNode;
 
     while (previousParent) {
       if ('style' in previousParent) {
@@ -152,32 +142,30 @@ var SectionsContainer = _react2['default'].createClass({
     }
   },
 
-  _addMouseWheelEventHandlers: function _addMouseWheelEventHandlers() {
+  _addMouseWheelEventHandlers() {
     window.addEventListener('mousewheel', this._mouseWheelHandler, false);
     window.addEventListener('DOMMouseScroll', this._mouseWheelHandler, false);
   },
 
-  _removeMouseWheelEventHandlers: function _removeMouseWheelEventHandlers() {
+  _removeMouseWheelEventHandlers() {
     window.removeEventListener('mousewheel', this._mouseWheelHandler);
     window.removeEventListener('DOMMouseScroll', this._mouseWheelHandler);
   },
 
-  _mouseWheelHandler: function _mouseWheelHandler() {
-    var _this = this;
-
+  _mouseWheelHandler() {
     this._removeMouseWheelEventHandlers();
 
-    var e = window.event || e; // old IE support
-    var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
-    var position = this.state.sectionScrolledPosition + delta * this.state.windowHeight;
-    var activeSection = this.state.activeSection - delta;
-    var maxPosition = 0 - this.props.children.length * this.state.windowHeight;
+    let e = window.event || e; // old IE support
+    let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+    let position = this.state.sectionScrolledPosition + delta * this.state.windowHeight;
+    let activeSection = this.state.activeSection - delta;
+    let maxPosition = 0 - this.props.children.length * this.state.windowHeight;
 
     if (position > 0 || maxPosition === position || this.state.scrollingStarted) {
       return this._addMouseWheelEventHandlers();
     }
 
-    var index = this.props.anchors[activeSection];
+    let index = this.props.anchors[activeSection];
     if (!this.props.anchors.length || index) {
       window.location.hash = '#' + index;
     }
@@ -188,24 +176,24 @@ var SectionsContainer = _react2['default'].createClass({
       sectionScrolledPosition: position
     });
 
-    setTimeout(function () {
-      _this.setState({
+    setTimeout(() => {
+      this.setState({
         scrollingStarted: false
       });
-      _this._addMouseWheelEventHandlers();
+      this._addMouseWheelEventHandlers();
     }, this.props.delay + 300);
   },
 
-  _handleResize: function _handleResize() {
-    var position = 0 - this.state.activeSection * window.innerHeight;
+  _handleResize() {
+    let position = 0 - this.state.activeSection * window.innerHeight;
     this.setState({
       windowHeight: window.innerHeight,
       sectionScrolledPosition: position
     });
   },
 
-  _handleSectionTransition: function _handleSectionTransition(index) {
-    var position = 0 - index * this.state.windowHeight;
+  _handleSectionTransition(index) {
+    let position = 0 - index * this.state.windowHeight;
 
     if (!this.props.anchors.length || index === -1 || index >= this.props.anchors.length) {
       return false;
@@ -217,10 +205,10 @@ var SectionsContainer = _react2['default'].createClass({
     });
   },
 
-  _handleArrowKeys: function _handleArrowKeys(e) {
-    var event = window.event ? window.event : e;
-    var direction = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
-    var hash = this.props.anchors[direction];
+  _handleArrowKeys(e) {
+    let event = window.event ? window.event : e;
+    let direction = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
+    let hash = this.props.anchors[direction];
 
     if (!this.props.anchors.length || hash) {
       window.location.hash = '#' + hash;
@@ -229,19 +217,17 @@ var SectionsContainer = _react2['default'].createClass({
     this._handleSectionTransition(direction);
   },
 
-  _handleAnchor: function _handleAnchor() {
-    var hash = window.location.hash.substring(1);
-    var index = this.props.anchors.indexOf(hash);
+  _handleAnchor() {
+    let hash = window.location.hash.substring(1);
+    let index = this.props.anchors.indexOf(hash);
 
     this._handleSectionTransition(index);
 
     this._addActiveClass();
   },
 
-  renderNavigation: function renderNavigation() {
-    var _this2 = this;
-
-    var navigationStyle = {
+  renderNavigation() {
+    let navigationStyle = {
       position: 'fixed',
       zIndex: '10',
       right: '20px',
@@ -249,38 +235,38 @@ var SectionsContainer = _react2['default'].createClass({
       transform: 'translate(-50%, -50%)'
     };
 
-    var anchors = this.props.anchors.map(function (link, index) {
-      var anchorStyle = {
+    const anchors = this.props.anchors.map((link, index) => {
+      let anchorStyle = {
         display: 'block',
         margin: '10px',
         borderRadius: '100%',
         backgroundColor: '#556270',
         padding: '5px',
         transition: 'all 0.2s',
-        transform: _this2.state.activeSection === index ? 'scale(1.3)' : 'none'
+        transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
       };
-      return _react2['default'].createElement('a', { href: '#' + link, key: index, className: _this2.props.navigationAnchorClass || 'Navigation-Anchor', style: _this2.props.navigationAnchorClass ? null : anchorStyle });
+      return React.createElement('a', { href: `#${ link }`, key: index, className: this.props.navigationAnchorClass || 'Navigation-Anchor', style: this.props.navigationAnchorClass ? null : anchorStyle });
     });
 
-    return _react2['default'].createElement(
+    return React.createElement(
       'div',
       { className: this.props.navigationClass || 'Navigation', style: this.props.navigationClass ? null : navigationStyle },
       anchors
     );
   },
 
-  render: function render() {
-    var containerStyle = {
+  render() {
+    let containerStyle = {
       height: '100%',
       width: '100%',
       position: 'relative',
-      transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
-      transition: 'all ' + this.props.delay + 'ms ease'
+      transform: `translate3d(0px, ${ this.state.sectionScrolledPosition }px, 0px)`,
+      transition: `all ${ this.props.delay }ms ease`
     };
-    return _react2['default'].createElement(
+    return React.createElement(
       'div',
       null,
-      _react2['default'].createElement(
+      React.createElement(
         'div',
         { className: this.props.className, style: containerStyle },
         this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children
@@ -291,5 +277,4 @@ var SectionsContainer = _react2['default'].createClass({
 
 });
 
-exports['default'] = SectionsContainer;
-module.exports = exports['default'];
+export default SectionsContainer;

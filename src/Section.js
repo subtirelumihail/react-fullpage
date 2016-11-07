@@ -40,7 +40,7 @@ const Section = React.createClass({
       display:          alignVertical ? 'table' : 'block',
       height:           this.state.windowHeight,
       maxHeight:        this.state.windowHeight,
-      overflow:         'scroll',
+      overflow:         'auto',
       backgroundColor:  this.props.color,
       paddingTop:       this.context.sectionPaddingTop,
       paddingBottom:    this.context.sectionPaddingBottom,
