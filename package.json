@@ -1,6 +1,6 @@
 {
   "name": "react15-fullpage",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "description": "An implementation of fullpage.js in react",
   "main": "index.js",
   "scripts": {
@@ -30,10 +30,11 @@
     "react-dom": "^15.3.2"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.25.0",
     "webpack": "^1.12.2",
