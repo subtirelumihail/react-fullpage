@@ -1,7 +1,7 @@
 {
   "name": "react15-fullpage",
-  "version": "0.1.7",
-  "description": "An implementation of fullpage.js in react",
+  "version": "0.1.9",
+  "description": "An implementation of fullpage.js in react based on react-fullpage",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,18 +13,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/subtirelumihail/react-fullpage.git"
+    "url": "git+https://github.com/kiuka/react15-fullpage.git"
   },
   "keywords": [
     "react",
     "fullpage.js"
   ],
-  "author": "Subtirelu Mihail",
+  "author": "Balazs Kiraly",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/subtirelumihail/react-fullpage/issues"
+    "url": "https://github.com/kiuka/react15-fullpage/issues"
   },
-  "homepage": "https://github.com/subtirelumihail/react-fullpage#readme",
+  "homepage": "https://github.com/kiuka/react15-fullpage",
   "dependencies": {
     "react": "^15.3.2",
     "react-dom": "^15.3.2"

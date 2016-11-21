@@ -1,82 +1,106 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
-var _react2 = _interopRequireDefault(_react);
+var React = _interopRequireWildcard(_react);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var Section = _react2.default.createClass({
-  displayName: 'Section',
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  propTypes: {
-    color: _react2.default.PropTypes.string
-  },
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  contextTypes: {
-    verticalAlign: _react2.default.PropTypes.bool,
-    sectionClassName: _react2.default.PropTypes.string,
-    sectionPaddingTop: _react2.default.PropTypes.string,
-    sectionPaddingBottom: _react2.default.PropTypes.string
-  },
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  getInitialState: function getInitialState() {
-    return {
-      windowHeight: window.innerHeight
-    };
-  },
+var Section = function (_React$Component) {
+    _inherits(Section, _React$Component);
 
-  handleResize: function handleResize() {
-    this.setState({
-      windowHeight: window.innerHeight
-    });
-  },
+    function Section() {
+        _classCallCheck(this, Section);
 
-  componentDidMount: function componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
-  },
+        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
 
-  componentWillUnmount: function componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  },
+        _this.state = {
+            windowHeight: window.innerHeight
+        };
+        return _this;
+    }
 
-  render: function render() {
-    var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
+    _createClass(Section, [{
+        key: 'handleResize',
+        value: function handleResize() {
+            this.setState({
+                windowHeight: window.innerHeight
+            });
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            window.addEventListener('resize', this.handleResize);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            window.removeEventListener('resize', this.handleResize);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
 
-    var sectionStyle = {
-      width: '100%',
-      display: alignVertical ? 'table' : 'block',
-      height: this.state.windowHeight,
-      maxHeight: this.state.windowHeight,
-      overflow: 'auto',
-      backgroundColor: this.props.color,
-      paddingTop: this.context.sectionPaddingTop,
-      paddingBottom: this.context.sectionPaddingBottom
-    };
+            var sectionStyle = {
+                width: '100%',
+                display: alignVertical ? 'table' : 'block',
+                height: this.state.windowHeight,
+                maxHeight: this.state.windowHeight,
+                overflow: 'auto',
+                backgroundColor: this.props.color,
+                paddingTop: this.context.sectionPaddingTop,
+                paddingBottom: this.context.sectionPaddingBottom
+            };
 
-    return _react2.default.createElement(
-      'div',
-      { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''), id: this.props.id, style: sectionStyle },
-      alignVertical ? this._renderVerticalAlign() : this.props.children
-    );
-  },
-  _renderVerticalAlign: function _renderVerticalAlign() {
-    var verticalAlignStyle = {
-      display: 'table-cell',
-      verticalAlign: 'middle',
-      width: '100%'
-    };
+            return React.createElement(
+                'div',
+                { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),
+                    id: this.props.id, style: sectionStyle },
+                alignVertical ? this._renderVerticalAlign() : this.props.children
+            );
+        }
+    }, {
+        key: '_renderVerticalAlign',
+        value: function _renderVerticalAlign() {
+            var verticalAlignStyle = {
+                display: 'table-cell',
+                verticalAlign: 'middle',
+                width: '100%'
+            };
 
-    return _react2.default.createElement(
-      'div',
-      { style: verticalAlignStyle },
-      this.props.children
-    );
-  }
-});
+            return React.createElement(
+                'div',
+                { style: verticalAlignStyle },
+                this.props.children
+            );
+        }
+    }]);
+
+    return Section;
+}(React.Component);
+
+Section.propTypes = {
+    color: React.PropTypes.string
+};
+
+Section.contextTypes = {
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string
+};
 
 exports.default = Section;
