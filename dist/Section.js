@@ -42,12 +42,20 @@ var Section = function (_React$Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            window.addEventListener('resize', this.handleResize);
+            var _this2 = this;
+
+            window.addEventListener('resize', function () {
+                return _this2.handleResize();
+            });
         }
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            window.removeEventListener('resize', this.handleResize);
+            var _this3 = this;
+
+            window.removeEventListener('resize', function () {
+                return _this3.handleResize();
+            });
         }
     }, {
         key: 'render',
