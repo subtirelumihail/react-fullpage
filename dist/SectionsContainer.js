@@ -232,8 +232,10 @@ var SectionsContainer = function (_React$Component) {
             var hash = window.location.hash.substring(1);
             var activeSection = this.props.anchors.indexOf(hash);
 
-            this._handleSectionTransition(activeSection);
-            this._addActiveClass();
+            if (this.state.activeSection !== activeSection) {
+                this._handleSectionTransition(activeSection);
+                this._addActiveClass();
+            }
         }
     }, {
         key: '_setAnchor',

@@ -76,7 +76,7 @@ export default class SectionsContainer extends React.Component {
     }
 
     _addChildrenWithAnchorId() {
-        var index = 0;
+        let index = 0;
 
         return React.Children.map(this.props.children, (child) => {
             let id = this.props.anchors[index];
@@ -151,8 +151,8 @@ export default class SectionsContainer extends React.Component {
     }
 
     _handleArrowKeys(e) {
-        let event = window.event ? window.event : e;
-        let activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : (event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1);
+        const event = window.event ? window.event : e;
+        const activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : (event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1);
 
         if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
             return false;
@@ -164,11 +164,13 @@ export default class SectionsContainer extends React.Component {
     }
 
     _handleAnchor() {
-        let hash = window.location.hash.substring(1);
-        let activeSection = this.props.anchors.indexOf(hash);
+        const hash = window.location.hash.substring(1);
+        const activeSection = this.props.anchors.indexOf(hash);
 
-        this._handleSectionTransition(activeSection);
-        this._addActiveClass();
+        if (this.state.activeSection !== activeSection) {
+            this._handleSectionTransition(activeSection);
+            this._addActiveClass();
+        }
     }
 
     _setAnchor(index) {
