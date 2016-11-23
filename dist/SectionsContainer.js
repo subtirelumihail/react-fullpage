@@ -21,10 +21,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var SectionsContainer = function (_React$Component) {
     _inherits(SectionsContainer, _React$Component);
 
-    function SectionsContainer() {
+    function SectionsContainer(props) {
         _classCallCheck(this, SectionsContainer);
 
-        var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this));
+        var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
         _this.state = {
             activeSection: 0,
@@ -32,6 +32,11 @@ var SectionsContainer = function (_React$Component) {
             sectionScrolledPosition: 0,
             windowHeight: window.innerHeight
         };
+
+        _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
+        _this._handleAnchor = _this._handleAnchor.bind(_this);
+        _this._handleResize = _this._handleResize.bind(_this);
+        _this._handleArrowKeys = _this._handleArrowKeys.bind(_this);
         return _this;
     }
 
@@ -48,46 +53,37 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
+            this._clearResetScrollTimer();
             this._removeDefaultEventListeners();
             this._removeMouseWheelEventHandlers();
         }
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this2 = this;
-
             this._childrenLength = this.props.children.length;
 
-            window.addEventListener('resize', function () {
-                return _this2._handleResize();
-            });
+            window.addEventListener('resize', this._handleResize);
 
             if (!this.props.scrollBar) {
                 this._addCSS3Scroll();
                 this._handleAnchor(); //Go to anchor in case we found it in the URL
 
-                window.addEventListener('hashchange', function () {
-                    return _this2._handleAnchor();
-                }, false); //Add an event to watch the url hash changes
+                window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
 
                 if (this.props.arrowNavigation) {
-                    window.addEventListener('keydown', function (event) {
-                        return _this2._handleArrowKeys(event);
-                    });
+                    window.addEventListener('keydown', this._handleArrowKeys);
                 }
             }
         }
     }, {
         key: '_removeDefaultEventListeners',
         value: function _removeDefaultEventListeners() {
-            var _this3 = this;
+            window.removeEventListener('resize', this._handleResize);
+            window.removeEventListener('hashchange', this._handleAnchor);
 
-            window.removeEventListener('resize', function () {
-                return _this3._handleResize();
-            });
-            window.removeEventListener('hashchange', function () {
-                return _this3._handleAnchor();
-            });
+            if (this.props.arrowNavigation) {
+                window.removeEventListener('keydown', this._handleArrowKeys);
+            }
         }
     }, {
         key: '_addCSS3Scroll',
@@ -119,12 +115,12 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_addChildrenWithAnchorId',
         value: function _addChildrenWithAnchorId() {
-            var _this4 = this;
+            var _this2 = this;
 
             var index = 0;
 
             return React.Children.map(this.props.children, function (child) {
-                var id = _this4.props.anchors[index];
+                var id = _this2.props.anchors[index];
 
                 index++;
 
@@ -145,26 +141,14 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_addMouseWheelEventHandlers',
         value: function _addMouseWheelEventHandlers() {
-            var _this5 = this;
-
-            window.addEventListener('mousewheel', function () {
-                return _this5._handleMouseWheel();
-            }, false);
-            window.addEventListener('DOMMouseScroll', function () {
-                return _this5._handleMouseWheel();
-            }, false);
+            window.addEventListener('mousewheel', this._handleMouseWheel, false);
+            window.addEventListener('DOMMouseScroll', this._handleMouseWheel, false);
         }
     }, {
         key: '_removeMouseWheelEventHandlers',
         value: function _removeMouseWheelEventHandlers() {
-            var _this6 = this;
-
-            window.removeEventListener('mousewheel', function () {
-                return _this6._handleMouseWheel();
-            });
-            window.removeEventListener('DOMMouseScroll', function () {
-                return _this6._handleMouseWheel();
-            });
+            window.removeEventListener('mousewheel', this._handleMouseWheel);
+            window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
         }
     }, {
         key: '_handleMouseWheel',
@@ -249,33 +233,38 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_handleScrollCallback',
         value: function _handleScrollCallback() {
-            var _this7 = this;
+            var _this3 = this;
 
             if (this.props.scrollCallback) {
                 setTimeout(function () {
-                    return _this7.props.scrollCallback(_this7.state);
+                    return _this3.props.scrollCallback(_this3.state);
                 }, 0);
             }
         }
     }, {
         key: '_resetScroll',
         value: function _resetScroll() {
-            var _this8 = this;
+            var _this4 = this;
 
-            if (this._resetScrollTimer) {
-                clearTimeout(this._resetScrollTimer);
-            }
+            this._clearResetScrollTimer();
 
             this._resetScrollTimer = setTimeout(function () {
-                _this8.setState({
+                _this4.setState({
                     scrollingStarted: false
                 });
             }, this.props.delay + 300);
         }
     }, {
+        key: '_clearResetScrollTimer',
+        value: function _clearResetScrollTimer() {
+            if (this._resetScrollTimer) {
+                clearTimeout(this._resetScrollTimer);
+            }
+        }
+    }, {
         key: 'renderNavigation',
         value: function renderNavigation() {
-            var _this9 = this;
+            var _this5 = this;
 
             var navigationStyle = {
                 position: 'fixed',
@@ -293,11 +282,11 @@ var SectionsContainer = function (_React$Component) {
                     backgroundColor: '#556270',
                     padding: '5px',
                     transition: 'all 0.2s',
-                    transform: _this9.state.activeSection === index ? 'scale(1.3)' : 'none'
+                    transform: _this5.state.activeSection === index ? 'scale(1.3)' : 'none'
                 };
 
-                return React.createElement('a', { href: '#' + link, key: index, className: _this9.props.navigationAnchorClass || 'Navigation-Anchor',
-                    style: _this9.props.navigationAnchorClass ? null : anchorStyle });
+                return React.createElement('a', { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
+                    style: _this5.props.navigationAnchorClass ? null : anchorStyle });
             });
 
             return React.createElement(

@@ -4,15 +4,19 @@ export default class SectionsContainer extends React.Component {
     _resetScrollTimer;
     _childrenLength;
 
-    constructor() {
-        super();
-
+    constructor(props) {
+        super(props);
         this.state = {
             activeSection: 0,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
             windowHeight: window.innerHeight,
         };
+
+        this._handleMouseWheel = this._handleMouseWheel.bind(this);
+        this._handleAnchor = this._handleAnchor.bind(this);
+        this._handleResize = this._handleResize.bind(this);
+        this._handleArrowKeys = this._handleArrowKeys.bind(this);
     }
 
     getChildContext() {
@@ -25,6 +29,7 @@ export default class SectionsContainer extends React.Component {
     }
 
     componentWillUnmount() {
+        this._clearResetScrollTimer();
         this._removeDefaultEventListeners();
         this._removeMouseWheelEventHandlers();
     }
@@ -32,23 +37,28 @@ export default class SectionsContainer extends React.Component {
     componentDidMount() {
         this._childrenLength = this.props.children.length;
 
-        window.addEventListener('resize', () => this._handleResize());
+        window.addEventListener('resize', this._handleResize);
 
         if (!this.props.scrollBar) {
             this._addCSS3Scroll();
             this._handleAnchor(); //Go to anchor in case we found it in the URL
 
-            window.addEventListener('hashchange', () => this._handleAnchor(), false); //Add an event to watch the url hash changes
+            window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
 
             if (this.props.arrowNavigation) {
-                window.addEventListener('keydown', (event) => this._handleArrowKeys(event));
+                window.addEventListener('keydown', this._handleArrowKeys);
             }
         }
     }
 
     _removeDefaultEventListeners() {
-        window.removeEventListener('resize', () => this._handleResize());
-        window.removeEventListener('hashchange', () => this._handleAnchor());
+        window.removeEventListener('resize', this._handleResize);
+        window.removeEventListener('hashchange', this._handleAnchor);
+
+
+        if (this.props.arrowNavigation) {
+            window.removeEventListener('keydown', this._handleArrowKeys);
+        }
     }
 
     _addCSS3Scroll() {
@@ -98,13 +108,13 @@ export default class SectionsContainer extends React.Component {
     }
 
     _addMouseWheelEventHandlers() {
-        window.addEventListener('mousewheel', () => this._handleMouseWheel(), false);
-        window.addEventListener('DOMMouseScroll', () => this._handleMouseWheel(), false);
+        window.addEventListener('mousewheel', this._handleMouseWheel, false);
+        window.addEventListener('DOMMouseScroll', this._handleMouseWheel, false);
     }
 
     _removeMouseWheelEventHandlers() {
-        window.removeEventListener('mousewheel', () => this._handleMouseWheel());
-        window.removeEventListener('DOMMouseScroll', () => this._handleMouseWheel());
+        window.removeEventListener('mousewheel', this._handleMouseWheel);
+        window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
     }
 
     _handleMouseWheel() {
@@ -188,15 +198,19 @@ export default class SectionsContainer extends React.Component {
     }
 
     _resetScroll() {
-        if (this._resetScrollTimer) {
-            clearTimeout(this._resetScrollTimer);
-        }
+        this._clearResetScrollTimer();
 
         this._resetScrollTimer = setTimeout(() => {
             this.setState({
                 scrollingStarted: false
             });
         }, this.props.delay + 300);
+    }
+
+    _clearResetScrollTimer() {
+        if (this._resetScrollTimer) {
+            clearTimeout(this._resetScrollTimer);
+        }
     }
 
     renderNavigation() {
