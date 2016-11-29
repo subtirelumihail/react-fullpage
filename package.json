@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/subtirelumihail/react-fullpage.git"
+    "url": "git+https://github.com/subtirelumihail/react-fullpage"
   },
   "keywords": [
     "react",
@@ -22,9 +22,9 @@
   "author": "Subtirelu Mihail",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kiuka/react15-fullpage/issues"
+    "url": "https://github.com/subtirelumihail/react-fullpage/issues"
   },
-  "homepage": "https://github.com/kiuka/react15-fullpage",
+  "homepage": "https://github.com/subtirelumihail/react-fullpage",
   "dependencies": {
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
