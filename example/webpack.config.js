@@ -1,4 +1,3 @@
-console.log(__dirname);
 module.exports = {
 	cache: true,
 	debug: true,
@@ -13,8 +12,8 @@ module.exports = {
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			exclude: /(node_modules|bower_components)/,
-			loader: 'babel'
+			exclude: /node_modules/,
+			loader: 'babel-loader'
 		},
 		{
 			test: /\.css$/, loader: 'css-loader' 
