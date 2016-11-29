@@ -1,22 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 
-const Header = React.createClass({
+class Header extends React.Component {
+    render() {
+        const headerStyle = {
+            position: 'fixed',
+            width: '100%',
+            zIndex: '1',
+            top: '0'
+        };
 
-  render() {
-    var headerStyle = {
-      position: 'fixed',
-      width:    '100%',
-      zIndex:   '1',
-      top:      '0'
-    };
-    
-    return (
-      <header style={headerStyle}>
-        {this.props.children}
-      </header>
-    );
-  }
-
-});
+        return (
+            <header style={headerStyle}>
+                {this.props.children}
+            </header>
+        );
+    }
+}
 
 export default Header;

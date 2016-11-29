@@ -1,6 +1,6 @@
 module.exports = {
-  SectionsContainer: require('./dist/SectionsContainer'),
-  Section: require('./dist/Section'),
-  Header: require('./dist/Header'),
-  Footer: require('./dist/Footer'),
+  SectionsContainer: require('./dist/SectionsContainer').default,
+  Section: require('./dist/Section').default,
+  Header: require('./dist/Header').default,
+  Footer: require('./dist/Footer').default,
 };
