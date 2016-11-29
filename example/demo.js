@@ -28,7 +28,7 @@ const Example = React.createClass({
           <a href="#sectionThree">Section Three</a>
         </Header>
         <Footer>
-          <a href="">Dcoumentation</a>
+          <a href="">Documentation</a>
           <a href="">Example Source</a>
           <a href="">About</a>
         </Footer>
