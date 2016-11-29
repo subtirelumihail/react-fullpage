@@ -1,6 +1,6 @@
 {
   "name": "react15-fullpage",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "An implementation of fullpage.js in react based on react-fullpage",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "react",
     "fullpage.js"
   ],
-  "author": "Balazs Kiraly",
+  "author": "Subtirelu Mihail",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kiuka/react15-fullpage/issues"
