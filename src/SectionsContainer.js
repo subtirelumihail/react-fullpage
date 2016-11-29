@@ -83,6 +83,17 @@ const SectionsContainer = React.createClass({
     this._addHeightToParents();
     this._addMouseWheelEventHandlers();
   },
+
+  _loadLazySrc() {
+    let imgs = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('img');
+    for (let i=0; i<imgs.length; i++) {
+      imgs[i].setAttribute('src', imgs[i].getAttribute('data-lazy-src'))
+    }
+    let eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
+    for (let i=0; i<eles.length; i++) {
+      eles[i].style.backgroundImage = `url(${eles[i].getAttribute('data-lazy-bg')})`;
+    }
+  },
   
   _addActiveClass() {
     this._removeActiveClass();
@@ -216,6 +227,12 @@ const SectionsContainer = React.createClass({
   _handleAnchor() {
     let hash  = window.location.hash.substring(1);
     let index = this.props.anchors.indexOf(hash);
+
+    this.setState({
+      activeSection: index
+    }, () => {
+      this._loadLazySrc();
+    });
     
     this._handleSectionTransition(index);
     

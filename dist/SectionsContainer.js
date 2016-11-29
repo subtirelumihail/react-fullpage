@@ -98,6 +98,17 @@ var SectionsContainer = _react2['default'].createClass({
     this._addMouseWheelEventHandlers();
   },
 
+  _loadLazySrc: function _loadLazySrc() {
+    var imgs = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('img');
+    for (var i = 0; i < imgs.length; i++) {
+      imgs[i].setAttribute('src', imgs[i].getAttribute('data-lazy-src'));
+    }
+    var eles = document.querySelectorAll(".container > div")[this.state.activeSection].querySelectorAll('[data-lazy-bg]');
+    for (var i = 0; i < eles.length; i++) {
+      eles[i].style.backgroundImage = 'url(' + eles[i].getAttribute('data-lazy-bg') + ')';
+    }
+  },
+
   _addActiveClass: function _addActiveClass() {
     this._removeActiveClass();
 
@@ -230,8 +241,16 @@ var SectionsContainer = _react2['default'].createClass({
   },
 
   _handleAnchor: function _handleAnchor() {
+    var _this2 = this;
+
     var hash = window.location.hash.substring(1);
     var index = this.props.anchors.indexOf(hash);
+
+    this.setState({
+      activeSection: index
+    }, function () {
+      _this2._loadLazySrc();
+    });
 
     this._handleSectionTransition(index);
 
@@ -239,7 +258,7 @@ var SectionsContainer = _react2['default'].createClass({
   },
 
   renderNavigation: function renderNavigation() {
-    var _this2 = this;
+    var _this3 = this;
 
     var navigationStyle = {
       position: 'fixed',
@@ -257,9 +276,9 @@ var SectionsContainer = _react2['default'].createClass({
         backgroundColor: '#556270',
         padding: '5px',
         transition: 'all 0.2s',
-        transform: _this2.state.activeSection === index ? 'scale(1.3)' : 'none'
+        transform: _this3.state.activeSection === index ? 'scale(1.3)' : 'none'
       };
-      return _react2['default'].createElement('a', { href: '#' + link, key: index, className: _this2.props.navigationAnchorClass || 'Navigation-Anchor', style: _this2.props.navigationAnchorClass ? null : anchorStyle });
+      return _react2['default'].createElement('a', { href: '#' + link, key: index, className: _this3.props.navigationAnchorClass || 'Navigation-Anchor', style: _this3.props.navigationAnchorClass ? null : anchorStyle });
     });
 
     return _react2['default'].createElement(
