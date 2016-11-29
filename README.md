@@ -65,7 +65,7 @@ Some of this props can be referenced with the [fullpage.js options](https://gith
 let options = {
   activeClass:          'active', // the class that is appended to the sections links
   anchors:              [], // the anchors for each sections
-  arrowNavigation:      true // use arrow keys
+  arrowNavigation:      true, // use arrow keys
   className:            'SectionContainer', // the class name for the section container
   delay:                1000, // the scroll animation speed
   navigation:           true, // use dots navigatio
