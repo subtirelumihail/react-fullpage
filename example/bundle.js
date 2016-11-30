@@ -21816,8 +21816,8 @@
 	        }
 	    }, {
 	        key: '_handleMouseWheel',
-	        value: function _handleMouseWheel() {
-	            var e = window.event || e; // old IE support
+	        value: function _handleMouseWheel(event) {
+	            var e = window.event || event; // old IE support
 	            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
 	            var activeSection = this.state.activeSection - delta;
 
