@@ -6,14 +6,14 @@ For the moment this is still in development and a lot of things can change.
 ## Install
 
 ```
-npm install --save react15-fullpage
+npm install --save react-fullpage
 ```
 
 ## Usage
 ### A basic usage
 ```javascript
 import React from 'react';
-import {SectionsContainer, Section} from 'react15-fullpage';
+import {SectionsContainer, Section} from 'react-fullpage';
 
 let options = {
   ...
@@ -36,7 +36,7 @@ In case you need a fixed header and footer you can also include the `Header` or 
 
 ```javascript
 
-import {SectionsContainer, Section, Header, Footer} from 'react15-fullpage';
+import {SectionsContainer, Section, Header, Footer} from 'react-fullpage';
 
 // => in the render() method of your app
 return (
@@ -100,7 +100,7 @@ const Example = React.createClass({
       sectionPaddingBottom: '50px',
       arrowNavigation:      true
     };
-    
+
     return (
       <div>
         <Header>
