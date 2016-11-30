@@ -117,8 +117,8 @@ export default class SectionsContainer extends React.Component {
         window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
     }
 
-    _handleMouseWheel() {
-        const e = window.event || e; // old IE support
+    _handleMouseWheel(event) {
+        const e = window.event || event; // old IE support
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         const activeSection = this.state.activeSection - delta;
 
