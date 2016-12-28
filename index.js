@@ -1,4 +1,7 @@
-module.exports = {
-  SectionsContainer: require('./src/SectionsContainer').default,
-  Section: require('./src/Section').default,
+import SectionContainer from './src/SectionsContainer';
+import Section from './src/Section';
+
+export default {
+  SectionsContainer: SectionContainer,
+  Section: Section
 };
