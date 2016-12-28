@@ -1,4 +1,4 @@
 module.exports = {
-  SectionsContainer: require('./dist/SectionsContainer').default,
-  Section: require('./dist/Section').default,
+  SectionsContainer: require('./src/SectionsContainer').default,
+  Section: require('./src/Section').default,
 };
