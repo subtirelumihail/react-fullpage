@@ -10,7 +10,7 @@ export default class SectionsContainer extends React.Component {
             activeSection: 0,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
-            windowHeight: window.innerHeight,
+            windowHeight: 1000,
         };
 
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
@@ -35,6 +35,10 @@ export default class SectionsContainer extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({
+            windowHeight: window.innerHeight
+        });
+
         this._childrenLength = this.props.children.length;
 
         window.addEventListener('resize', this._handleResize);

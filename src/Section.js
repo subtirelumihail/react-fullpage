@@ -5,7 +5,7 @@ class Section extends React.Component {
         super();
 
         this.state = {
-            windowHeight: window.innerHeight
+            windowHeight: 1000
         };
     }
 
@@ -16,6 +16,9 @@ class Section extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({
+            windowHeight: window.innerHeight
+        });
         window.addEventListener('resize', () => this.handleResize());
     }
 
