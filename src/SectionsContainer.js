@@ -40,6 +40,12 @@ export default class SectionsContainer extends React.Component {
         });
 
         this._childrenLength = this.props.children.length;
+        this._childrenSliders = {};
+
+        this.props.children.map((child, index) => {
+            if ( child.type.name === "SelectionSlider" )
+                this._childrenSliders[index] = child.props.children.length;
+        });
 
         window.addEventListener('resize', this._handleResize);
 
@@ -285,7 +291,7 @@ SectionsContainer.defaultProps = {
     arrowNavigation: true
 };
 
-SectionsContainer.propTypes = {
+/*SectionsContainer.propTypes = {
     scrollCallback: React.PropTypes.func,
     delay: React.PropTypes.number,
     verticalAlign: React.PropTypes.bool,
@@ -306,4 +312,4 @@ SectionsContainer.childContextTypes = {
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
-};
+};*/

@@ -60,11 +60,18 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this2 = this;
+
             this.setState({
                 windowHeight: window.innerHeight
             });
 
             this._childrenLength = this.props.children.length;
+            this._childrenSliders = {};
+
+            this.props.children.map(function (child, index) {
+                if (child.type.name === "SelectionSlider") _this2._childrenSliders[index] = child.props.children.length;
+            });
 
             window.addEventListener('resize', this._handleResize);
 
@@ -119,12 +126,12 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_addChildrenWithAnchorId',
         value: function _addChildrenWithAnchorId() {
-            var _this2 = this;
+            var _this3 = this;
 
             var index = 0;
 
             return React.Children.map(this.props.children, function (child) {
-                var id = _this2.props.anchors[index];
+                var id = _this3.props.anchors[index];
 
                 index++;
 
@@ -237,23 +244,23 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_handleScrollCallback',
         value: function _handleScrollCallback() {
-            var _this3 = this;
+            var _this4 = this;
 
             if (this.props.scrollCallback) {
                 setTimeout(function () {
-                    return _this3.props.scrollCallback(_this3.state);
+                    return _this4.props.scrollCallback(_this4.state);
                 }, 0);
             }
         }
     }, {
         key: '_resetScroll',
         value: function _resetScroll() {
-            var _this4 = this;
+            var _this5 = this;
 
             this._clearResetScrollTimer();
 
             this._resetScrollTimer = setTimeout(function () {
-                _this4.setState({
+                _this5.setState({
                     scrollingStarted: false
                 });
             }, this.props.delay + 300);
@@ -268,7 +275,7 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: 'renderNavigation',
         value: function renderNavigation() {
-            var _this5 = this;
+            var _this6 = this;
 
             var navigationStyle = {
                 position: 'fixed',
@@ -286,11 +293,11 @@ var SectionsContainer = function (_React$Component) {
                     backgroundColor: '#556270',
                     padding: '5px',
                     transition: 'all 0.2s',
-                    transform: _this5.state.activeSection === index ? 'scale(1.3)' : 'none'
+                    transform: _this6.state.activeSection === index ? 'scale(1.3)' : 'none'
                 };
 
-                return React.createElement('a', { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
-                    style: _this5.props.navigationAnchorClass ? null : anchorStyle });
+                return React.createElement('a', { href: '#' + link, key: index, className: _this6.props.navigationAnchorClass || 'Navigation-Anchor',
+                    style: _this6.props.navigationAnchorClass ? null : anchorStyle });
             });
 
             return React.createElement(
@@ -344,7 +351,7 @@ SectionsContainer.defaultProps = {
     arrowNavigation: true
 };
 
-SectionsContainer.propTypes = {
+/*SectionsContainer.propTypes = {
     scrollCallback: React.PropTypes.func,
     delay: React.PropTypes.number,
     verticalAlign: React.PropTypes.bool,
@@ -357,12 +364,12 @@ SectionsContainer.propTypes = {
     activeClass: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool
+    arrowNavigation: React.PropTypes.bool,
 };
 
 SectionsContainer.childContextTypes = {
     verticalAlign: React.PropTypes.bool,
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string
-};
+    sectionPaddingBottom: React.PropTypes.string,
+};*/

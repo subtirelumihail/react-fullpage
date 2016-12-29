@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-class Section extends React.Component {
-    constructor(props) {
-        super(props);
+class SectionSlider extends React.Component {
+    constructor() {
+        super();
 
         this.state = {
-            windowHeight: 1000
+            windowHeight: 1000,
         };
     }
 
@@ -19,6 +19,9 @@ class Section extends React.Component {
         this.setState({
             windowHeight: window.innerHeight
         });
+
+        this._childrenLength = this.props.children.length;
+
         window.addEventListener('resize', () => this.handleResize());
     }
 
@@ -63,15 +66,4 @@ class Section extends React.Component {
     }
 }
 
-Section.propTypes = {
-    color: React.PropTypes.string
-};
-
-Section.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-};
-
-export default Section;
+export default SectionSlider;

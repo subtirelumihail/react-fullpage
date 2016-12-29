@@ -21,10 +21,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Section = function (_React$Component) {
     _inherits(Section, _React$Component);
 
-    function Section() {
+    function Section(props) {
         _classCallCheck(this, Section);
 
-        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
+        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this, props));
 
         _this.state = {
             windowHeight: 1000
