@@ -351,7 +351,7 @@ SectionsContainer.defaultProps = {
     arrowNavigation: true
 };
 
-/*SectionsContainer.propTypes = {
+SectionsContainer.propTypes = {
     scrollCallback: React.PropTypes.func,
     delay: React.PropTypes.number,
     verticalAlign: React.PropTypes.bool,
@@ -364,12 +364,12 @@ SectionsContainer.defaultProps = {
     activeClass: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool,
+    arrowNavigation: React.PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
     verticalAlign: React.PropTypes.bool,
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-};*/
+    sectionPaddingBottom: React.PropTypes.string
+};

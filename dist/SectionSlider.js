@@ -107,3 +107,11 @@ var SectionSlider = function (_React$Component) {
 }(React.Component);
 
 exports.default = SectionSlider;
+
+
+SectionSlider.contextTypes = {
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string
+};
