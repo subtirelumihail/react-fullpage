@@ -67,3 +67,10 @@ class SectionSlider extends React.Component {
 }
 
 export default SectionSlider;
+
+SectionSlider.contextTypes = {
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string,
+};
