@@ -76,9 +76,11 @@ var Section = function (_React$Component) {
                 paddingBottom: this.context.sectionPaddingBottom
             };
 
+            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+
             return React.createElement(
                 'div',
-                { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),
+                { className: className,
                     id: this.props.id, style: sectionStyle },
                 alignVertical ? this._renderVerticalAlign() : this.props.children
             );

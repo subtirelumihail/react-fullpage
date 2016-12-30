@@ -308,6 +308,21 @@ var SectionsContainer = function (_React$Component) {
             );
         }
     }, {
+        key: 'getChildrenWithProps',
+        value: function getChildrenWithProps() {
+            var _this7 = this;
+
+            return React.Children.map(this.props.children, function (child, index) {
+                if (index == _this7.state.activeSection) {
+                    return React.cloneElement(child, {
+                        active: true
+                    });
+                } else {
+                    return child;
+                }
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var containerStyle = {
@@ -323,9 +338,8 @@ var SectionsContainer = function (_React$Component) {
                 React.createElement(
                     'div',
                     { className: this.props.className, style: containerStyle },
-                    this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children
-                ),
-                this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null
+                    this.getChildrenWithProps()
+                )
             );
         }
     }]);

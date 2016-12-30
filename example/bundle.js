@@ -21973,6 +21973,21 @@
 	                style: this.props.navigationClass ? null : navigationStyle }, anchors);
 	        }
 	    }, {
+	        key: 'getChildrenWithProps',
+	        value: function getChildrenWithProps() {
+	            var _this7 = this;
+
+	            return React.Children.map(this.props.children, function (child, index) {
+	                if (index == _this7.state.activeSection) {
+	                    return React.cloneElement(child, {
+	                        active: true
+	                    });
+	                } else {
+	                    return child;
+	                }
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var containerStyle = {
@@ -21982,7 +21997,7 @@
 	                transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
 	                transition: 'all ' + this.props.delay + 'ms ease'
 	            };
-	            return React.createElement('div', null, React.createElement('div', { className: this.props.className, style: containerStyle }, this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children), this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null);
+	            return React.createElement('div', null, React.createElement('div', { className: this.props.className, style: containerStyle }, this.getChildrenWithProps()));
 	        }
 	    }]);
 
@@ -22220,7 +22235,9 @@
 	                paddingBottom: this.context.sectionPaddingBottom
 	            };
 
-	            return React.createElement('div', { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),
+	            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+
+	            return React.createElement('div', { className: className,
 	                id: this.props.id, style: sectionStyle }, alignVertical ? this._renderVerticalAlign() : this.props.children);
 	        }
 	    }, {

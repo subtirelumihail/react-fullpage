@@ -257,6 +257,18 @@ export default class SectionsContainer extends React.Component {
         );
     }
 
+    getChildrenWithProps() {
+        return React.Children.map(this.props.children, (child, index) => {
+                if (index == this.state.activeSection) {
+                    return React.cloneElement(child, {
+                        active: true
+                    });
+                } else {
+                    return child;
+                }
+            });
+    }
+
     render() {
         let containerStyle = {
             height: '100%',
@@ -268,9 +280,10 @@ export default class SectionsContainer extends React.Component {
         return (
             <div>
                 <div className={this.props.className} style={containerStyle}>
-                    {this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children}
+                    { this.getChildrenWithProps() }
+                    {/*{this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children}*/}
                 </div>
-                {this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null}
+                {/*{this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null}*/}
             </div>
         );
     }

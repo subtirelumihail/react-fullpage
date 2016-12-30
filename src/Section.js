@@ -40,8 +40,12 @@ class Section extends React.Component {
             paddingBottom: this.context.sectionPaddingBottom,
         };
 
+        let className = this.context.sectionClassName +
+            (this.props.className ? ` ${this.props.className}` : '') +
+            (this.props.active ? ` active` : '');
+
         return (
-            <div className={this.context.sectionClassName + (this.props.className ? ` ${this.props.className}` : '')}
+            <div className={ className }
                  id={this.props.id} style={sectionStyle}>
                 {alignVertical ? this._renderVerticalAlign() : this.props.children}
             </div>
