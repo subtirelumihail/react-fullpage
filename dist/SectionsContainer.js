@@ -70,7 +70,7 @@ var SectionsContainer = function (_React$Component) {
             this._childrenSliders = {};
 
             this.props.children.map(function (child, index) {
-                if (child.type.name === "SelectionSlider") _this2._childrenSliders[index] = child.props.children.length;
+                if (child.type.name === "SectionSlider") _this2._childrenSliders[index] = child.props.children.length;
             });
 
             window.addEventListener('resize', this._handleResize);

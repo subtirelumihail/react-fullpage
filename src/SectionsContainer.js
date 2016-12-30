@@ -43,7 +43,7 @@ export default class SectionsContainer extends React.Component {
         this._childrenSliders = {};
 
         this.props.children.map((child, index) => {
-            if ( child.type.name === "SelectionSlider" )
+            if ( child.type.name === "SectionSlider" )
                 this._childrenSliders[index] = child.props.children.length;
         });
 

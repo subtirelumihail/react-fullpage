@@ -21,83 +21,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var SectionSlider = function (_React$Component) {
     _inherits(SectionSlider, _React$Component);
 
-    function SectionSlider() {
+    function SectionSlider(props) {
         _classCallCheck(this, SectionSlider);
 
-        var _this = _possibleConstructorReturn(this, (SectionSlider.__proto__ || Object.getPrototypeOf(SectionSlider)).call(this));
-
-        _this.state = {
-            windowHeight: 1000
-        };
-        return _this;
+        return _possibleConstructorReturn(this, (SectionSlider.__proto__ || Object.getPrototypeOf(SectionSlider)).call(this, props));
     }
 
     _createClass(SectionSlider, [{
-        key: 'handleResize',
-        value: function handleResize() {
-            this.setState({
-                windowHeight: window.innerHeight
-            });
-        }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this2 = this;
-
-            this.setState({
-                windowHeight: window.innerHeight
-            });
-
-            this._childrenLength = this.props.children.length;
-
-            window.addEventListener('resize', function () {
-                return _this2.handleResize();
-            });
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            var _this3 = this;
-
-            window.removeEventListener('resize', function () {
-                return _this3.handleResize();
-            });
-        }
-    }, {
         key: 'render',
         value: function render() {
-            var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
-
-            var sectionStyle = {
-                width: '100%',
-                display: alignVertical ? 'table' : 'block',
-                height: this.state.windowHeight,
-                maxHeight: this.state.windowHeight,
-                overflow: 'auto',
-                backgroundColor: this.props.color,
-                paddingTop: this.context.sectionPaddingTop,
-                paddingBottom: this.context.sectionPaddingBottom
-            };
-
             return React.createElement(
                 'div',
-                { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),
-                    id: this.props.id, style: sectionStyle },
-                alignVertical ? this._renderVerticalAlign() : this.props.children
-            );
-        }
-    }, {
-        key: '_renderVerticalAlign',
-        value: function _renderVerticalAlign() {
-            var verticalAlignStyle = {
-                display: 'table-cell',
-                verticalAlign: 'middle',
-                width: '100%'
-            };
-
-            return React.createElement(
-                'div',
-                { style: verticalAlignStyle },
+                null,
                 this.props.children
             );
         }
@@ -107,11 +42,3 @@ var SectionSlider = function (_React$Component) {
 }(React.Component);
 
 exports.default = SectionSlider;
-
-
-SectionSlider.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string
-};
