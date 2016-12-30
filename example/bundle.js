@@ -21856,9 +21856,21 @@
 	            var currentSlider = this._childrenSliders[this.state.activeSection];
 	            if (scrollTop && currentSlider.current > 0) {
 	                currentSlider.current -= 1;
+
+	                this.setState({
+	                    scrollingStarted: true
+	                });
+	                this._resetScroll();
+
 	                return true;
 	            } else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
 	                currentSlider.current += 1;
+
+	                this.setState({
+	                    scrollingStarted: true
+	                });
+	                this._resetScroll();
+
 	                return true;
 	            } else return false;
 	        }
@@ -21996,7 +22008,8 @@
 
 	            return React.Children.map(this.props.children, function (child, index) {
 	                var props = {
-	                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0
+	                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0,
+	                    delay: _this6.props.delay
 	                };
 
 	                if (index == _this6.state.activeSection) props.active = true;
@@ -22179,15 +22192,14 @@
 	            var sectionStyle = {
 	                width: '100%',
 	                display: alignVertical ? 'table' : 'block',
-	                height: this.state.windowHeight,
-	                maxHeight: this.state.windowHeight,
-	                overflow: 'hidden',
+	                height: this.state.windowHeight * this.props.children.length,
+	                maxHeight: this.state.windowHeight * this.props.children.length,
 	                backgroundColor: this.props.color,
 	                paddingTop: this.context.sectionPaddingTop,
 	                paddingBottom: this.context.sectionPaddingBottom,
 	                position: 'relative',
-	                transform: 'translateY(' + this.state.windowHeight * this.props.currentSection + 'px)',
-	                transition: 'all ' + this.props.delay + 'ms ease'
+	                transform: 'translateY(-' + this.state.windowHeight * this.props.currentSection + 'px)',
+	                transition: 'all ' + this.props.delay + 'ms'
 	            };
 
 	            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
@@ -22365,7 +22377,8 @@
 	}(React.Component);
 
 	Section.propTypes = {
-	    color: React.PropTypes.string
+	    color: React.PropTypes.string,
+	    delay: React.PropTypes.number
 	};
 
 	Section.contextTypes = {

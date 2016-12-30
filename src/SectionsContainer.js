@@ -154,10 +154,22 @@ export default class SectionsContainer extends React.Component {
         let currentSlider = this._childrenSliders[ this.state.activeSection ];
         if (scrollTop && currentSlider.current > 0) {
             currentSlider.current -= 1;
+
+            this.setState({
+                scrollingStarted: true
+            });
+            this._resetScroll();
+
             return true;
         }
         else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
             currentSlider.current += 1;
+
+            this.setState({
+                scrollingStarted: true
+            });
+            this._resetScroll();
+
             return true;
         }
         else return false;
@@ -282,7 +294,8 @@ export default class SectionsContainer extends React.Component {
     getChildrenWithProps() {
         return React.Children.map(this.props.children, (child, index) => {
             let props = {
-                currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0
+                currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
+                delay: this.props.delay
             };
 
             if (index == this.state.activeSection) props.active = true;

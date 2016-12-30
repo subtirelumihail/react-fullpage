@@ -42,15 +42,14 @@ class SectionSlider extends React.Component {
         const sectionStyle = {
             width: '100%',
             display: alignVertical ? 'table' : 'block',
-            height: this.state.windowHeight,
-            maxHeight: this.state.windowHeight,
-            overflow: 'hidden',
+            height: this.state.windowHeight*this.props.children.length,
+            maxHeight: this.state.windowHeight*this.props.children.length,
             backgroundColor: this.props.color,
             paddingTop: this.context.sectionPaddingTop,
             paddingBottom: this.context.sectionPaddingBottom,
             position: 'relative',
-            transform: `translateY(${ this.state.windowHeight * this.props.currentSection }px)`,
-            transition: `all ${this.props.delay}ms ease`
+            transform: `translateY(-${ this.state.windowHeight * this.props.currentSection }px)`,
+            transition: `all ${this.props.delay}ms`
         };
 
         let className = this.context.sectionClassName +

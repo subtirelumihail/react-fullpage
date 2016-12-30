@@ -68,7 +68,8 @@ class Section extends React.Component {
 }
 
 Section.propTypes = {
-    color: React.PropTypes.string
+    color: React.PropTypes.string,
+    delay: React.PropTypes.number
 };
 
 Section.contextTypes = {

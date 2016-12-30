@@ -187,9 +187,21 @@ var SectionsContainer = function (_React$Component) {
             var currentSlider = this._childrenSliders[this.state.activeSection];
             if (scrollTop && currentSlider.current > 0) {
                 currentSlider.current -= 1;
+
+                this.setState({
+                    scrollingStarted: true
+                });
+                this._resetScroll();
+
                 return true;
             } else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
                 currentSlider.current += 1;
+
+                this.setState({
+                    scrollingStarted: true
+                });
+                this._resetScroll();
+
                 return true;
             } else return false;
         }
@@ -331,7 +343,8 @@ var SectionsContainer = function (_React$Component) {
 
             return React.Children.map(this.props.children, function (child, index) {
                 var props = {
-                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0
+                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0,
+                    delay: _this6.props.delay
                 };
 
                 if (index == _this6.state.activeSection) props.active = true;
