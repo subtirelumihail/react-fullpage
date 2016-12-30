@@ -76,6 +76,7 @@ Section.contextTypes = {
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
+    currentSection: React.PropTypes.number
 };
 
 export default Section;

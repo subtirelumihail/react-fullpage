@@ -113,7 +113,8 @@ Section.contextTypes = {
     verticalAlign: React.PropTypes.bool,
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string
+    sectionPaddingBottom: React.PropTypes.string,
+    currentSection: React.PropTypes.number
 };
 
 exports.default = Section;

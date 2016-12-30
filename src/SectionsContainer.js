@@ -6,6 +6,18 @@ export default class SectionsContainer extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this._childrenLength = this.props.children.length;
+        this._childrenSliders = {};
+
+        this.props.children.map((child, index) => {
+            if ( child.type.name === "SectionSlider" )
+                this._childrenSliders[index] = {
+                    count: child.props.children.length,
+                    current: 0
+                };
+        });
+
         this.state = {
             activeSection: 0,
             scrollingStarted: false,
@@ -25,6 +37,7 @@ export default class SectionsContainer extends React.Component {
             sectionClassName: this.props.sectionClassName,
             sectionPaddingTop: this.props.sectionPaddingTop,
             sectionPaddingBottom: this.props.sectionPaddingBottom,
+            currentSection: this.props.currentSection
         };
     }
 
@@ -37,14 +50,6 @@ export default class SectionsContainer extends React.Component {
     componentDidMount() {
         this.setState({
             windowHeight: window.innerHeight
-        });
-
-        this._childrenLength = this.props.children.length;
-        this._childrenSliders = {};
-
-        this.props.children.map((child, index) => {
-            if ( child.type.name === "SectionSlider" )
-                this._childrenSliders[index] = child.props.children.length;
         });
 
         window.addEventListener('resize', this._handleResize);
@@ -132,6 +137,9 @@ export default class SectionsContainer extends React.Component {
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         const activeSection = this.state.activeSection - delta;
 
+        if(this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection))
+            return false;
+
         if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
             return false;
         }
@@ -139,6 +147,20 @@ export default class SectionsContainer extends React.Component {
         this._setAnchor(activeSection);
         this._handleSectionTransition(activeSection);
         this._addActiveClass();
+    }
+
+    _handleSliderTransition(index) {
+        let scrollTop = index < this.state.activeSection;
+        let currentSlider = this._childrenSliders[ this.state.activeSection ];
+        if (scrollTop && currentSlider.current > 0) {
+            currentSlider.current -= 1;
+            return true;
+        }
+        else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
+            currentSlider.current += 1;
+            return true;
+        }
+        else return false;
     }
 
     _handleResize() {
@@ -259,14 +281,14 @@ export default class SectionsContainer extends React.Component {
 
     getChildrenWithProps() {
         return React.Children.map(this.props.children, (child, index) => {
-                if (index == this.state.activeSection) {
-                    return React.cloneElement(child, {
-                        active: true
-                    });
-                } else {
-                    return child;
-                }
-            });
+            let props = {
+                currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0
+            };
+
+            if (index == this.state.activeSection) props.active = true;
+
+            return React.cloneElement(child, props);
+        });
     }
 
     render() {
@@ -325,4 +347,5 @@ SectionsContainer.childContextTypes = {
     sectionClassName: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
+    currentSection: React.PropTypes.number
 };

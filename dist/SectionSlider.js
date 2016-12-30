@@ -24,15 +24,93 @@ var SectionSlider = function (_React$Component) {
     function SectionSlider(props) {
         _classCallCheck(this, SectionSlider);
 
-        return _possibleConstructorReturn(this, (SectionSlider.__proto__ || Object.getPrototypeOf(SectionSlider)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (SectionSlider.__proto__ || Object.getPrototypeOf(SectionSlider)).call(this, props));
+
+        _this.state = {
+            windowHeight: 1000
+        };
+        return _this;
     }
 
     _createClass(SectionSlider, [{
+        key: 'getChildContext',
+        value: function getChildContext() {
+            return {
+                verticalAlign: this.props.verticalAlign,
+                sectionClassName: this.props.sectionClassName,
+                sectionPaddingTop: this.props.sectionPaddingTop,
+                sectionPaddingBottom: this.props.sectionPaddingBottom,
+                currentSection: this.props.currentSection
+            };
+        }
+    }, {
+        key: 'handleResize',
+        value: function handleResize() {
+            this.setState({
+                windowHeight: window.innerHeight
+            });
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.setState({
+                windowHeight: window.innerHeight
+            });
+            window.addEventListener('resize', function () {
+                return _this2.handleResize();
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            var _this3 = this;
+
+            window.removeEventListener('resize', function () {
+                return _this3.handleResize();
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
+
+            var sectionStyle = {
+                width: '100%',
+                display: alignVertical ? 'table' : 'block',
+                height: this.state.windowHeight,
+                maxHeight: this.state.windowHeight,
+                overflow: 'hidden',
+                backgroundColor: this.props.color,
+                paddingTop: this.context.sectionPaddingTop,
+                paddingBottom: this.context.sectionPaddingBottom,
+                position: 'relative',
+                transform: 'translateY(' + this.state.windowHeight * this.props.currentSection + 'px)',
+                transition: 'all ' + this.props.delay + 'ms ease'
+            };
+
+            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+
             return React.createElement(
                 'div',
-                null,
+                { className: className,
+                    id: this.props.id, style: sectionStyle },
+                alignVertical ? this._renderVerticalAlign() : this.props.children
+            );
+        }
+    }, {
+        key: '_renderVerticalAlign',
+        value: function _renderVerticalAlign() {
+            var verticalAlignStyle = {
+                display: 'table-cell',
+                verticalAlign: 'middle',
+                width: '100%'
+            };
+
+            return React.createElement(
+                'div',
+                { style: verticalAlignStyle },
                 this.props.children
             );
         }
@@ -40,5 +118,21 @@ var SectionSlider = function (_React$Component) {
 
     return SectionSlider;
 }(React.Component);
+
+SectionSlider.contextTypes = {
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string,
+    currentSection: React.PropTypes.number
+};
+
+SectionSlider.childContextTypes = {
+    verticalAlign: React.PropTypes.bool,
+    sectionClassName: React.PropTypes.string,
+    sectionPaddingTop: React.PropTypes.string,
+    sectionPaddingBottom: React.PropTypes.string,
+    currentSection: React.PropTypes.number
+};
 
 exports.default = SectionSlider;
