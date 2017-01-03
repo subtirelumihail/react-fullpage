@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+
 class Section extends React.Component {
     constructor(props) {
         super(props);
@@ -9,7 +10,7 @@ class Section extends React.Component {
         };
     }
 
-    handleResize() {
+    /*handleResize() {
         this.setState({
             windowHeight: window.innerHeight
         });
@@ -24,60 +25,35 @@ class Section extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', () => this.handleResize());
-    }
+    }*/
 
     render() {
         const alignVertical = this.props.verticalAlign || this.context.verticalAlign;
 
         const sectionStyle = {
             width: '100%',
-            display: alignVertical ? 'table' : 'block',
-            height: this.state.windowHeight,
-            maxHeight: this.state.windowHeight,
-            overflow: 'auto',
-            backgroundColor: this.props.color,
-            paddingTop: this.context.sectionPaddingTop,
-            paddingBottom: this.context.sectionPaddingBottom,
+            overflow: 'auto'
         };
 
         let className = this.context.sectionClassName +
-            (this.props.className ? ` ${this.props.className}` : '') +
-            (this.props.active ? ` active` : '');
+            (this.props.className ? ` ${this.props.className}` : '');
 
+        console.log(this.props.children);
         return (
-            <div className={ className }
-                 id={this.props.id} style={sectionStyle}>
-                {alignVertical ? this._renderVerticalAlign() : this.props.children}
-            </div>
-        );
-    }
-
-    _renderVerticalAlign() {
-        const verticalAlignStyle = {
-            display: 'table-cell',
-            verticalAlign: 'middle',
-            width: '100%'
-        };
-
-        return (
-            <div style={verticalAlignStyle}>
-                {this.props.children}
+            <div ref={ wrapper => this.wrapper = wrapper } className={ className } id={this.props.id} style={sectionStyle}>
+                { this.props.children }
             </div>
         );
     }
 }
 
-Section.propTypes = {
+/*Section.propTypes = {
     color: React.PropTypes.string,
     delay: React.PropTypes.number
-};
+};*/
 
 Section.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    currentSection: React.PropTypes.number
+    sectionClassName: React.PropTypes.string
 };
 
 export default Section;

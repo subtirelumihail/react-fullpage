@@ -10,6 +10,8 @@ var _react = require('react');
 
 var React = _interopRequireWildcard(_react);
 
+var _reactDom = require('react-dom');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27,14 +29,6 @@ var SectionsContainer = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
         _this._childrenLength = _this.props.children.length;
-        _this._childrenSliders = {};
-
-        _this.props.children.map(function (child, index) {
-            if (child.type.name === "SectionSlider") _this._childrenSliders[index] = {
-                count: child.props.children.length,
-                current: 0
-            };
-        });
 
         _this.state = {
             activeSection: 0,
@@ -44,9 +38,8 @@ var SectionsContainer = function (_React$Component) {
         };
 
         _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
-        _this._handleAnchor = _this._handleAnchor.bind(_this);
+        //this._handleAnchor = this._handleAnchor.bind(this);
         _this._handleResize = _this._handleResize.bind(_this);
-        _this._handleArrowKeys = _this._handleArrowKeys.bind(_this);
         return _this;
     }
 
@@ -54,49 +47,52 @@ var SectionsContainer = function (_React$Component) {
         key: 'getChildContext',
         value: function getChildContext() {
             return {
-                verticalAlign: this.props.verticalAlign,
-                sectionClassName: this.props.sectionClassName,
-                sectionPaddingTop: this.props.sectionPaddingTop,
-                sectionPaddingBottom: this.props.sectionPaddingBottom,
-                currentSection: this.props.currentSection
+                sectionClassName: this.props.sectionClassName
             };
         }
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
             this._clearResetScrollTimer();
-            this._removeDefaultEventListeners();
+            //this._removeDefaultEventListeners();
             this._removeMouseWheelEventHandlers();
         }
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
+            console.log(this.refs);
+            console.log(this.refs.reduce);
+
             this.setState({
-                windowHeight: window.innerHeight
+                windowHeight: this._calculateWrapperHeight()
             });
+
+            console.log(this);
 
             window.addEventListener('resize', this._handleResize);
 
-            if (!this.props.scrollBar) {
-                this._addCSS3Scroll();
-                this._handleAnchor(); //Go to anchor in case we found it in the URL
-
-                window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
-
-                if (this.props.arrowNavigation) {
-                    window.addEventListener('keydown', this._handleArrowKeys);
-                }
-            }
+            this._addCSS3Scroll();
+            //this._handleAnchor(); //Go to anchor in case we found it in the URL
+            document.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
         }
-    }, {
-        key: '_removeDefaultEventListeners',
-        value: function _removeDefaultEventListeners() {
-            window.removeEventListener('resize', this._handleResize);
-            window.removeEventListener('hashchange', this._handleAnchor);
 
-            if (this.props.arrowNavigation) {
-                window.removeEventListener('keydown', this._handleArrowKeys);
-            }
+        /*_removeDefaultEventListeners() {
+            this.refs.wrapper.removeEventListener('resize', this._handleResize);
+            this.refs.wrapper.removeEventListener('hashchange', this._handleAnchor);
+        }*/
+
+    }, {
+        key: '_calculateWrapperHeight',
+        value: function _calculateWrapperHeight() {
+            var _this2 = this;
+
+            var height = 0;
+
+            Object.keys(this.refs).forEach(function (key) {
+                height += (0, _reactDom.findDOMNode)(_this2.refs[key]).offsetHeight;
+            });
+
+            return height + window.innerHeight - (0, _reactDom.findDOMNode)(this.refs[this._childrenLength - 1]).offsetHeight;
         }
     }, {
         key: '_addCSS3Scroll',
@@ -104,48 +100,22 @@ var SectionsContainer = function (_React$Component) {
             this._addOverflowToBody();
             this._addMouseWheelEventHandlers();
         }
-    }, {
-        key: '_addActiveClass',
-        value: function _addActiveClass() {
+
+        /*_addActiveClass() {
             this._removeActiveClass();
-
-            var hash = window.location.hash.substring(1);
-            var activeLinks = document.querySelectorAll('a[href="#' + hash + '"]');
-
-            for (var i = 0; i < activeLinks.length; i++) {
-                activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + ('' + this.props.activeClass);
+             let hash = window.location.hash.substring(1);
+            let activeLinks = document.querySelectorAll(`a[href="#${hash}"]`);
+             for (let i = 0; i < activeLinks.length; i++) {
+                activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + `${this.props.activeClass}`;
             }
         }
-    }, {
-        key: '_removeActiveClass',
-        value: function _removeActiveClass() {
-            var activeLinks = document.querySelectorAll('a:not([href="#' + this.props.anchors[this.state.activeSection] + '"])');
-
-            for (var i = 0; i < activeLinks.length; i++) {
+         _removeActiveClass() {
+            let activeLinks = document.querySelectorAll(`a:not([href="#${this.props.anchors[this.state.activeSection]}"])`);
+             for (let i = 0; i < activeLinks.length; i++) {
                 activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
             }
-        }
-    }, {
-        key: '_addChildrenWithAnchorId',
-        value: function _addChildrenWithAnchorId() {
-            var _this2 = this;
+        }*/
 
-            var index = 0;
-
-            return React.Children.map(this.props.children, function (child) {
-                var id = _this2.props.anchors[index];
-
-                index++;
-
-                if (id) {
-                    return React.cloneElement(child, {
-                        id: id
-                    });
-                } else {
-                    return child;
-                }
-            });
-        }
     }, {
         key: '_addOverflowToBody',
         value: function _addOverflowToBody() {
@@ -168,66 +138,37 @@ var SectionsContainer = function (_React$Component) {
         value: function _handleMouseWheel(event) {
             var e = window.event || event; // old IE support
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
-            var activeSection = this.state.activeSection - delta;
 
-            if (!this.state.scrollingStarted && this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection)) return false;
+            console.log(delta); // if -1 -> to bottom, +1 -> to top
+
+            var activeSection = this.state.activeSection - delta;
 
             if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
                 return false;
+            } else {
+                event.stopPropagation();
+                this._handleSectionTransition(activeSection, delta > 0);
             }
 
-            this._setAnchor(activeSection);
-            this._handleSectionTransition(activeSection);
-            this._addActiveClass();
-        }
-    }, {
-        key: '_handleSliderTransition',
-        value: function _handleSliderTransition(index) {
-            var scrollTop = index < this.state.activeSection;
-            var currentSlider = this._childrenSliders[this.state.activeSection];
-            if (scrollTop && currentSlider.current > 0) {
-                currentSlider.current -= 1;
+            //this._setAnchor(activeSection);
 
-                this.setState({
-                    scrollingStarted: true
-                });
-                this._resetScroll();
-                this._handleScrollCallback();
-
-                return true;
-            } else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
-                currentSlider.current += 1;
-
-                this.setState({
-                    scrollingStarted: true
-                });
-                this._resetScroll();
-                this._handleScrollCallback();
-
-                return true;
-            } else return false;
+            //this._addActiveClass();
         }
     }, {
         key: '_handleResize',
         value: function _handleResize() {
-            var position = 0 - this.state.activeSection * window.innerHeight;
-
             this.setState({
                 scrollingStarted: true,
-                windowHeight: window.innerHeight,
-                sectionScrolledPosition: position
+                windowHeight: this._calculateWrapperHeight()
             });
 
             this._resetScroll();
         }
     }, {
         key: '_handleSectionTransition',
-        value: function _handleSectionTransition(index) {
-            var position = 0 - index * this.state.windowHeight;
-
-            if (!this.props.anchors.length || index === -1 || index >= this.props.anchors.length) {
-                return false;
-            }
+        value: function _handleSectionTransition(index, topDirection) {
+            var child = (0, _reactDom.findDOMNode)(this.refs[this.state.activeSection]);
+            var position = topDirection ? this.state.sectionScrolledPosition - child.offsetHeight : this.state.sectionScrolledPosition + child.offsetHeight;
 
             this.setState({
                 scrollingStarted: true,
@@ -238,40 +179,28 @@ var SectionsContainer = function (_React$Component) {
             this._resetScroll();
             this._handleScrollCallback();
         }
-    }, {
-        key: '_handleArrowKeys',
-        value: function _handleArrowKeys(e) {
-            var event = window.event ? window.event : e;
-            var activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
 
-            if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
-                return false;
-            }
-
-            this._setAnchor(activeSection);
-            this._handleSectionTransition(activeSection);
-            this._addActiveClass();
-        }
-    }, {
-        key: '_handleAnchor',
-        value: function _handleAnchor() {
-            var hash = window.location.hash.substring(1);
-            var activeSection = this.props.anchors.indexOf(hash);
-
-            if (this.state.activeSection !== activeSection) {
+        /*_handleAnchor() {
+            const hash = window.location.hash.substring(1).split(';');
+            console.log(hash);
+            const subIndex = hash[1];
+            const activeSection = this.props.anchors.indexOf(hash[0]);
+             if (this.state.activeSection !== activeSection) {
                 this._handleSectionTransition(activeSection);
                 this._addActiveClass();
             }
-        }
-    }, {
-        key: '_setAnchor',
-        value: function _setAnchor(index) {
-            var hash = this.props.anchors[index];
-
-            if (!this.props.anchors.length || hash) {
-                window.location.hash = '#' + hash;
+            else if (!!subIndex){
+                this._childrenSliders[ activeSection ].activeSection = parseInt(subIndex);
+                this.setState({});
             }
         }
+         _setAnchor(index, subIndex) {
+            const hash = this.props.anchors[index];
+             if (!this.props.anchors.length || hash) {
+                window.location.hash = !!subIndex ? '#' + hash + ';' + subIndex : '#' + hash;
+            }
+        }*/
+
     }, {
         key: '_handleScrollCallback',
         value: function _handleScrollCallback() {
@@ -303,74 +232,72 @@ var SectionsContainer = function (_React$Component) {
                 clearTimeout(this._resetScrollTimer);
             }
         }
-    }, {
-        key: 'renderNavigation',
-        value: function renderNavigation() {
-            var _this5 = this;
 
-            var navigationStyle = {
+        /*renderNavigation() {
+            let navigationStyle = {
                 position: 'fixed',
                 zIndex: '10',
                 right: '20px',
                 top: '50%',
-                transform: 'translate(-50%, -50%)'
+                transform: 'translate(-50%, -50%)',
             };
-
-            var anchors = this.props.anchors.map(function (link, index) {
-                var anchorStyle = {
+             const anchors = this.props.anchors.map((link, index) => {
+                const anchorStyle = {
                     display: 'block',
                     margin: '10px',
                     borderRadius: '100%',
                     backgroundColor: '#556270',
                     padding: '5px',
                     transition: 'all 0.2s',
-                    transform: _this5.state.activeSection === index ? 'scale(1.3)' : 'none'
+                    transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
                 };
-
-                return React.createElement('a', { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
-                    style: _this5.props.navigationAnchorClass ? null : anchorStyle });
+                 return (
+                    <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
+                       style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
+                );
             });
-
-            return React.createElement(
-                'div',
-                { className: this.props.navigationClass || 'Navigation',
-                    style: this.props.navigationClass ? null : navigationStyle },
-                anchors
+             return (
+                <div className={this.props.navigationClass || 'Navigation'}
+                     style={this.props.navigationClass ? null : navigationStyle}>
+                    {anchors}
+                </div>
             );
         }
-    }, {
-        key: 'getChildrenWithProps',
-        value: function getChildrenWithProps() {
-            var _this6 = this;
-
-            return React.Children.map(this.props.children, function (child, index) {
-                var props = {
-                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0,
-                    delay: _this6.props.delay
+         getChildrenWithProps() {
+            return React.Children.map(this.props.children, (child, index) => {
+                let props = {
+                    currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
+                    subIndex: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
+                    delay: this.props.delay
                 };
-
-                if (index == _this6.state.activeSection) props.active = true;
-
-                return React.cloneElement(child, props);
+                 if (index == this.state.activeSection) props.active = true;
+                 return React.cloneElement(child, props);
             });
-        }
+        }*/
+
     }, {
         key: 'render',
         value: function render() {
+            var _this5 = this;
+
             var containerStyle = {
                 height: '100%',
                 width: '100%',
                 position: 'relative',
-                transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
+                transform: 'translate3d(0px, -' + this.state.sectionScrolledPosition + 'px, 0px)',
                 transition: 'all ' + this.props.delay + 'ms ease'
             };
             return React.createElement(
                 'div',
-                null,
+                { style: { height: this.state.windowHeight + 'px' }, ref: function ref(input) {
+                        return _this5.wrapper = input;
+                    } },
                 React.createElement(
                     'div',
                     { className: this.props.className, style: containerStyle },
-                    this.getChildrenWithProps()
+                    React.Children.map(this.props.children, function (element, idx) {
+                        return React.cloneElement(element, { ref: idx });
+                    })
                 )
             );
         }
@@ -385,38 +312,24 @@ exports.default = SectionsContainer;
 SectionsContainer.defaultProps = {
     scrollCallback: null,
     delay: 1000,
-    verticalAlign: false,
-    scrollBar: false,
-    navigation: true,
     className: 'SectionContainer',
     sectionClassName: 'Section',
     anchors: [],
     activeClass: 'active',
-    sectionPaddingTop: '0',
-    sectionPaddingBottom: '0',
-    arrowNavigation: true
+    slider: false,
+    scrollBar: true
 };
 
 SectionsContainer.propTypes = {
     scrollCallback: React.PropTypes.func,
     delay: React.PropTypes.number,
-    verticalAlign: React.PropTypes.bool,
-    scrollBar: React.PropTypes.bool,
-    navigation: React.PropTypes.bool,
     className: React.PropTypes.string,
     sectionClassName: React.PropTypes.string,
-    navigationClass: React.PropTypes.string,
-    navigationAnchorClass: React.PropTypes.string,
     activeClass: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool
+    slider: React.PropTypes.bool,
+    scrollBar: React.PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    currentSection: React.PropTypes.number
+    sectionClassName: React.PropTypes.string
 };

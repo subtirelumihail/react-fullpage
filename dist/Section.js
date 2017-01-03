@@ -32,71 +32,41 @@ var Section = function (_React$Component) {
         return _this;
     }
 
+    /*handleResize() {
+        this.setState({
+            windowHeight: window.innerHeight
+        });
+    }
+     componentDidMount() {
+        this.setState({
+            windowHeight: window.innerHeight
+        });
+        window.addEventListener('resize', () => this.handleResize());
+    }
+     componentWillUnmount() {
+        window.removeEventListener('resize', () => this.handleResize());
+    }*/
+
     _createClass(Section, [{
-        key: 'handleResize',
-        value: function handleResize() {
-            this.setState({
-                windowHeight: window.innerHeight
-            });
-        }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this2 = this;
-
-            this.setState({
-                windowHeight: window.innerHeight
-            });
-            window.addEventListener('resize', function () {
-                return _this2.handleResize();
-            });
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            var _this3 = this;
-
-            window.removeEventListener('resize', function () {
-                return _this3.handleResize();
-            });
-        }
-    }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
 
             var sectionStyle = {
                 width: '100%',
-                display: alignVertical ? 'table' : 'block',
-                height: this.state.windowHeight,
-                maxHeight: this.state.windowHeight,
-                overflow: 'auto',
-                backgroundColor: this.props.color,
-                paddingTop: this.context.sectionPaddingTop,
-                paddingBottom: this.context.sectionPaddingBottom
+                overflow: 'auto'
             };
 
-            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '');
 
+            console.log(this.props.children);
             return React.createElement(
                 'div',
-                { className: className,
-                    id: this.props.id, style: sectionStyle },
-                alignVertical ? this._renderVerticalAlign() : this.props.children
-            );
-        }
-    }, {
-        key: '_renderVerticalAlign',
-        value: function _renderVerticalAlign() {
-            var verticalAlignStyle = {
-                display: 'table-cell',
-                verticalAlign: 'middle',
-                width: '100%'
-            };
-
-            return React.createElement(
-                'div',
-                { style: verticalAlignStyle },
+                { ref: function ref(wrapper) {
+                        return _this2.wrapper = wrapper;
+                    }, className: className, id: this.props.id, style: sectionStyle },
                 this.props.children
             );
         }
@@ -105,17 +75,13 @@ var Section = function (_React$Component) {
     return Section;
 }(React.Component);
 
-Section.propTypes = {
+/*Section.propTypes = {
     color: React.PropTypes.string,
     delay: React.PropTypes.number
-};
+};*/
 
 Section.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    currentSection: React.PropTypes.number
+    sectionClassName: React.PropTypes.string
 };
 
 exports.default = Section;
