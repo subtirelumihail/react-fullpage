@@ -170,7 +170,7 @@ var SectionsContainer = function (_React$Component) {
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             var activeSection = this.state.activeSection - delta;
 
-            if (this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection)) return false;
+            if (!this.state.scrollingStarted && this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection)) return false;
 
             if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
                 return false;
@@ -192,6 +192,7 @@ var SectionsContainer = function (_React$Component) {
                     scrollingStarted: true
                 });
                 this._resetScroll();
+                this._handleScrollCallback();
 
                 return true;
             } else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
@@ -201,6 +202,7 @@ var SectionsContainer = function (_React$Component) {
                     scrollingStarted: true
                 });
                 this._resetScroll();
+                this._handleScrollCallback();
 
                 return true;
             } else return false;

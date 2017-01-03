@@ -79,8 +79,8 @@ var SectionSlider = function (_React$Component) {
             var sectionStyle = {
                 width: '100%',
                 display: alignVertical ? 'table' : 'block',
-                height: this.state.windowHeight * this.props.children.length,
-                maxHeight: this.state.windowHeight * this.props.children.length,
+                height: this.state.windowHeight,
+                maxHeight: this.state.windowHeight,
                 backgroundColor: this.props.color,
                 paddingTop: this.context.sectionPaddingTop,
                 paddingBottom: this.context.sectionPaddingBottom,

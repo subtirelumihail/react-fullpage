@@ -137,7 +137,7 @@ export default class SectionsContainer extends React.Component {
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         const activeSection = this.state.activeSection - delta;
 
-        if(this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection))
+        if(!this.state.scrollingStarted && this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection))
             return false;
 
         if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
@@ -159,6 +159,7 @@ export default class SectionsContainer extends React.Component {
                 scrollingStarted: true
             });
             this._resetScroll();
+            this._handleScrollCallback();
 
             return true;
         }
@@ -169,6 +170,7 @@ export default class SectionsContainer extends React.Component {
                 scrollingStarted: true
             });
             this._resetScroll();
+            this._handleScrollCallback();
 
             return true;
         }
