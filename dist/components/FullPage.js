@@ -59,8 +59,6 @@ var _class = function (_React$Component) {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
             if (nextProps.currentSection !== this.props.currentSection) {
-                console.log(this.props.currentSection);
-                console.log(nextProps.currentSection);
                 this.setState({
                     offset: this._calculateOffset(nextProps.currentSection)
                 });
@@ -172,7 +170,8 @@ var _class = function (_React$Component) {
                 { className: this.props.className, style: containerStyle },
                 _react2.default.Children.map(this.props.children, function (child, id) {
                     return _react2.default.cloneElement(child, {
-                        ref: id
+                        ref: id,
+                        index: id
                     });
                 })
             );

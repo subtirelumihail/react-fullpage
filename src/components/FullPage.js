@@ -131,7 +131,8 @@ export default class extends React.Component {
             <div className={ this.props.className } style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
                     return React.cloneElement(child, {
-                        ref: id
+                        ref: id,
+                        index: id,
                     });
                 })}
             </div>

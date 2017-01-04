@@ -7,8 +7,12 @@ export default class extends React.Component {
     }
 
     render() {
+        let className = this.props.index == this.props.currentSection ?
+            `${this.props.sectionClassName} ${this.props.activeClass}` :
+               this.props.sectionClassName;
+
         return (
-            <div>
+            <div className={ className }>
                 { this.props.children }
             </div>
         )
