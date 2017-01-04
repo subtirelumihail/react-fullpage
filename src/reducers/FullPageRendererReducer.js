@@ -2,7 +2,7 @@
  * Created by yura on 04.01.17.
  */
 
-import { SCROLL_START, SCROLL_STOP } from '../actions/ActionTypes';
+import { SCROLL_START, SCROLL_STOP, JUMP_START } from '../actions/ActionTypes';
 
 
 const defaultOptions = {
@@ -47,6 +47,13 @@ export default function( options ) {
                         lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
                     };
                 }
+
+            case JUMP_START:
+                return {
+                    ...state,
+                    currentSection: action.section,
+                    currentSlide: action.slide
+                };
 
             case SCROLL_STOP:
                 return { ...state, scrolling: false };

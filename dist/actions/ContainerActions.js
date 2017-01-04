@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.startScroll = startScroll;
 exports.scrollStop = scrollStop;
+exports.startJump = startJump;
 exports.moveTo = moveTo;
+exports.jumpTo = jumpTo;
 
 var _ActionTypes = require('./ActionTypes');
 
@@ -25,9 +27,27 @@ function scrollStop() {
     };
 }
 
+function startJump(section, slide) {
+    return {
+        type: _ActionTypes.JUMP_START,
+        section: section,
+        slide: slide
+    };
+}
+
 function moveTo(direction, isSlide) {
     return function (dispatch) {
         dispatch(startScroll(direction, isSlide));
+
+        setTimeout(function () {
+            return dispatch(scrollStop());
+        }, 1000);
+    };
+}
+
+function jumpTo(section, slide) {
+    return function (dispatch) {
+        dispatch(startJump(section, slide));
 
         setTimeout(function () {
             return dispatch(scrollStop());

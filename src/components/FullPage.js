@@ -4,8 +4,6 @@
 
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import { Provider } from 'react-redux';
-import StoreCreator from '../stores/MainStore';
 
 
 export default class extends React.Component {
@@ -20,6 +18,7 @@ export default class extends React.Component {
 
         this._handleResize = this._handleResize.bind(this);
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
+        this._handleAnchor = this._handleAnchor.bind(this);
     }
 
     componentDidMount() {
@@ -28,6 +27,7 @@ export default class extends React.Component {
         });
 
         this.bindEvents();
+        this._handleAnchor();
 
         document.querySelector('body').style.overflow = 'hidden';
     }
@@ -37,6 +37,8 @@ export default class extends React.Component {
             this.setState({
                 offset: this._calculateOffset( nextProps.currentSection )
             });
+
+            this._setAnchor(nextProps.currentSection, nextProps.currentSlide);
         }
     }
 
@@ -47,11 +49,13 @@ export default class extends React.Component {
     bindEvents() {
         window.addEventListener('resize', this._handleResize);
         window.addEventListener('mousewheel', this._handleMouseWheel, false);
+        window.addEventListener('hashchange', this._handleAnchor, false);
     }
 
     unbindEvents() {
         window.removeEventListener('resize', this._handleMouseWheel);
         window.removeEventListener('mousewheel', this._handleMouseWheel);
+        window.removeEventListener('hashchange', this._handleAnchor);
     }
 
     /*
@@ -88,6 +92,14 @@ export default class extends React.Component {
         return offset;
     }
 
+    _setAnchor( section, slide ) {
+        let anchor = this.props.anchors[section];
+
+        if (Array.isArray(anchor)) anchor = anchor[ slide ];
+
+        window.location.hash = anchor;
+    }
+
     /*
     * Handlers
     * */
@@ -116,6 +128,29 @@ export default class extends React.Component {
                 return false;
             }
         }
+    }
+
+    _handleAnchor() {
+        const hash = window.location.hash.substring(1);
+
+        let cords = this._findAnchorCords( hash );
+
+        if ( cords ) return this.props.actions.jumpTo( cords[0], cords[1] );
+    }
+
+    // Black magic! (really black, need refactoring)
+    _findAnchorCords( anchor ) {
+        let anchors = this.props.anchors;
+
+        for(let i = 0; i < anchors.length; i ++) {
+            if (Array.isArray(anchors[i])) {
+                for(let j = 0; j < anchors[i].length; j ++)
+                    if (anchors[i][j] == anchor) return [i, j];
+            }
+            else if( anchors[i] == anchor ) return [i, 0];
+        }
+
+        return false;
     }
 
     render () {

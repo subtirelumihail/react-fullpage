@@ -38,6 +38,12 @@ exports.default = function (options) {
                     });
                 }
 
+            case _ActionTypes.JUMP_START:
+                return _extends({}, state, {
+                    currentSection: action.section,
+                    currentSlide: action.slide
+                });
+
             case _ActionTypes.SCROLL_STOP:
                 return _extends({}, state, { scrolling: false });
 

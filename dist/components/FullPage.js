@@ -12,12 +12,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
-var _reactRedux = require('react-redux');
-
-var _MainStore = require('../stores/MainStore');
-
-var _MainStore2 = _interopRequireDefault(_MainStore);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -41,6 +35,7 @@ var _class = function (_React$Component) {
 
         _this._handleResize = _this._handleResize.bind(_this);
         _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
+        _this._handleAnchor = _this._handleAnchor.bind(_this);
         return _this;
     }
 
@@ -52,6 +47,7 @@ var _class = function (_React$Component) {
             });
 
             this.bindEvents();
+            this._handleAnchor();
 
             document.querySelector('body').style.overflow = 'hidden';
         }
@@ -62,6 +58,8 @@ var _class = function (_React$Component) {
                 this.setState({
                     offset: this._calculateOffset(nextProps.currentSection)
                 });
+
+                this._setAnchor(nextProps.currentSection, nextProps.currentSlide);
             }
         }
     }, {
@@ -74,12 +72,14 @@ var _class = function (_React$Component) {
         value: function bindEvents() {
             window.addEventListener('resize', this._handleResize);
             window.addEventListener('mousewheel', this._handleMouseWheel, false);
+            window.addEventListener('hashchange', this._handleAnchor, false);
         }
     }, {
         key: 'unbindEvents',
         value: function unbindEvents() {
             window.removeEventListener('resize', this._handleMouseWheel);
             window.removeEventListener('mousewheel', this._handleMouseWheel);
+            window.removeEventListener('hashchange', this._handleAnchor);
         }
 
         /*
@@ -122,6 +122,15 @@ var _class = function (_React$Component) {
 
             return offset;
         }
+    }, {
+        key: '_setAnchor',
+        value: function _setAnchor(section, slide) {
+            var anchor = this.props.anchors[section];
+
+            if (Array.isArray(anchor)) anchor = anchor[slide];
+
+            window.location.hash = anchor;
+        }
 
         /*
         * Handlers
@@ -153,6 +162,33 @@ var _class = function (_React$Component) {
                     return false;
                 }
             }
+        }
+    }, {
+        key: '_handleAnchor',
+        value: function _handleAnchor() {
+            var hash = window.location.hash.substring(1);
+
+            var cords = this._findAnchorCords(hash);
+
+            if (cords) return this.props.actions.jumpTo(cords[0], cords[1]);
+        }
+
+        // Black magic! (really black, need refactoring)
+
+    }, {
+        key: '_findAnchorCords',
+        value: function _findAnchorCords(anchor) {
+            var anchors = this.props.anchors;
+
+            for (var i = 0; i < anchors.length; i++) {
+                if (Array.isArray(anchors[i])) {
+                    for (var j = 0; j < anchors[i].length; j++) {
+                        if (anchors[i][j] == anchor) return [i, j];
+                    }
+                } else if (anchors[i] == anchor) return [i, 0];
+            }
+
+            return false;
         }
     }, {
         key: 'render',
