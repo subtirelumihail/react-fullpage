@@ -1,5 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -8,9 +12,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = require('react-redux');
 
-var _FullPageRendererReducer = require('../reducers/FullPageRendererReducer');
+var _MainStore = require('../stores/MainStore');
 
-var _FullPageRendererReducer2 = _interopRequireDefault(_FullPageRendererReducer);
+var _MainStore2 = _interopRequireDefault(_MainStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,30 +26,36 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Created by yura on 04.01.17.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
-var FullPageRenderer = function (_React$Component) {
-    _inherits(FullPageRenderer, _React$Component);
+var _class = function (_React$Component) {
+    _inherits(_class, _React$Component);
 
-    function FullPageRenderer(props) {
-        _classCallCheck(this, FullPageRenderer);
+    function _class(props) {
+        _classCallCheck(this, _class);
 
-        var _this = _possibleConstructorReturn(this, (FullPageRenderer.__proto__ || Object.getPrototypeOf(FullPageRenderer)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
         _this.state = {
-            store: (0, _FullPageRendererReducer2.default)(_this.props.options)
+            store: (0, _MainStore2.default)(_this.props.options)
         };
         return _this;
     }
 
-    _createClass(FullPageRenderer, [{
+    _createClass(_class, [{
         key: 'render',
         value: function render() {
-            _react2.default.createElement(
+            return _react2.default.createElement(
                 _reactRedux.Provider,
                 { store: this.state.store },
-                this.props.children
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    this.props.children
+                )
             );
         }
     }]);
 
-    return FullPageRenderer;
+    return _class;
 }(_react2.default.Component);
+
+exports.default = _class;

@@ -8,13 +8,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                                                                                                                                                                                                                                                                    * Created by yura on 04.01.17.
                                                                                                                                                                                                                                                                    */
 
-// Reducer creator. We can make some actions with state
-
-
 exports.default = function (options) {
 
+    var initialState = _extends({}, defaultOptions, options);
+    // need to parse anchor here
+
     return function () {
-        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : options;
+        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
         var action = arguments[1];
 
         switch (action.type) {
@@ -30,4 +30,14 @@ exports.default = function (options) {
 
 var _ActionTypes = require('../actions/ActionTypes');
 
+var defaultOptions = {
+    delay: 1000,
+    className: 'SectionContainer',
+    sectionClassName: 'Section',
+    anchors: [],
+    activeClass: 'active',
+    activatedClass: 'activated'
+};
+
+// Reducer creator. We can make some actions with state
 ;

@@ -4,21 +4,25 @@
 
 import React from 'react';
 import { Provider } from 'react-redux';
-import ReducerCreator from '../reducers/FullPageRendererReducer';
+import StoreCreator from '../stores/MainStore';
 
 
-class FullPageRenderer extends React.Component {
+export default class extends React.Component {
     constructor( props ) {
         super( props );
 
         this.state = {
-            store: ReducerCreator( this.props.options )
+            store: StoreCreator( this.props.options )
         }
     }
 
     render () {
-        <Provider store={ this.state.store }>
-            { this.props.children }
-        </Provider>
+        return (
+            <Provider store={ this.state.store }>
+                <div>
+                    { this.props.children }
+                </div>
+            </Provider>
+        )
     }
 }
