@@ -23,17 +23,29 @@ export default function( options ) {
         ...options,
         scrolling: false,
         currentSection: 0,
-        currentSlide: 0
+        currentSlide: 0,
+        lastActivated: 0,
     };
 
     return function(state = initialState, action) {
         switch( action.type ) {
             case SCROLL_START:
                 if ( action.isSlide ) {
-                    return { ...state, currentSlide: state.currentSlide - action.direction, scrolling: true };
+                    return {
+                        ...state,
+                        currentSlide: state.currentSlide - action.direction,
+                        scrolling: true
+                    };
                 }
                 else {
-                    return { ...state, currentSection: state.currentSection - action.direction, scrolling: true }
+                    let nextSection = state.currentSection - action.direction;
+
+                    return {
+                        ...state,
+                        currentSection: nextSection,
+                        scrolling: true,
+                        lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
+                    };
                 }
 
             case SCROLL_STOP:

@@ -30,7 +30,10 @@ var _class = function (_React$Component) {
     _createClass(_class, [{
         key: 'render',
         value: function render() {
-            var className = this.props.index == this.props.currentSection ? this.props.sectionClassName + ' ' + this.props.activeClass : this.props.sectionClassName;
+            var className = this.props.sectionClassName;
+
+            if (this.props.index == this.props.currentSection) className += ' ' + this.props.activeClass;
+            if (this.props.index <= this.props.lastActivated) className += ' ' + this.props.activatedClass;
 
             return React.createElement(
                 'div',

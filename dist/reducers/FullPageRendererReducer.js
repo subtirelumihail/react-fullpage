@@ -13,7 +13,8 @@ exports.default = function (options) {
     var initialState = _extends({}, defaultOptions, options, {
         scrolling: false,
         currentSection: 0,
-        currentSlide: 0
+        currentSlide: 0,
+        lastActivated: 0
     });
 
     return function () {
@@ -23,9 +24,18 @@ exports.default = function (options) {
         switch (action.type) {
             case _ActionTypes.SCROLL_START:
                 if (action.isSlide) {
-                    return _extends({}, state, { currentSlide: state.currentSlide - action.direction, scrolling: true });
+                    return _extends({}, state, {
+                        currentSlide: state.currentSlide - action.direction,
+                        scrolling: true
+                    });
                 } else {
-                    return _extends({}, state, { currentSection: state.currentSection - action.direction, scrolling: true });
+                    var nextSection = state.currentSection - action.direction;
+
+                    return _extends({}, state, {
+                        currentSection: nextSection,
+                        scrolling: true,
+                        lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
+                    });
                 }
 
             case _ActionTypes.SCROLL_STOP:

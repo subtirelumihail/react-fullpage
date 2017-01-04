@@ -7,9 +7,10 @@ export default class extends React.Component {
     }
 
     render() {
-        let className = this.props.index == this.props.currentSection ?
-            `${this.props.sectionClassName} ${this.props.activeClass}` :
-               this.props.sectionClassName;
+        let className = this.props.sectionClassName;
+
+        if ( this.props.index == this.props.currentSection ) className += ` ${ this.props.activeClass }`;
+        if ( this.props.index <= this.props.lastActivated ) className += ` ${ this.props.activatedClass }`;
 
         return (
             <div className={ className }>
