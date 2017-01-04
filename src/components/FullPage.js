@@ -23,7 +23,6 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.refs);
         this.setState({
             wrapperHeight: `${ this._calculateHeight() }px`
         });
@@ -31,6 +30,14 @@ export default class extends React.Component {
         this.bindEvents();
 
         document.querySelector('body').style.overflow = 'hidden';
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if( nextProps.currentSection !== this.props.currentSection ) {
+            this.setState({
+                offset: this._calculateOffset( nextProps.currentSection )
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -71,6 +78,16 @@ export default class extends React.Component {
                direction < 0 && this.props.currentSection < this.props.anchors.length - 1
     }
 
+    _calculateOffset( currentSection ) {
+        let offset = 0;
+
+        for(let i = 0; i < currentSection; i ++) {
+            offset += findDOMNode( this.refs[i] ).offsetHeight;
+        }
+
+        return offset;
+    }
+
     /*
     * Handlers
     * */
@@ -85,9 +102,7 @@ export default class extends React.Component {
             return false;
         }
 
-        console.log('trytoscroll');
-
-        const e = window.event || event; // old IE support
+        const e = window.event || event;
         const direction = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
         if (this._isSlideAction()) {
@@ -104,8 +119,16 @@ export default class extends React.Component {
     }
 
     render () {
+        let containerStyle = {
+            height: this.state.wrapperHeight,
+            width: '100%',
+            position: 'relative',
+            transform: `translate3d(0px, -${this.state.offset}px, 0px)`,
+            transition: `all ${this.props.delay}ms ease`,
+        };
+
         return (
-            <div style={{ height: this.state.wrapperHeight }}>
+            <div className={ this.props.className } style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
                     return React.cloneElement(child, {
                         ref: id

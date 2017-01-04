@@ -47,7 +47,6 @@ var _class = function (_React$Component) {
     _createClass(_class, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.refs);
             this.setState({
                 wrapperHeight: this._calculateHeight() + 'px'
             });
@@ -55,6 +54,17 @@ var _class = function (_React$Component) {
             this.bindEvents();
 
             document.querySelector('body').style.overflow = 'hidden';
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            if (nextProps.currentSection !== this.props.currentSection) {
+                console.log(this.props.currentSection);
+                console.log(nextProps.currentSection);
+                this.setState({
+                    offset: this._calculateOffset(nextProps.currentSection)
+                });
+            }
         }
     }, {
         key: 'componentWillUnmount',
@@ -103,6 +113,17 @@ var _class = function (_React$Component) {
         value: function _canScroll(direction) {
             return direction > 0 && this.props.currentSection > 0 || direction < 0 && this.props.currentSection < this.props.anchors.length - 1;
         }
+    }, {
+        key: '_calculateOffset',
+        value: function _calculateOffset(currentSection) {
+            var offset = 0;
+
+            for (var i = 0; i < currentSection; i++) {
+                offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
+            }
+
+            return offset;
+        }
 
         /*
         * Handlers
@@ -122,9 +143,7 @@ var _class = function (_React$Component) {
                 return false;
             }
 
-            console.log('trytoscroll');
-
-            var e = window.event || event; // old IE support
+            var e = window.event || event;
             var direction = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
 
             if (this._isSlideAction()) {
@@ -140,9 +159,17 @@ var _class = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
+            var containerStyle = {
+                height: this.state.wrapperHeight,
+                width: '100%',
+                position: 'relative',
+                transform: 'translate3d(0px, -' + this.state.offset + 'px, 0px)',
+                transition: 'all ' + this.props.delay + 'ms ease'
+            };
+
             return _react2.default.createElement(
                 'div',
-                { style: { height: this.state.wrapperHeight } },
+                { className: this.props.className, style: containerStyle },
                 _react2.default.Children.map(this.props.children, function (child, id) {
                     return _react2.default.cloneElement(child, {
                         ref: id
