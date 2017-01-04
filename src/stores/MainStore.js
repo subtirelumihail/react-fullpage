@@ -3,9 +3,13 @@
  */
 
 import reducerCreator from '../reducers/FullPageRendererReducer';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
 
 
 export default function ( options ) {
-    return createStore( reducerCreator( options ) )
+    return createStore(
+        reducerCreator( options ),
+        applyMiddleware(ReduxThunk)
+    )
 }

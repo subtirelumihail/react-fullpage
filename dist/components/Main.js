@@ -16,6 +16,10 @@ var _MainStore = require('../stores/MainStore');
 
 var _MainStore2 = _interopRequireDefault(_MainStore);
 
+var _FullPageContainer = require('../containers/FullPageContainer');
+
+var _FullPageContainer2 = _interopRequireDefault(_FullPageContainer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32,12 +36,7 @@ var _class = function (_React$Component) {
     function _class(props) {
         _classCallCheck(this, _class);
 
-        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
-
-        _this.state = {
-            store: (0, _MainStore2.default)(_this.props.options)
-        };
-        return _this;
+        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
     }
 
     _createClass(_class, [{
@@ -45,9 +44,9 @@ var _class = function (_React$Component) {
         value: function render() {
             return _react2.default.createElement(
                 _reactRedux.Provider,
-                { store: this.state.store },
+                { store: (0, _MainStore2.default)(this.props.options) },
                 _react2.default.createElement(
-                    'div',
+                    _FullPageContainer2.default,
                     null,
                     this.props.children
                 )

@@ -7,4 +7,5 @@ Object.defineProperty(exports, "__esModule", {
  * Created by yura on 04.01.17.
  */
 
-var SCROLL = exports.SCROLL = 'SCROLL';
+var SCROLL_START = exports.SCROLL_START = 'SCROLL_START';
+var SCROLL_STOP = exports.SCROLL_STOP = 'SCROLL_STOP';

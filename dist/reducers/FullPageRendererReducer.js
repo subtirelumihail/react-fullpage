@@ -10,17 +10,26 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = function (options) {
 
-    var initialState = _extends({}, defaultOptions, options);
-    // need to parse anchor here
+    var initialState = _extends({}, defaultOptions, options, {
+        scrolling: false,
+        currentSection: 0,
+        currentSlide: 0
+    });
 
     return function () {
         var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
         var action = arguments[1];
 
         switch (action.type) {
-            case _ActionTypes.SCROLL:
+            case _ActionTypes.SCROLL_START:
+                if (action.isSlide) {
+                    return _extends({}, state, { currentSlide: state.currentSlide - action.direction, scrolling: true });
+                } else {
+                    return _extends({}, state, { currentSection: state.currentSection - action.direction, scrolling: true });
+                }
 
-                return _extends({}, state);
+            case _ActionTypes.SCROLL_STOP:
+                return _extends({}, state, { scrolling: false });
 
             default:
                 return state;

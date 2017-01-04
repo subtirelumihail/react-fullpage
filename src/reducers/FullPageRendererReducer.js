@@ -2,7 +2,7 @@
  * Created by yura on 04.01.17.
  */
 
-import { SCROLL } from '../actions/ActionTypes';
+import { SCROLL_START, SCROLL_STOP } from '../actions/ActionTypes';
 
 
 const defaultOptions = {
@@ -18,14 +18,26 @@ const defaultOptions = {
 // Reducer creator. We can make some actions with state
 export default function( options ) {
 
-    const initialState = {...defaultOptions, ...options};
-    // need to parse anchor here
+    const initialState = {
+        ...defaultOptions,
+        ...options,
+        scrolling: false,
+        currentSection: 0,
+        currentSlide: 0
+    };
 
     return function(state = initialState, action) {
         switch( action.type ) {
-            case SCROLL:
+            case SCROLL_START:
+                if ( action.isSlide ) {
+                    return { ...state, currentSlide: state.currentSlide - action.direction, scrolling: true };
+                }
+                else {
+                    return { ...state, currentSection: state.currentSection - action.direction, scrolling: true }
+                }
 
-                return { ...state };
+            case SCROLL_STOP:
+                return { ...state, scrolling: false };
 
             default: return state;
         }
