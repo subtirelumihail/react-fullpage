@@ -6,7 +6,7 @@ class Section extends React.Component {
         super(props);
 
         this.state = {
-            windowHeight: 1000
+            //windowHeight: 1000
         };
     }
 

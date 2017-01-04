@@ -61,7 +61,7 @@ export default class SectionsContainer extends React.Component {
         let height = 0;
 
         Object.keys( this.refs ).forEach( ( key ) => {
-            height += findDOMNode( this.refs[key] ).offsetHeight
+            height += findDOMNode( this.refs[key] ).offsetHeight;
         });
 
         return height + window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
