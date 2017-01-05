@@ -41,7 +41,8 @@ exports.default = function (options) {
             case _ActionTypes.JUMP_START:
                 return _extends({}, state, {
                     currentSection: action.section,
-                    currentSlide: action.slide
+                    currentSlide: action.slide,
+                    lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
                 });
 
             case _ActionTypes.SCROLL_STOP:

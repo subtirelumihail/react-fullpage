@@ -52,7 +52,8 @@ export default function( options ) {
                 return {
                     ...state,
                     currentSection: action.section,
-                    currentSlide: action.slide
+                    currentSlide: action.slide,
+                    lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
                 };
 
             case SCROLL_STOP:
