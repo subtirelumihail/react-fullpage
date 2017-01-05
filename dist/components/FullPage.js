@@ -140,7 +140,8 @@ var _class = function (_React$Component) {
         key: '_handleResize',
         value: function _handleResize() {
             this.setState({
-                wrapperHeight: this._calculateHeight()
+                wrapperHeight: this._calculateHeight(),
+                offset: this._calculateOffset(this.props.currentSection)
             });
         }
     }, {

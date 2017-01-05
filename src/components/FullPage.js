@@ -105,7 +105,8 @@ export default class extends React.Component {
     * */
     _handleResize() {
         this.setState({
-            wrapperHeight: this._calculateHeight()
+            wrapperHeight: this._calculateHeight(),
+            offset: this._calculateOffset( this.props.currentSection )
         });
     }
 
