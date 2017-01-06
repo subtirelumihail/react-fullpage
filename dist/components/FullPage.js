@@ -97,7 +97,10 @@ var _class = function (_React$Component) {
                 height += (0, _reactDom.findDOMNode)(_this2.refs[key]).offsetHeight;
             });
 
-            return height; //+ window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
+            // If we want to reserve for last block (need to add flag)
+            //return height + window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
+
+            return height;
         }
     }, {
         key: '_isSlideAction',
@@ -120,11 +123,8 @@ var _class = function (_React$Component) {
                 offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
             }
 
-            console.log(offset);
-            console.log(this.state);
-            console.log(window.innerHeight);
             if (offset > this.state.wrapperHeight - window.innerHeight) offset = this.state.wrapperHeight - window.innerHeight;
-            console.log(offset);
+
             return offset;
         }
     }, {
