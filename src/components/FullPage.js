@@ -22,9 +22,9 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({
-            wrapperHeight: `${ this._calculateHeight() }px`
-        });
+
+        console.log('calculate wrapper height');
+        this.state.wrapperHeight = this._calculateHeight();
 
         this.bindEvents();
         this._handleAnchor();
@@ -35,7 +35,7 @@ export default class extends React.Component {
     componentWillReceiveProps(nextProps) {
         if( nextProps.currentSection !== this.props.currentSection ) {
             this.setState({
-                offset: this._calculateOffset( nextProps.currentSection )
+                offset: this._calculateOffset(nextProps.currentSection)
             });
 
             this._setAnchor(nextProps.currentSection, nextProps.currentSlide);
@@ -68,7 +68,10 @@ export default class extends React.Component {
             height += findDOMNode( this.refs[key] ).offsetHeight;
         });
 
-        return height + window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
+        // If we want to reserve for last block (need to add flag)
+        //return height + window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
+
+        return height;
     }
 
     _isSlideAction() {
@@ -88,6 +91,9 @@ export default class extends React.Component {
         for(let i = 0; i < currentSection; i ++) {
             offset += findDOMNode( this.refs[i] ).offsetHeight;
         }
+
+        if (offset > this.state.wrapperHeight - window.innerHeight)
+            offset = this.state.wrapperHeight - window.innerHeight;
 
         return offset;
     }

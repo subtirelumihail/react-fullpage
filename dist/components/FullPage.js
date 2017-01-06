@@ -42,9 +42,9 @@ var _class = function (_React$Component) {
     _createClass(_class, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            this.setState({
-                wrapperHeight: this._calculateHeight() + 'px'
-            });
+
+            console.log('calculate wrapper height');
+            this.state.wrapperHeight = this._calculateHeight();
 
             this.bindEvents();
             this._handleAnchor();
@@ -97,7 +97,7 @@ var _class = function (_React$Component) {
                 height += (0, _reactDom.findDOMNode)(_this2.refs[key]).offsetHeight;
             });
 
-            return height + window.innerHeight - (0, _reactDom.findDOMNode)(this.refs[this._childrenLength - 1]).offsetHeight;
+            return height; //+ window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
         }
     }, {
         key: '_isSlideAction',
@@ -120,6 +120,11 @@ var _class = function (_React$Component) {
                 offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
             }
 
+            console.log(offset);
+            console.log(this.state);
+            console.log(window.innerHeight);
+            if (offset > this.state.wrapperHeight - window.innerHeight) offset = this.state.wrapperHeight - window.innerHeight;
+            console.log(offset);
             return offset;
         }
     }, {
