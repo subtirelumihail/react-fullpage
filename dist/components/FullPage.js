@@ -203,7 +203,7 @@ var _class = function (_React$Component) {
                 height: this.state.wrapperHeight,
                 width: '100%',
                 position: 'relative',
-                transform: 'translate3d(0px, -' + this.state.offset + 'px, 0px)',
+                top: this.state.offset,
                 transition: 'all ' + this.props.delay + 'ms ease'
             };
 
