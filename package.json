@@ -1,6 +1,6 @@
 {
   "name": "react-fullpage",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "React full-page renderer with sliders and SSR",
   "main": "index.js",
   "scripts": {
