@@ -181,7 +181,7 @@ export default class extends React.Component {
                     if(typeof child.type == 'function') {
                         return React.cloneElement(child, {
                             ref: id - ignoredCount,
-                            index: id,
+                            index: id - ignoredCount,
                         });
                     }
                     else {

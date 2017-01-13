@@ -223,7 +223,7 @@ var _class = function (_React$Component) {
                     if (typeof child.type == 'function') {
                         return _react2.default.cloneElement(child, {
                             ref: id - ignoredCount,
-                            index: id
+                            index: id - ignoredCount
                         });
                     } else {
                         ignoredCount += 1;
