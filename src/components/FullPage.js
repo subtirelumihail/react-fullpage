@@ -7,13 +7,16 @@ import {findDOMNode} from 'react-dom';
 
 
 export default class extends React.Component {
-    _childrenLength;
+    _childrenLength = 0;
 
     constructor(props) {
         super(props);
 
+        React.Children.map(this.props.children, (child) => {
+            if(typeof child.type == 'function')
+                this._childrenLength += 1;
+        });
 
-        this._childrenLength = this.props.children.length;
         this.state = {};
 
         this._handleResize = this._handleResize.bind(this);

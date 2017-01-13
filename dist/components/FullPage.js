@@ -30,7 +30,13 @@ var _class = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
-        _this._childrenLength = _this.props.children.length;
+        _this._childrenLength = 0;
+
+
+        _react2.default.Children.map(_this.props.children, function (child) {
+            if (typeof child.type == 'function') _this._childrenLength += 1;
+        });
+
         _this.state = {};
 
         _this._handleResize = _this._handleResize.bind(_this);
