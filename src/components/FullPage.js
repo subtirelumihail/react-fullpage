@@ -19,6 +19,7 @@ export default class extends React.Component {
         this._handleResize = this._handleResize.bind(this);
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
         this._handleAnchor = this._handleAnchor.bind(this);
+        this._generateKeyFrames = this._generateKeyFrames.bind(this);
     }
 
     componentDidMount() {
@@ -30,6 +31,8 @@ export default class extends React.Component {
         this._handleAnchor();
 
         document.querySelector('body').style.overflow = 'hidden';
+
+        if( this.props.horizontalScroll ) this._generateKeyFrames();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -106,6 +109,27 @@ export default class extends React.Component {
         window.location.hash = anchor;
     }
 
+    _generateKeyFrames( currentSection, direction ) {
+        const hsVars = this.props.horizontalScrollVariables;
+
+        let keyframes = `@-webkit-keyframes rifpskf {
+              0%{
+                -webkit-transform: translateX(${hsVars.translateX * (currentSection - direction )}vw);
+                -webkit-transform: rotate (0deg);
+                -webkit-transform: scale (0);
+              }
+              50% {
+                -webkit-transform: rotate (${ hsVars.rotate }deg);
+                -webkit-transform: scale (${ hsVars.scale });
+              }
+              100%{
+                -webkit-transform: translateX(${hsVars.translateX * currentSection}vw);
+                -webkit-transform: rotate (0deg);
+                -webkit-transform: scale (0);
+              }
+            }`;
+    }
+
     /*
     * Handlers
     * */
@@ -161,13 +185,24 @@ export default class extends React.Component {
     }
 
     render () {
-        let containerStyle = {
-            height: this.state.wrapperHeight,
-            width: '100%',
-            position: 'relative',
-            top: `-${this.state.offset}px`,
-            transition: `all ${this.props.delay}ms ease`,
-        };
+        if( this.props.horizontalScroll ) {
+            let containerStyle = {
+                'left': `-${ this.state.offset }wv`,
+                'animation': 'rifpskf',
+                'animation-delay': '5s',
+                'animation-duration': '12s',
+                'animation-timing-function': 'ease-in-out'
+            };
+        }
+        else {
+            let containerStyle = {
+                height: this.state.wrapperHeight,
+                width: '100%',
+                position: 'relative',
+                top: `-${this.state.offset}px`,
+                transition: `all ${this.props.delay}ms ease`,
+            };
+        }
 
         return (
             <div className={ this.props.className } style={ containerStyle }>

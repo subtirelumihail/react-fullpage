@@ -11,7 +11,15 @@ const defaultOptions = {
     sectionClassName: 'Section',
     anchors: [],
     activeClass: 'active',
-    activatedClass: 'activated'
+    activatedClass: 'activated',
+
+    horizontalScroll: false,
+    backgroundClass: 'background',
+    horizontalScrollVariables: {
+        translateX: 5,
+        scale: 1.3,
+        rotate: 5
+    }
 };
 
 
