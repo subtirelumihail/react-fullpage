@@ -3,14 +3,14 @@
  */
 
 import React from 'react';
-import { findDOMNode } from 'react-dom';
+import {findDOMNode} from 'react-dom';
 
 
 export default class extends React.Component {
     _childrenLength;
 
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
 
 
         this._childrenLength = this.props.children.length;
@@ -33,7 +33,7 @@ export default class extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if( nextProps.currentSection !== this.props.currentSection ) {
+        if (nextProps.currentSection !== this.props.currentSection) {
             this.setState({
                 offset: this._calculateOffset(nextProps.currentSection)
             });
@@ -59,13 +59,13 @@ export default class extends React.Component {
     }
 
     /*
-    * Calculators
-    * */
+     * Calculators
+     * */
     _calculateHeight() {
         let height = 0;
 
-        Object.keys( this.refs ).forEach( ( key ) => {
-            height += findDOMNode( this.refs[key] ).offsetHeight;
+        Object.keys(this.refs).forEach((key) => {
+            height += findDOMNode(this.refs[key]).offsetHeight;
         });
 
         // If we want to reserve for last block (need to add flag)
@@ -75,21 +75,21 @@ export default class extends React.Component {
     }
 
     _isSlideAction() {
-        let currentSection = this.props.anchors[ this.props.currentSection ];
+        let currentSection = this.props.anchors[this.props.currentSection];
 
         return Array.isArray(currentSection) && currentSection.length < this.props.currentSlide && this.props.currentSlide >= 0;
     }
 
-    _canScroll( direction ) {
+    _canScroll(direction) {
         return direction > 0 && this.props.currentSection > 0 ||
-               direction < 0 && this.props.currentSection < this.props.anchors.length - 1
+            direction < 0 && this.props.currentSection < this.props.anchors.length - 1
     }
 
-    _calculateOffset( currentSection ) {
+    _calculateOffset(currentSection) {
         let offset = 0;
 
-        for(let i = 0; i < currentSection; i ++) {
-            offset += findDOMNode( this.refs[i] ).offsetHeight;
+        for (let i = 0; i < currentSection; i++) {
+            offset += findDOMNode(this.refs[i]).offsetHeight;
         }
 
         if (offset > this.state.wrapperHeight - window.innerHeight)
@@ -98,21 +98,21 @@ export default class extends React.Component {
         return offset;
     }
 
-    _setAnchor( section, slide ) {
+    _setAnchor(section, slide) {
         let anchor = this.props.anchors[section];
 
-        if (Array.isArray(anchor)) anchor = anchor[ slide ];
+        if (Array.isArray(anchor)) anchor = anchor[slide];
 
         window.location.hash = anchor;
     }
 
     /*
-    * Handlers
-    * */
+     * Handlers
+     * */
     _handleResize() {
         this.setState({
             wrapperHeight: this._calculateHeight(),
-            offset: this._calculateOffset( this.props.currentSection )
+            offset: this._calculateOffset(this.props.currentSection)
         });
     }
 
@@ -125,11 +125,11 @@ export default class extends React.Component {
         const direction = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
         if (this._isSlideAction()) {
-            this.props.actions.moveTo( direction, true );
+            this.props.actions.moveTo(direction, true);
         }
         else {
-            if(this._canScroll( direction )) {
-                this.props.actions.moveTo( direction, false );
+            if (this._canScroll(direction)) {
+                this.props.actions.moveTo(direction, false);
             }
             else {
                 return false;
@@ -140,33 +140,34 @@ export default class extends React.Component {
     _handleAnchor() {
         const hash = window.location.hash.substring(1);
 
-        let cords = this._findAnchorCords( hash );
+        let cords = this._findAnchorCords(hash);
 
-        if ( cords ) return this.props.actions.jumpTo( cords[0], cords[1] );
+        if (cords) return this.props.actions.jumpTo(cords[0], cords[1]);
     }
 
     // Black magic! (really black, need refactoring)
-    _findAnchorCords( anchor ) {
+    _findAnchorCords(anchor) {
         let anchors = this.props.anchors;
 
-        for(let i = 0; i < anchors.length; i ++) {
+        for (let i = 0; i < anchors.length; i++) {
             if (Array.isArray(anchors[i])) {
-                for(let j = 0; j < anchors[i].length; j ++)
+                for (let j = 0; j < anchors[i].length; j++)
                     if (anchors[i][j] == anchor) return [i, j];
             }
-            else if( anchors[i] == anchor ) return [i, 0];
+            else if (anchors[i] == anchor) return [i, 0];
         }
 
         return false;
     }
 
-    render () {
+    render() {
         let containerStyle = {
             height: this.state.wrapperHeight,
             width: '100%',
             position: 'relative',
-            top: `-${this.state.offset}px`,
+            transform: `translate3d(0,-${this.state.offset}px,0)`,
             transition: `all ${this.props.delay}ms ease`,
+            willChange: 'transform'
         };
 
         return (
