@@ -42,8 +42,6 @@ var _class = function (_React$Component) {
     _createClass(_class, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-
-            console.log('calculate wrapper height');
             this.state.wrapperHeight = this._calculateHeight();
 
             this.bindEvents();
@@ -72,6 +70,7 @@ var _class = function (_React$Component) {
         value: function bindEvents() {
             window.addEventListener('resize', this._handleResize);
             window.addEventListener('mousewheel', this._handleMouseWheel, false);
+            window.addEventListener('DOMMouseScroll', this._handleMouseWheel, false);
             window.addEventListener('hashchange', this._handleAnchor, false);
         }
     }, {
@@ -79,12 +78,13 @@ var _class = function (_React$Component) {
         value: function unbindEvents() {
             window.removeEventListener('resize', this._handleMouseWheel);
             window.removeEventListener('mousewheel', this._handleMouseWheel);
+            window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
             window.removeEventListener('hashchange', this._handleAnchor);
         }
 
         /*
-        * Calculators
-        * */
+         * Calculators
+         * */
 
     }, {
         key: '_calculateHeight',
@@ -138,8 +138,8 @@ var _class = function (_React$Component) {
         }
 
         /*
-        * Handlers
-        * */
+         * Handlers
+         * */
 
     }, {
         key: '_handleResize',
@@ -203,18 +203,26 @@ var _class = function (_React$Component) {
                 height: this.state.wrapperHeight,
                 width: '100%',
                 position: 'relative',
-                top: '-' + this.state.offset + 'px',
-                transition: 'all ' + this.props.delay + 'ms ease'
+                transform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                transition: 'all ' + this.props.delay + 'ms ease',
+                willChange: 'transform'
             };
+
+            var ignoredCount = 0;
 
             return _react2.default.createElement(
                 'div',
                 { className: this.props.className, style: containerStyle },
                 _react2.default.Children.map(this.props.children, function (child, id) {
-                    return _react2.default.cloneElement(child, {
-                        ref: id,
-                        index: id
-                    });
+                    if (typeof child.type == 'function') {
+                        return _react2.default.cloneElement(child, {
+                            ref: id - ignoredCount,
+                            index: id
+                        });
+                    } else {
+                        ignoredCount += 1;
+                        return child;
+                    }
                 })
             );
         }

@@ -22,8 +22,6 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-
-        console.log('calculate wrapper height');
         this.state.wrapperHeight = this._calculateHeight();
 
         this.bindEvents();
@@ -49,12 +47,14 @@ export default class extends React.Component {
     bindEvents() {
         window.addEventListener('resize', this._handleResize);
         window.addEventListener('mousewheel', this._handleMouseWheel, false);
+        window.addEventListener('DOMMouseScroll', this._handleMouseWheel, false);
         window.addEventListener('hashchange', this._handleAnchor, false);
     }
 
     unbindEvents() {
         window.removeEventListener('resize', this._handleMouseWheel);
         window.removeEventListener('mousewheel', this._handleMouseWheel);
+        window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
         window.removeEventListener('hashchange', this._handleAnchor);
     }
 
@@ -170,13 +170,21 @@ export default class extends React.Component {
             willChange: 'transform'
         };
 
+        let ignoredCount = 0;
+
         return (
             <div className={ this.props.className } style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
-                    return React.cloneElement(child, {
-                        ref: id,
-                        index: id,
-                    });
+                    if(typeof child.type == 'function') {
+                        return React.cloneElement(child, {
+                            ref: id - ignoredCount,
+                            index: id,
+                        });
+                    }
+                    else {
+                        ignoredCount += 1;
+                        return child;
+                    }
                 })}
             </div>
         )
