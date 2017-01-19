@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { findDOMNode } from 'react-dom';
+
 
 export default class SectionsContainer extends React.Component {
     _resetScrollTimer;
@@ -6,59 +8,63 @@ export default class SectionsContainer extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this._childrenLength = this.props.children.length;
+
         this.state = {
             activeSection: 0,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
-            windowHeight: window.innerHeight,
+            windowHeight: 1000,
         };
 
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
-        this._handleAnchor = this._handleAnchor.bind(this);
+        //this._handleAnchor = this._handleAnchor.bind(this);
         this._handleResize = this._handleResize.bind(this);
-        this._handleArrowKeys = this._handleArrowKeys.bind(this);
     }
 
     getChildContext() {
         return {
-            verticalAlign: this.props.verticalAlign,
-            sectionClassName: this.props.sectionClassName,
-            sectionPaddingTop: this.props.sectionPaddingTop,
-            sectionPaddingBottom: this.props.sectionPaddingBottom,
+            sectionClassName: this.props.sectionClassName
         };
     }
 
     componentWillUnmount() {
         this._clearResetScrollTimer();
-        this._removeDefaultEventListeners();
+        //this._removeDefaultEventListeners();
         this._removeMouseWheelEventHandlers();
     }
 
     componentDidMount() {
-        this._childrenLength = this.props.children.length;
+        console.log(this.refs);
+        console.log(this.refs.reduce);
+
+        this.setState({
+            windowHeight: this._calculateWrapperHeight()
+        });
+
+        console.log(this);
 
         window.addEventListener('resize', this._handleResize);
 
-        if (!this.props.scrollBar) {
-            this._addCSS3Scroll();
-            this._handleAnchor(); //Go to anchor in case we found it in the URL
-
-            window.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
-
-            if (this.props.arrowNavigation) {
-                window.addEventListener('keydown', this._handleArrowKeys);
-            }
-        }
+        this._addCSS3Scroll();
+        //this._handleAnchor(); //Go to anchor in case we found it in the URL
+        document.addEventListener('hashchange', this._handleAnchor, false); //Add an event to watch the url hash changes
     }
 
-    _removeDefaultEventListeners() {
-        window.removeEventListener('resize', this._handleResize);
-        window.removeEventListener('hashchange', this._handleAnchor);
+    /*_removeDefaultEventListeners() {
+        this.refs.wrapper.removeEventListener('resize', this._handleResize);
+        this.refs.wrapper.removeEventListener('hashchange', this._handleAnchor);
+    }*/
 
+    _calculateWrapperHeight() {
+        let height = 0;
 
-        if (this.props.arrowNavigation) {
-            window.removeEventListener('keydown', this._handleArrowKeys);
-        }
+        Object.keys( this.refs ).forEach( ( key ) => {
+            height += findDOMNode( this.refs[key] ).offsetHeight;
+        });
+
+        return height + window.innerHeight - findDOMNode(this.refs[ this._childrenLength - 1 ]).offsetHeight
     }
 
     _addCSS3Scroll() {
@@ -66,7 +72,7 @@ export default class SectionsContainer extends React.Component {
         this._addMouseWheelEventHandlers();
     }
 
-    _addActiveClass() {
+    /*_addActiveClass() {
         this._removeActiveClass();
 
         let hash = window.location.hash.substring(1);
@@ -83,25 +89,7 @@ export default class SectionsContainer extends React.Component {
         for (let i = 0; i < activeLinks.length; i++) {
             activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
         }
-    }
-
-    _addChildrenWithAnchorId() {
-        let index = 0;
-
-        return React.Children.map(this.props.children, (child) => {
-            let id = this.props.anchors[index];
-
-            index++;
-
-            if (id) {
-                return React.cloneElement(child, {
-                    id: id
-                });
-            } else {
-                return child;
-            }
-        });
-    }
+    }*/
 
     _addOverflowToBody() {
         document.querySelector('body').style.overflow = 'hidden';
@@ -120,35 +108,36 @@ export default class SectionsContainer extends React.Component {
     _handleMouseWheel(event) {
         const e = window.event || event; // old IE support
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+
+        console.log(delta); // if -1 -> to bottom, +1 -> to top
+
         const activeSection = this.state.activeSection - delta;
 
         if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
             return false;
         }
+        else {
+            event.stopPropagation();
+            this._handleSectionTransition(activeSection, delta > 0);
+        }
 
-        this._setAnchor(activeSection);
-        this._handleSectionTransition(activeSection);
-        this._addActiveClass();
+        //this._setAnchor(activeSection);
+
+        //this._addActiveClass();
     }
 
     _handleResize() {
-        const position = 0 - (this.state.activeSection * window.innerHeight);
-
         this.setState({
             scrollingStarted: true,
-            windowHeight: window.innerHeight,
-            sectionScrolledPosition: position
+            windowHeight: this._calculateWrapperHeight()
         });
 
         this._resetScroll();
     }
 
-    _handleSectionTransition(index) {
-        const position = 0 - (index * this.state.windowHeight);
-
-        if (!this.props.anchors.length || index === -1 || index >= this.props.anchors.length) {
-            return false;
-        }
+    _handleSectionTransition(index, topDirection) {
+        const child = findDOMNode( this.refs[ this.state.activeSection ] );
+        const position = topDirection ? this.state.sectionScrolledPosition - child.offsetHeight : this.state.sectionScrolledPosition + child.offsetHeight;
 
         this.setState({
             scrollingStarted: true,
@@ -160,36 +149,29 @@ export default class SectionsContainer extends React.Component {
         this._handleScrollCallback();
     }
 
-    _handleArrowKeys(e) {
-        const event = window.event ? window.event : e;
-        const activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : (event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1);
-
-        if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
-            return false;
-        }
-
-        this._setAnchor(activeSection);
-        this._handleSectionTransition(activeSection);
-        this._addActiveClass();
-    }
-
-    _handleAnchor() {
-        const hash = window.location.hash.substring(1);
-        const activeSection = this.props.anchors.indexOf(hash);
+    /*_handleAnchor() {
+        const hash = window.location.hash.substring(1).split(';');
+        console.log(hash);
+        const subIndex = hash[1];
+        const activeSection = this.props.anchors.indexOf(hash[0]);
 
         if (this.state.activeSection !== activeSection) {
             this._handleSectionTransition(activeSection);
             this._addActiveClass();
         }
+        else if (!!subIndex){
+            this._childrenSliders[ activeSection ].activeSection = parseInt(subIndex);
+            this.setState({});
+        }
     }
 
-    _setAnchor(index) {
+    _setAnchor(index, subIndex) {
         const hash = this.props.anchors[index];
 
         if (!this.props.anchors.length || hash) {
-            window.location.hash = '#' + hash;
+            window.location.hash = !!subIndex ? '#' + hash + ';' + subIndex : '#' + hash;
         }
-    }
+    }*/
 
     _handleScrollCallback() {
         if (this.props.scrollCallback) {
@@ -213,7 +195,7 @@ export default class SectionsContainer extends React.Component {
         }
     }
 
-    renderNavigation() {
+    /*renderNavigation() {
         let navigationStyle = {
             position: 'fixed',
             zIndex: '10',
@@ -247,20 +229,37 @@ export default class SectionsContainer extends React.Component {
         );
     }
 
+    getChildrenWithProps() {
+        return React.Children.map(this.props.children, (child, index) => {
+            let props = {
+                currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
+                subIndex: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
+                delay: this.props.delay
+            };
+
+            if (index == this.state.activeSection) props.active = true;
+
+            return React.cloneElement(child, props);
+        });
+    }*/
+
     render() {
         let containerStyle = {
             height: '100%',
             width: '100%',
             position: 'relative',
-            transform: `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
+            transform: `translate3d(0px, -${this.state.sectionScrolledPosition}px, 0px)`,
             transition: `all ${this.props.delay}ms ease`,
         };
         return (
-            <div>
+            <div style={{ height: `${this.state.windowHeight}px` }} ref={ input =>  this.wrapper = input }>
                 <div className={this.props.className} style={containerStyle}>
-                    {this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children}
+                    {React.Children.map(this.props.children, (element, idx) => {
+                        return React.cloneElement(element, { ref: idx });
+                    })}
+                    {/*{this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children}*/}
                 </div>
-                {this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null}
+                {/*{this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null}*/}
             </div>
         );
     }
@@ -269,37 +268,24 @@ export default class SectionsContainer extends React.Component {
 SectionsContainer.defaultProps = {
     scrollCallback: null,
     delay: 1000,
-    verticalAlign: false,
-    scrollBar: false,
-    navigation: true,
     className: 'SectionContainer',
     sectionClassName: 'Section',
     anchors: [],
     activeClass: 'active',
-    sectionPaddingTop: '0',
-    sectionPaddingBottom: '0',
-    arrowNavigation: true
+    slider: false,
+    scrollBar: true
 };
 
 SectionsContainer.propTypes = {
     scrollCallback: React.PropTypes.func,
     delay: React.PropTypes.number,
-    verticalAlign: React.PropTypes.bool,
-    scrollBar: React.PropTypes.bool,
-    navigation: React.PropTypes.bool,
     className: React.PropTypes.string,
     sectionClassName: React.PropTypes.string,
-    navigationClass: React.PropTypes.string,
-    navigationAnchorClass: React.PropTypes.string,
     activeClass: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool,
+    slider: React.PropTypes.bool,
+    scrollBar: React.PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
+    sectionClassName: React.PropTypes.string
 };

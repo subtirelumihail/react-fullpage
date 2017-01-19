@@ -18,34 +18,32 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Footer = function (_React$Component) {
-    _inherits(Footer, _React$Component);
+var _class = function (_React$Component) {
+    _inherits(_class, _React$Component);
 
-    function Footer() {
-        _classCallCheck(this, Footer);
+    function _class(props) {
+        _classCallCheck(this, _class);
 
-        return _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
     }
 
-    _createClass(Footer, [{
+    _createClass(_class, [{
         key: 'render',
         value: function render() {
-            var footerStyle = {
-                position: 'fixed',
-                width: '100%',
-                zIndex: '1',
-                bottom: '0'
-            };
+            var className = this.props.sectionClassName;
+
+            if (this.props.index == this.props.currentSection) className += ' ' + this.props.activeClass;
+            if (this.props.index <= this.props.lastActivated) className += ' ' + this.props.activatedClass;
 
             return React.createElement(
-                'footer',
-                { style: footerStyle },
+                'div',
+                { className: className },
                 this.props.children
             );
         }
     }]);
 
-    return Footer;
+    return _class;
 }(React.Component);
 
-exports.default = Footer;
+exports.default = _class;

@@ -1,6 +1,5 @@
 module.exports = {
-  SectionsContainer: require('./dist/SectionsContainer').default,
-  Section: require('./dist/Section').default,
-  Header: require('./dist/Header').default,
-  Footer: require('./dist/Footer').default,
+  //SectionsContainer: require('./dist/components/SectionsContainer.js').default,
+  Section: require('./dist/containers/SectionContainer.js').default,
+  FullPageRenderer: require('./dist/components/Main.js').default,
 };

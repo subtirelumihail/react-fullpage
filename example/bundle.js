@@ -1019,12 +1019,18 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
+	var validateFormat = function validateFormat(format) {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  validateFormat = function validateFormat(format) {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
 	    }
-	  }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
 
 	  if (!condition) {
 	    var error;
@@ -21621,9 +21627,8 @@
 
 	module.exports = {
 	  SectionsContainer: __webpack_require__(176).default,
-	  Section: __webpack_require__(177).default,
-	  Header: __webpack_require__(178).default,
-	  Footer: __webpack_require__(179).default
+	  SectionSlider: __webpack_require__(177).default,
+	  Section: __webpack_require__(178).default
 	};
 
 /***/ },
@@ -21690,11 +21695,21 @@
 
 	        var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
+	        _this._childrenLength = _this.props.children.length;
+	        _this._childrenSliders = {};
+
+	        _this.props.children.map(function (child, index) {
+	            if (child.type.name === "SectionSlider") _this._childrenSliders[index] = {
+	                count: child.props.children.length,
+	                current: 0
+	            };
+	        });
+
 	        _this.state = {
 	            activeSection: 0,
 	            scrollingStarted: false,
 	            sectionScrolledPosition: 0,
-	            windowHeight: window.innerHeight
+	            windowHeight: 1000
 	        };
 
 	        _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
@@ -21711,7 +21726,8 @@
 	                verticalAlign: this.props.verticalAlign,
 	                sectionClassName: this.props.sectionClassName,
 	                sectionPaddingTop: this.props.sectionPaddingTop,
-	                sectionPaddingBottom: this.props.sectionPaddingBottom
+	                sectionPaddingBottom: this.props.sectionPaddingBottom,
+	                currentSection: this.props.currentSection
 	            };
 	        }
 	    }, {
@@ -21724,7 +21740,9 @@
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this._childrenLength = this.props.children.length;
+	            this.setState({
+	                windowHeight: window.innerHeight
+	            });
 
 	            window.addEventListener('resize', this._handleResize);
 
@@ -21821,6 +21839,8 @@
 	            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
 	            var activeSection = this.state.activeSection - delta;
 
+	            if (this.state.activeSection in this._childrenSliders && this._handleSliderTransition(activeSection)) return false;
+
 	            if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
 	                return false;
 	            }
@@ -21828,6 +21848,31 @@
 	            this._setAnchor(activeSection);
 	            this._handleSectionTransition(activeSection);
 	            this._addActiveClass();
+	        }
+	    }, {
+	        key: '_handleSliderTransition',
+	        value: function _handleSliderTransition(index) {
+	            var scrollTop = index < this.state.activeSection;
+	            var currentSlider = this._childrenSliders[this.state.activeSection];
+	            if (scrollTop && currentSlider.current > 0) {
+	                currentSlider.current -= 1;
+
+	                this.setState({
+	                    scrollingStarted: true
+	                });
+	                this._resetScroll();
+
+	                return true;
+	            } else if (!scrollTop && currentSlider.current < currentSlider.count - 1) {
+	                currentSlider.current += 1;
+
+	                this.setState({
+	                    scrollingStarted: true
+	                });
+	                this._resetScroll();
+
+	                return true;
+	            } else return false;
 	        }
 	    }, {
 	        key: '_handleResize',
@@ -21957,6 +22002,22 @@
 	                style: this.props.navigationClass ? null : navigationStyle }, anchors);
 	        }
 	    }, {
+	        key: 'getChildrenWithProps',
+	        value: function getChildrenWithProps() {
+	            var _this6 = this;
+
+	            return React.Children.map(this.props.children, function (child, index) {
+	                var props = {
+	                    currentSection: _this6._childrenSliders[index] ? _this6._childrenSliders[index].current : 0,
+	                    delay: _this6.props.delay
+	                };
+
+	                if (index == _this6.state.activeSection) props.active = true;
+
+	                return React.cloneElement(child, props);
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var containerStyle = {
@@ -21966,7 +22027,7 @@
 	                transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
 	                transition: 'all ' + this.props.delay + 'ms ease'
 	            };
-	            return React.createElement('div', null, React.createElement('div', { className: this.props.className, style: containerStyle }, this.props.scrollBar ? this._addChildrenWithAnchorId() : this.props.children), this.props.navigation && !this.props.scrollBar ? this.renderNavigation() : null);
+	            return React.createElement('div', null, React.createElement('div', { className: this.props.className, style: containerStyle }, this.getChildrenWithProps()));
 	        }
 	    }]);
 
@@ -22010,7 +22071,8 @@
 	    verticalAlign: React.PropTypes.bool,
 	    sectionClassName: React.PropTypes.string,
 	    sectionPaddingTop: React.PropTypes.string,
-	    sectionPaddingBottom: React.PropTypes.string
+	    sectionPaddingBottom: React.PropTypes.string,
+	    currentSection: React.PropTypes.number
 	};
 
 /***/ },
@@ -22069,21 +22131,32 @@
 	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var Section = function (_React$Component) {
-	    _inherits(Section, _React$Component);
+	var SectionSlider = function (_React$Component) {
+	    _inherits(SectionSlider, _React$Component);
 
-	    function Section() {
-	        _classCallCheck(this, Section);
+	    function SectionSlider(props) {
+	        _classCallCheck(this, SectionSlider);
 
-	        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
+	        var _this = _possibleConstructorReturn(this, (SectionSlider.__proto__ || Object.getPrototypeOf(SectionSlider)).call(this, props));
 
 	        _this.state = {
-	            windowHeight: window.innerHeight
+	            windowHeight: 1000
 	        };
 	        return _this;
 	    }
 
-	    _createClass(Section, [{
+	    _createClass(SectionSlider, [{
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            return {
+	                verticalAlign: this.props.verticalAlign,
+	                sectionClassName: this.props.sectionClassName,
+	                sectionPaddingTop: this.props.sectionPaddingTop,
+	                sectionPaddingBottom: this.props.sectionPaddingBottom,
+	                currentSection: this.props.currentSection
+	            };
+	        }
+	    }, {
 	        key: 'handleResize',
 	        value: function handleResize() {
 	            this.setState({
@@ -22095,6 +22168,9 @@
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            this.setState({
+	                windowHeight: window.innerHeight
+	            });
 	            window.addEventListener('resize', function () {
 	                return _this2.handleResize();
 	            });
@@ -22116,15 +22192,19 @@
 	            var sectionStyle = {
 	                width: '100%',
 	                display: alignVertical ? 'table' : 'block',
-	                height: this.state.windowHeight,
-	                maxHeight: this.state.windowHeight,
-	                overflow: 'auto',
+	                height: this.state.windowHeight * this.props.children.length,
+	                maxHeight: this.state.windowHeight * this.props.children.length,
 	                backgroundColor: this.props.color,
 	                paddingTop: this.context.sectionPaddingTop,
-	                paddingBottom: this.context.sectionPaddingBottom
+	                paddingBottom: this.context.sectionPaddingBottom,
+	                position: 'relative',
+	                transform: 'translateY(-' + this.state.windowHeight * this.props.currentSection + 'px)',
+	                transition: 'all ' + this.props.delay + 'ms'
 	            };
 
-	            return React.createElement('div', { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),
+	            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+
+	            return React.createElement('div', { className: className,
 	                id: this.props.id, style: sectionStyle }, alignVertical ? this._renderVerticalAlign() : this.props.children);
 	        }
 	    }, {
@@ -22140,21 +22220,26 @@
 	        }
 	    }]);
 
-	    return Section;
+	    return SectionSlider;
 	}(React.Component);
 
-	Section.propTypes = {
-	    color: React.PropTypes.string
-	};
-
-	Section.contextTypes = {
+	SectionSlider.contextTypes = {
 	    verticalAlign: React.PropTypes.bool,
 	    sectionClassName: React.PropTypes.string,
 	    sectionPaddingTop: React.PropTypes.string,
-	    sectionPaddingBottom: React.PropTypes.string
+	    sectionPaddingBottom: React.PropTypes.string,
+	    currentSection: React.PropTypes.number
 	};
 
-	exports.default = Section;
+	SectionSlider.childContextTypes = {
+	    verticalAlign: React.PropTypes.bool,
+	    sectionClassName: React.PropTypes.string,
+	    sectionPaddingTop: React.PropTypes.string,
+	    sectionPaddingBottom: React.PropTypes.string,
+	    currentSection: React.PropTypes.number
+	};
+
+	exports.default = SectionSlider;
 
 /***/ },
 /* 178 */
@@ -22212,117 +22297,99 @@
 	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var Header = function (_React$Component) {
-	    _inherits(Header, _React$Component);
+	var Section = function (_React$Component) {
+	    _inherits(Section, _React$Component);
 
-	    function Header() {
-	        _classCallCheck(this, Header);
+	    function Section(props) {
+	        _classCallCheck(this, Section);
 
-	        return _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this, props));
+
+	        _this.state = {
+	            windowHeight: 1000
+	        };
+	        return _this;
 	    }
 
-	    _createClass(Header, [{
+	    _createClass(Section, [{
+	        key: 'handleResize',
+	        value: function handleResize() {
+	            this.setState({
+	                windowHeight: window.innerHeight
+	            });
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
+
+	            this.setState({
+	                windowHeight: window.innerHeight
+	            });
+	            window.addEventListener('resize', function () {
+	                return _this2.handleResize();
+	            });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            var _this3 = this;
+
+	            window.removeEventListener('resize', function () {
+	                return _this3.handleResize();
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var headerStyle = {
-	                position: 'fixed',
+	            var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
+
+	            var sectionStyle = {
 	                width: '100%',
-	                zIndex: '1',
-	                top: '0'
+	                display: alignVertical ? 'table' : 'block',
+	                height: this.state.windowHeight,
+	                maxHeight: this.state.windowHeight,
+	                overflow: 'auto',
+	                backgroundColor: this.props.color,
+	                paddingTop: this.context.sectionPaddingTop,
+	                paddingBottom: this.context.sectionPaddingBottom
 	            };
 
-	            return React.createElement('header', { style: headerStyle }, this.props.children);
+	            var className = this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : '') + (this.props.active ? ' active' : '');
+
+	            return React.createElement('div', { className: className,
+	                id: this.props.id, style: sectionStyle }, alignVertical ? this._renderVerticalAlign() : this.props.children);
+	        }
+	    }, {
+	        key: '_renderVerticalAlign',
+	        value: function _renderVerticalAlign() {
+	            var verticalAlignStyle = {
+	                display: 'table-cell',
+	                verticalAlign: 'middle',
+	                width: '100%'
+	            };
+
+	            return React.createElement('div', { style: verticalAlignStyle }, this.props.children);
 	        }
 	    }]);
 
-	    return Header;
+	    return Section;
 	}(React.Component);
 
-	exports.default = Header;
+	Section.propTypes = {
+	    color: React.PropTypes.string,
+	    delay: React.PropTypes.number
+	};
 
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
+	Section.contextTypes = {
+	    verticalAlign: React.PropTypes.bool,
+	    sectionClassName: React.PropTypes.string,
+	    sectionPaddingTop: React.PropTypes.string,
+	    sectionPaddingBottom: React.PropTypes.string,
+	    currentSection: React.PropTypes.number
+	};
 
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () {
-	    function defineProperties(target, props) {
-	        for (var i = 0; i < props.length; i++) {
-	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-	        }
-	    }return function (Constructor, protoProps, staticProps) {
-	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-	    };
-	}();
-
-	var _react = __webpack_require__(4);
-
-	var React = _interopRequireWildcard(_react);
-
-	function _interopRequireWildcard(obj) {
-	    if (obj && obj.__esModule) {
-	        return obj;
-	    } else {
-	        var newObj = {};if (obj != null) {
-	            for (var key in obj) {
-	                if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-	            }
-	        }newObj.default = obj;return newObj;
-	    }
-	}
-
-	function _classCallCheck(instance, Constructor) {
-	    if (!(instance instanceof Constructor)) {
-	        throw new TypeError("Cannot call a class as a function");
-	    }
-	}
-
-	function _possibleConstructorReturn(self, call) {
-	    if (!self) {
-	        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-	    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
-	}
-
-	function _inherits(subClass, superClass) {
-	    if (typeof superClass !== "function" && superClass !== null) {
-	        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
-	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-	}
-
-	var Footer = function (_React$Component) {
-	    _inherits(Footer, _React$Component);
-
-	    function Footer() {
-	        _classCallCheck(this, Footer);
-
-	        return _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
-	    }
-
-	    _createClass(Footer, [{
-	        key: 'render',
-	        value: function render() {
-	            var footerStyle = {
-	                position: 'fixed',
-	                width: '100%',
-	                zIndex: '1',
-	                bottom: '0'
-	            };
-
-	            return React.createElement('footer', { style: footerStyle }, this.props.children);
-	        }
-	    }]);
-
-	    return Footer;
-	}(React.Component);
-
-	exports.default = Footer;
+	exports.default = Section;
 
 /***/ }
 /******/ ]);
