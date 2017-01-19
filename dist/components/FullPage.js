@@ -240,7 +240,7 @@ var _class = function (_React$Component) {
             if (this.props.horizontalScroll) {
                 containerStyle = {
                     height: this.state.wrapperHeight,
-                    width: '100%',
+                    width: this._childrenLength * 100 + 'vw',
                     position: 'relative',
                     transform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
                     transition: 'transform ' + this.props.delay + 'ms ease'
