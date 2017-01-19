@@ -64,6 +64,8 @@ var _class = function (_React$Component) {
                     offset: this._calculateOffset(nextProps.currentSection)
                 });
 
+                if (this.props.scrollCallback) this.props.scrollCallback(nextProps.currentSection);
+
                 this._setAnchor(nextProps.currentSection, nextProps.currentSlide);
             }
         }
