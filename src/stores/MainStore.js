@@ -10,6 +10,6 @@ import ReduxThunk from 'redux-thunk';
 export default function ( options ) {
     return createStore(
         reducerCreator( options ),
-        applyMiddleware(ReduxThunk)
+        applyMiddleware( ReduxThunk )
     )
 }
