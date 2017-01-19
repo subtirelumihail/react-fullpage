@@ -216,6 +216,7 @@ export default class extends React.Component {
             };
         }
 
+        let ignoredCount = 0;
         return (
             <div className={ this.props.className } style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
