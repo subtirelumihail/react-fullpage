@@ -36,6 +36,7 @@ var _class = function (_React$Component) {
         _this._handleResize = _this._handleResize.bind(_this);
         _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
         _this._handleAnchor = _this._handleAnchor.bind(_this);
+        //this._generateKeyFrames = this._generateKeyFrames.bind(this);
         return _this;
     }
 
@@ -43,13 +44,15 @@ var _class = function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
 
-            console.log('calculate wrapper height');
+            // comment this
             this.state.wrapperHeight = this._calculateHeight();
 
             this.bindEvents();
             this._handleAnchor();
 
             document.querySelector('body').style.overflow = 'hidden';
+
+            //if( this.props.horizontalScroll ) this._generateKeyFrames();
         }
     }, {
         key: 'componentWillReceiveProps',
@@ -70,8 +73,10 @@ var _class = function (_React$Component) {
     }, {
         key: 'bindEvents',
         value: function bindEvents() {
+            // comment resize for horizontal scroll
             window.addEventListener('resize', this._handleResize);
             window.addEventListener('mousewheel', this._handleMouseWheel, false);
+            window.removeEventListener('DOMMouseScroll', this._handleMouseWheel, false);
             window.addEventListener('hashchange', this._handleAnchor, false);
         }
     }, {
@@ -79,6 +84,7 @@ var _class = function (_React$Component) {
         value: function unbindEvents() {
             window.removeEventListener('resize', this._handleMouseWheel);
             window.removeEventListener('mousewheel', this._handleMouseWheel);
+            window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
             window.removeEventListener('hashchange', this._handleAnchor);
         }
 
@@ -102,6 +108,9 @@ var _class = function (_React$Component) {
 
             return height;
         }
+
+        // remove (or finish) this in future
+
     }, {
         key: '_isSlideAction',
         value: function _isSlideAction() {
@@ -119,11 +128,15 @@ var _class = function (_React$Component) {
         value: function _calculateOffset(currentSection) {
             var offset = 0;
 
-            for (var i = 0; i < currentSection; i++) {
-                offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
-            }
+            if (this.props.horizontalScroll) {
+                offset = 100 * currentSection;
+            } else {
+                for (var i = 0; i < currentSection; i++) {
+                    offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
+                }
 
-            if (offset > this.state.wrapperHeight - window.innerHeight) offset = this.state.wrapperHeight - window.innerHeight;
+                if (offset > this.state.wrapperHeight - window.innerHeight) offset = this.state.wrapperHeight - window.innerHeight;
+            }
 
             return offset;
         }
@@ -136,6 +149,27 @@ var _class = function (_React$Component) {
 
             window.location.hash = anchor;
         }
+
+        /*    _generateKeyFrames( currentSection, direction ) {
+                const hsVars = this.props.horizontalScrollVariables;
+        
+                let keyframes = `@-webkit-keyframes rifpskf {
+                      0%{
+                        -webkit-transform: translateX(${hsVars.translateX * (currentSection - direction )}vw);
+                        -webkit-transform: rotate (0deg);
+                        -webkit-transform: scale (0);
+                      }
+                      50% {
+                        -webkit-transform: rotate (${ hsVars.rotate }deg);
+                        -webkit-transform: scale (${ hsVars.scale });
+                      }
+                      100%{
+                        -webkit-transform: translateX(${hsVars.translateX * currentSection}vw);
+                        -webkit-transform: rotate (0deg);
+                        -webkit-transform: scale (0);
+                      }
+                    }`;
+            }*/
 
         /*
         * Handlers
@@ -199,13 +233,25 @@ var _class = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var containerStyle = {
-                height: this.state.wrapperHeight,
-                width: '100%',
-                position: 'relative',
-                top: '-' + this.state.offset + 'px',
-                transition: 'all ' + this.props.delay + 'ms ease'
-            };
+            var containerStyle = {};
+
+            if (this.props.horizontalScroll) {
+                containerStyle = {
+                    height: this.state.wrapperHeight,
+                    width: '100%',
+                    position: 'relative',
+                    transform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    transition: 'transform ' + this.props.delay + 'ms ease'
+                };
+            } else {
+                containerStyle = {
+                    height: this.state.wrapperHeight,
+                    width: '100%',
+                    position: 'relative',
+                    transform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    transition: 'transform ' + this.props.delay + 'ms ease'
+                };
+            }
 
             return _react2.default.createElement(
                 'div',

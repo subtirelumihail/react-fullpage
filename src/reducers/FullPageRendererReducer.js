@@ -13,13 +13,7 @@ const defaultOptions = {
     activeClass: 'active',
     activatedClass: 'activated',
 
-    horizontalScroll: false,
-    backgroundClass: 'background',
-    horizontalScrollVariables: {
-        translateX: 5,
-        scale: 1.3,
-        rotate: 5
-    }
+    horizontalScroll: false
 };
 
 

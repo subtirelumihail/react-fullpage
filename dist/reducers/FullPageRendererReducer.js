@@ -62,7 +62,9 @@ var defaultOptions = {
     sectionClassName: 'Section',
     anchors: [],
     activeClass: 'active',
-    activatedClass: 'activated'
+    activatedClass: 'activated',
+
+    horizontalScroll: false
 };
 
 // Reducer creator. We can make some actions with state

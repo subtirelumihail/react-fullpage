@@ -19,12 +19,12 @@ export default class extends React.Component {
         this._handleResize = this._handleResize.bind(this);
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
         this._handleAnchor = this._handleAnchor.bind(this);
-        this._generateKeyFrames = this._generateKeyFrames.bind(this);
+        //this._generateKeyFrames = this._generateKeyFrames.bind(this);
     }
 
     componentDidMount() {
 
-        console.log('calculate wrapper height');
+        // comment this
         this.state.wrapperHeight = this._calculateHeight();
 
         this.bindEvents();
@@ -32,7 +32,7 @@ export default class extends React.Component {
 
         document.querySelector('body').style.overflow = 'hidden';
 
-        if( this.props.horizontalScroll ) this._generateKeyFrames();
+        //if( this.props.horizontalScroll ) this._generateKeyFrames();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,14 +50,17 @@ export default class extends React.Component {
     }
 
     bindEvents() {
+        // comment resize for horizontal scroll
         window.addEventListener('resize', this._handleResize);
         window.addEventListener('mousewheel', this._handleMouseWheel, false);
+        window.removeEventListener('DOMMouseScroll', this._handleMouseWheel, false);
         window.addEventListener('hashchange', this._handleAnchor, false);
     }
 
     unbindEvents() {
         window.removeEventListener('resize', this._handleMouseWheel);
         window.removeEventListener('mousewheel', this._handleMouseWheel);
+        window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
         window.removeEventListener('hashchange', this._handleAnchor);
     }
 
@@ -77,6 +80,7 @@ export default class extends React.Component {
         return height;
     }
 
+    // remove (or finish) this in future
     _isSlideAction() {
         let currentSection = this.props.anchors[ this.props.currentSection ];
 
@@ -91,12 +95,16 @@ export default class extends React.Component {
     _calculateOffset( currentSection ) {
         let offset = 0;
 
-        for(let i = 0; i < currentSection; i ++) {
-            offset += findDOMNode( this.refs[i] ).offsetHeight;
-        }
+        if( this.props.horizontalScroll ) {
+            offset = 100 * currentSection;
+        } else {
+            for(let i = 0; i < currentSection; i ++) {
+                offset += findDOMNode( this.refs[i] ).offsetHeight;
+            }
 
-        if (offset > this.state.wrapperHeight - window.innerHeight)
-            offset = this.state.wrapperHeight - window.innerHeight;
+            if (offset > this.state.wrapperHeight - window.innerHeight)
+                offset = this.state.wrapperHeight - window.innerHeight;
+        }
 
         return offset;
     }
@@ -109,7 +117,7 @@ export default class extends React.Component {
         window.location.hash = anchor;
     }
 
-    _generateKeyFrames( currentSection, direction ) {
+/*    _generateKeyFrames( currentSection, direction ) {
         const hsVars = this.props.horizontalScrollVariables;
 
         let keyframes = `@-webkit-keyframes rifpskf {
@@ -128,7 +136,7 @@ export default class extends React.Component {
                 -webkit-transform: scale (0);
               }
             }`;
-    }
+    }*/
 
     /*
     * Handlers
@@ -185,22 +193,24 @@ export default class extends React.Component {
     }
 
     render () {
+        let containerStyle = { };
+
         if( this.props.horizontalScroll ) {
-            let containerStyle = {
-                'left': `-${ this.state.offset }wv`,
-                'animation': 'rifpskf',
-                'animation-delay': '5s',
-                'animation-duration': '12s',
-                'animation-timing-function': 'ease-in-out'
-            };
-        }
-        else {
-            let containerStyle = {
+            containerStyle = {
                 height: this.state.wrapperHeight,
                 width: '100%',
                 position: 'relative',
-                top: `-${this.state.offset}px`,
-                transition: `all ${this.props.delay}ms ease`,
+                transform: `translate3d(-${this.state.offset}vw, 0, 0)`,
+                transition: `transform ${this.props.delay}ms ease`
+            };
+        }
+        else {
+            containerStyle = {
+                height: this.state.wrapperHeight,
+                width: '100%',
+                position: 'relative',
+                transform: `translate3d(0,-${this.state.offset}px,0)`,
+                transition: `transform ${this.props.delay}ms ease`
             };
         }
 
