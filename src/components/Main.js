@@ -9,13 +9,17 @@ import FullPageContainer from '../containers/FullPageContainer';
 
 
 export default class extends React.Component {
+    store;
+
     constructor( props ) {
         super( props );
+
+        this.store = StoreCreator( this.props.options );
     }
 
     render () {
         return (
-            <Provider store={ StoreCreator( this.props.options ) }>
+            <Provider store={ this.store }>
                 <FullPageContainer>
                     { this.props.children }
                 </FullPageContainer>

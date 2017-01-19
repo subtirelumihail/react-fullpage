@@ -36,7 +36,10 @@ var _class = function (_React$Component) {
     function _class(props) {
         _classCallCheck(this, _class);
 
-        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+
+        _this.store = (0, _MainStore2.default)(_this.props.options);
+        return _this;
     }
 
     _createClass(_class, [{
@@ -44,7 +47,7 @@ var _class = function (_React$Component) {
         value: function render() {
             return _react2.default.createElement(
                 _reactRedux.Provider,
-                { store: (0, _MainStore2.default)(this.props.options) },
+                { store: this.store },
                 _react2.default.createElement(
                     _FullPageContainer2.default,
                     null,
