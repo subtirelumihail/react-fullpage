@@ -27,7 +27,7 @@ var SectionsContainer = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
         _this.state = {
-            activeSection: 0,
+            activeSection: props.activeSection,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
             windowHeight: window.innerHeight
@@ -73,6 +73,16 @@ var SectionsContainer = function (_React$Component) {
                 if (this.props.arrowNavigation) {
                     window.addEventListener('keydown', this._handleArrowKeys);
                 }
+            }
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            if (this.props.activeSection !== nextProps.activeSection) {
+                this.setState({ activeSection: nextProps.activeSection });
+                this._setAnchor(nextProps.activeSection);
+                this._handleSectionTransition(nextProps.activeSection);
+                this._addActiveClass();
             }
         }
     }, {
@@ -337,7 +347,8 @@ SectionsContainer.defaultProps = {
     activeClass: 'active',
     sectionPaddingTop: '0',
     sectionPaddingBottom: '0',
-    arrowNavigation: true
+    arrowNavigation: true,
+    activeSection: 0
 };
 
 SectionsContainer.propTypes = {
@@ -353,7 +364,8 @@ SectionsContainer.propTypes = {
     activeClass: React.PropTypes.string,
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool
+    arrowNavigation: React.PropTypes.bool,
+    activeSection: React.PropTypes.number
 };
 
 SectionsContainer.childContextTypes = {

@@ -42,3 +42,15 @@ a.active,
 a:hover {
   color: #C44D58;
 }
+
+button {
+  width: 50px;
+  padding: 8px;
+}
+
+.btnGroup {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9;
+}

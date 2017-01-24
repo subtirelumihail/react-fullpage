@@ -7,7 +7,7 @@ export default class SectionsContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeSection: 0,
+            activeSection: props.activeSection,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
             windowHeight: window.innerHeight,
@@ -49,6 +49,15 @@ export default class SectionsContainer extends React.Component {
                 window.addEventListener('keydown', this._handleArrowKeys);
             }
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if(this.props.activeSection !== nextProps.activeSection) {
+          this.setState({activeSection: nextProps.activeSection})
+          this._setAnchor(nextProps.activeSection);
+          this._handleSectionTransition(nextProps.activeSection);
+          this._addActiveClass();
+      }
     }
 
     _removeDefaultEventListeners() {
@@ -278,7 +287,8 @@ SectionsContainer.defaultProps = {
     activeClass: 'active',
     sectionPaddingTop: '0',
     sectionPaddingBottom: '0',
-    arrowNavigation: true
+    arrowNavigation: true,
+    activeSection: 0,
 };
 
 SectionsContainer.propTypes = {
@@ -295,6 +305,7 @@ SectionsContainer.propTypes = {
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
     arrowNavigation: React.PropTypes.bool,
+    activeSection: React.PropTypes.number,
 };
 
 SectionsContainer.childContextTypes = {

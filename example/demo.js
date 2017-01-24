@@ -8,6 +8,13 @@ import { SectionsContainer, Section, Header, Footer } from '../index';
 const app = document.querySelector('#app');
 
 class Example extends React.Component {
+    constructor(props) {
+      super(props)
+      this.state = {
+        current: 0,
+      }
+    }
+
     render() {
         const options = {
             sectionClassName: 'section',
@@ -18,8 +25,10 @@ class Example extends React.Component {
             sectionPaddingTop: '50px',
             sectionPaddingBottom: '50px',
             arrowNavigation: true,
-            scrollCallback: (states) => console.log(states)
+            scrollCallback: (states) => this.setState({current: states.activeSection})
         };
+
+        const {current} = this.state
 
         return (
             <div>
@@ -33,11 +42,16 @@ class Example extends React.Component {
                     <a href="">Example Source</a>
                     <a href="">About</a>
                 </Footer>
-                <SectionsContainer className="container" {...options}>
+                <SectionsContainer className="container" {...options} activeSection={current}>
                     <Section className="custom-section" verticalAlign="true" color="#69D2E7">Page 1</Section>
                     <Section color="#A7DBD8">Page 2</Section>
                     <Section color="#E0E4CC">Page 3</Section>
                 </SectionsContainer>
+
+                <div className="btnGroup">
+                    <button onClick={() => this.setState({current: current - 1})} disabled={current === 0}>pre</button>
+                    <button onClick={() => this.setState({current: current + 1})} disabled={current === 2}>next</button>
+                </div>
             </div>
         )
     }
