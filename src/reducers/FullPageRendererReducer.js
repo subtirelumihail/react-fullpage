@@ -30,8 +30,6 @@ export default function( options ) {
     };
 
     return function(state = initialState, action) {
-        console.log(action)
-
         switch( action.type ) {
             case SCROLL_START:
                 if ( action.isSlide ) {
