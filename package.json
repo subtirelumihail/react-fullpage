@@ -1,6 +1,6 @@
 {
   "name": "react-fullpage",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "React full-page renderer with sliders and SSR",
   "main": "index.js",
   "scripts": {
@@ -27,8 +27,8 @@
   "homepage": "https://github.com/subtirelumihail/react-fullpage",
   "dependencies": {
     "babel-preset-stage-2": "^6.18.0",
-    "react": "15.3.2",
-    "react-dom": "15.4.2",
+    "react": "^15.3.2",
+    "react-dom": "^15.4.2",
     "react-redux": "^5.0.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0"
