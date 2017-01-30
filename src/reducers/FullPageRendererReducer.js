@@ -30,6 +30,8 @@ export default function( options ) {
     };
 
     return function(state = initialState, action) {
+        console.log(action)
+
         switch( action.type ) {
             case SCROLL_START:
                 if ( action.isSlide ) {
@@ -55,6 +57,7 @@ export default function( options ) {
                     ...state,
                     currentSection: action.section,
                     currentSlide: action.slide,
+                    scrolling: true,
                     lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
                 };
 

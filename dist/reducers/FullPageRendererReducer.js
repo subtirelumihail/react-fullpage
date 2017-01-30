@@ -21,6 +21,8 @@ exports.default = function (options) {
         var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
         var action = arguments[1];
 
+        console.log(action);
+
         switch (action.type) {
             case _ActionTypes.SCROLL_START:
                 if (action.isSlide) {
@@ -42,6 +44,7 @@ exports.default = function (options) {
                 return _extends({}, state, {
                     currentSection: action.section,
                     currentSlide: action.slide,
+                    scrolling: true,
                     lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
                 });
 

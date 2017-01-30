@@ -30,6 +30,9 @@ var _class = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
+        _this._scrolling = false;
+
+
         _react2.default.Children.map(_this.props.children, function (child) {
             if (typeof child.type == 'function') _this._childrenLength += 1;
         });
@@ -59,14 +62,16 @@ var _class = function (_React$Component) {
     }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
+            this._scrolling = nextProps.scrolling;
+
             if (nextProps.currentSection !== this.props.currentSection) {
                 this.setState({
                     offset: this._calculateOffset(nextProps.currentSection)
                 });
 
-                if (this.props.scrollCallback) this.props.scrollCallback(nextProps.currentSection);
-
                 this._setAnchor(nextProps.currentSection, nextProps.currentSlide);
+
+                if (this.props.scrollCallback) this.props.scrollCallback(nextProps.currentSection);
             }
         }
     }, {
@@ -190,9 +195,11 @@ var _class = function (_React$Component) {
     }, {
         key: '_handleMouseWheel',
         value: function _handleMouseWheel(event) {
-            if (this.props.scrolling) {
+            if (this._scrolling) {
                 return false;
             }
+
+            this._scrolling = true;
 
             var e = window.event || event;
             var direction = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
@@ -203,6 +210,7 @@ var _class = function (_React$Component) {
                 if (this._canScroll(direction)) {
                     this.props.actions.moveTo(direction, false);
                 } else {
+                    this._scrolling = false;
                     return false;
                 }
             }
@@ -210,11 +218,18 @@ var _class = function (_React$Component) {
     }, {
         key: '_handleAnchor',
         value: function _handleAnchor() {
+            if (this._scrolling) {
+                return false;
+            }
+
             var hash = window.location.hash.substring(1);
 
             var cords = this._findAnchorCords(hash);
 
-            if (cords) return this.props.actions.jumpTo(cords[0], cords[1]);
+            if (cords) {
+                this._scrolling = true;
+                this.props.actions.jumpTo(cords[0], cords[1]);
+            }
         }
 
         // Black magic! (really black, need refactoring)
