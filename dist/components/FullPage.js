@@ -261,15 +261,15 @@ var _class = function (_React$Component) {
                     position: 'relative',
 
                     transform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    "-moz-transform": 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    "-ms-transform": 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    "-webkit-transform": 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    "-o-transform": 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    MozTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    msTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    WebkitTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    OTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
 
                     transition: 'transform ' + this.props.delay + 'ms ease',
-                    "-webkit-transition": 'transform ' + this.props.delay + 'ms ease',
-                    "-moz-transition": 'transform ' + this.props.delay + 'ms ease',
-                    "-o-transition": 'transform ' + this.props.delay + 'ms ease'
+                    WebkitTransition: 'transform ' + this.props.delay + 'ms ease',
+                    MozTransition: 'transform ' + this.props.delay + 'ms ease',
+                    OTransition: 'transform ' + this.props.delay + 'ms ease'
                 };
             } else {
                 containerStyle = {
@@ -278,15 +278,15 @@ var _class = function (_React$Component) {
                     position: 'relative',
 
                     transform: 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    "-moz-transform": 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    "-ms-transform": 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    "-webkit-transform": 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    "-o-transform": 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    MozTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    msTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    WebkitTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    OTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
 
                     transition: 'transform ' + this.props.delay + 'ms ease',
-                    "-webkit-transition": 'transform ' + this.props.delay + 'ms ease',
-                    "-moz-transition": 'transform ' + this.props.delay + 'ms ease',
-                    "-o-transition": 'transform ' + this.props.delay + 'ms ease'
+                    WebkitTransition: 'transform ' + this.props.delay + 'ms ease',
+                    MozTransition: 'transform ' + this.props.delay + 'ms ease',
+                    OTransition: 'transform ' + this.props.delay + 'ms ease'
                 };
             }
 
