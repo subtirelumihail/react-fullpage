@@ -32,6 +32,7 @@ var _class = function (_React$Component) {
         value: function render() {
             var className = this.props.sectionClassName;
 
+            if (this.props.className) className += ' ' + this.props.className;
             if (this.props.index == this.props.currentSection) className += ' ' + this.props.activeClass;
             if (this.props.index <= this.props.lastActivated) className += ' ' + this.props.activatedClass;
 

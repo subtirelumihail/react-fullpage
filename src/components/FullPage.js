@@ -257,6 +257,11 @@ export default class extends React.Component {
                         return React.cloneElement(child, {
                             ref: id - ignoredCount,
                             index: id - ignoredCount,
+                            activeClass: this.props.activeClass,
+                            activatedClass: this.props.activatedClass,
+                            sectionClassName: this.props.sectionClassName,
+                            currentSection: this.props.currentSection,
+                            lastActivated: this.props.lastActivated
                         });
                     }
                     else {

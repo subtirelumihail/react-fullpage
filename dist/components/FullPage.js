@@ -252,6 +252,8 @@ var _class = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var containerStyle = {};
 
             if (this.props.horizontalScroll) {
@@ -298,7 +300,12 @@ var _class = function (_React$Component) {
                     if (typeof child.type == 'function') {
                         return _react2.default.cloneElement(child, {
                             ref: id - ignoredCount,
-                            index: id - ignoredCount
+                            index: id - ignoredCount,
+                            activeClass: _this3.props.activeClass,
+                            activatedClass: _this3.props.activatedClass,
+                            sectionClassName: _this3.props.sectionClassName,
+                            currentSection: _this3.props.currentSection,
+                            lastActivated: _this3.props.lastActivated
                         });
                     } else {
                         ignoredCount += 1;

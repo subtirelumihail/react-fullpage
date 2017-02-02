@@ -20,20 +20,23 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/*const mapStateToProps = ( state ) => {
+    return state;
+};
+
+const mapDispatchToProps = ( dispatch ) => {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+};
+
+const SectionContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)( Section );*/
+
 /**
  * Created by yura on 04.01.17.
  */
 
-var mapStateToProps = function mapStateToProps(state) {
-    return state;
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-    return {
-        actions: (0, _redux.bindActionCreators)(actions, dispatch)
-    };
-};
-
-var SectionContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Section2.default);
-
-exports.default = SectionContainer;
+exports.default = _Section2.default;
