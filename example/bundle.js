@@ -84,15 +84,22 @@
 	var Example = function (_React$Component) {
 	    _inherits(Example, _React$Component);
 
-	    function Example() {
+	    function Example(props) {
 	        _classCallCheck(this, Example);
 
-	        return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).call(this, props));
+
+	        _this.state = {
+	            current: 0
+	        };
+	        return _this;
 	    }
 
 	    _createClass(Example, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
 	            var options = {
 	                sectionClassName: 'section',
 	                anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
@@ -103,9 +110,12 @@
 	                sectionPaddingBottom: '50px',
 	                arrowNavigation: true,
 	                scrollCallback: function scrollCallback(states) {
-	                    return console.log(states);
+	                    return _this2.setState({ current: states.activeSection });
 	                }
 	            };
+
+	            var current = this.state.current;
+
 
 	            return React.createElement(
 	                'div',
@@ -150,7 +160,7 @@
 	                ),
 	                React.createElement(
 	                    _index.SectionsContainer,
-	                    _extends({ className: 'container' }, options),
+	                    _extends({ className: 'container' }, options, { activeSection: current }),
 	                    React.createElement(
 	                        _index.Section,
 	                        { className: 'custom-section', verticalAlign: 'true', color: '#69D2E7' },
@@ -165,6 +175,24 @@
 	                        _index.Section,
 	                        { color: '#E0E4CC' },
 	                        'Page 3'
+	                    )
+	                ),
+	                React.createElement(
+	                    'div',
+	                    { className: 'btnGroup' },
+	                    React.createElement(
+	                        'button',
+	                        { onClick: function onClick() {
+	                                return _this2.setState({ current: current - 1 });
+	                            }, disabled: current === 0 },
+	                        'pre'
+	                    ),
+	                    React.createElement(
+	                        'button',
+	                        { onClick: function onClick() {
+	                                return _this2.setState({ current: current + 1 });
+	                            }, disabled: current === 2 },
+	                        'next'
 	                    )
 	                )
 	            );
@@ -185,7 +213,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n", ""]);
+	exports.push([module.id, "html,\r\nbody {\r\n\tmargin: 0;\r\n  font-family: arial,helvetica;\r\n}\r\n\r\nhtml {\r\n  box-sizing: border-box;\r\n}\r\n*, *:before, *:after {\r\n  box-sizing: inherit;\r\n}\r\n\r\nfooter,\r\nheader {\r\n  color: #fff;\r\n  text-align: center;\r\n  padding: 10px;\r\n}\r\n\r\nheader {\r\n  background-color:rgba(0, 0, 0, 0.3);\r\n  border-bottom: 1px solid #556270;\r\n}\r\n\r\nfooter {\r\n   color: #000;\r\n}\r\n\r\na {\r\n  display: inline-block;\r\n  color: inherit;\r\n  text-decoration: none;\r\n  margin: 0px 25px;\r\n  \r\n  -webkit-transition: all 0.2s;\r\n  -o-transition: all 0.2s;\r\n  transition: all 0.2s;\r\n}\r\n\r\na.active,\r\na:hover {\r\n  color: #C44D58;\r\n}\r\n\r\nbutton {\r\n  width: 50px;\r\n  padding: 8px;\r\n}\r\n\r\n.btnGroup {\r\n  position: absolute;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  z-index: 9;\r\n}", ""]);
 
 	// exports
 
@@ -1019,12 +1047,18 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
+	var validateFormat = function validateFormat(format) {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  validateFormat = function validateFormat(format) {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
 	    }
-	  }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
 
 	  if (!condition) {
 	    var error;
@@ -21691,7 +21725,7 @@
 	        var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
 	        _this.state = {
-	            activeSection: 0,
+	            activeSection: props.activeSection,
 	            scrollingStarted: false,
 	            sectionScrolledPosition: 0,
 	            windowHeight: window.innerHeight
@@ -21737,6 +21771,20 @@
 	                if (this.props.arrowNavigation) {
 	                    window.addEventListener('keydown', this._handleArrowKeys);
 	                }
+
+	                if (this.props.touchNavigation) {
+	                    this._handleTouchNav();
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.activeSection !== nextProps.activeSection) {
+	                this.setState({ activeSection: nextProps.activeSection });
+	                this._setAnchor(nextProps.activeSection);
+	                this._handleSectionTransition(nextProps.activeSection);
+	                this._addActiveClass();
 	            }
 	        }
 	    }, {
@@ -21863,6 +21911,9 @@
 	    }, {
 	        key: '_handleArrowKeys',
 	        value: function _handleArrowKeys(e) {
+	            if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+	                e.preventDefault(); // Prevent unwanted scrolling on Firefox
+	            }
 	            var event = window.event ? window.event : e;
 	            var activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
 
@@ -21873,6 +21924,71 @@
 	            this._setAnchor(activeSection);
 	            this._handleSectionTransition(activeSection);
 	            this._addActiveClass();
+	        }
+	    }, {
+	        key: '_handleTouchNav',
+	        value: function _handleTouchNav() {
+	            var that = this;
+
+	            var touchsurface = document.querySelector("." + this.props.className),
+	                swipedir,
+	                startX,
+	                startY,
+	                dist,
+	                distX,
+	                distY,
+	                threshold = 50,
+
+	            //required min distance traveled to be considered swipe
+	            restraint = 100,
+
+	            // maximum distance allowed at the same time in perpendicular direction
+	            allowedTime = 1000,
+
+	            // maximum time allowed to travel that distance
+	            elapsedTime,
+	                startTime,
+	                handleswipe = function handleswipe(swipedir) {
+	                console.log(swipedir);
+	            };
+
+	            touchsurface.addEventListener('touchstart', function (e) {
+	                var touchobj = e.changedTouches[0];
+	                swipedir = 'none';
+	                dist = 0;
+	                startX = touchobj.pageX;
+	                startY = touchobj.pageY;
+	                startTime = new Date().getTime(); // record time when finger first makes contact with surface
+	                // e.preventDefault()
+	            }, false);
+
+	            touchsurface.addEventListener('touchmove', function (e) {
+	                e.preventDefault(); // prevent scrolling when inside DIV
+	            }, false);
+
+	            touchsurface.addEventListener('touchend', function (e) {
+	                var touchobj = e.changedTouches[0];
+	                distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+	                distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+	                elapsedTime = new Date().getTime() - startTime; // get time elapsed
+	                if (elapsedTime <= allowedTime) {
+	                    // first condition for awipe met
+	                    if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
+	                        // 2nd condition for vertical swipe met
+	                        swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
+	                        var direction = swipedir === 'down' ? that.state.activeSection - 1 : swipedir === 'up' ? that.state.activeSection + 1 : -1;
+	                        var hash = that.props.anchors[direction];
+
+	                        if (!that.props.anchors.length || hash) {
+	                            window.location.hash = '#' + hash;
+	                        }
+
+	                        that._handleSectionTransition(direction);
+	                    }
+	                }
+	                handleswipe(swipedir);
+	                // e.preventDefault()
+	            }, false);
 	        }
 	    }, {
 	        key: '_handleAnchor',
@@ -21987,7 +22103,9 @@
 	    activeClass: 'active',
 	    sectionPaddingTop: '0',
 	    sectionPaddingBottom: '0',
-	    arrowNavigation: true
+	    arrowNavigation: true,
+	    activeSection: 0,
+	    touchNavigation: true
 	};
 
 	SectionsContainer.propTypes = {
@@ -22003,7 +22121,9 @@
 	    activeClass: React.PropTypes.string,
 	    sectionPaddingTop: React.PropTypes.string,
 	    sectionPaddingBottom: React.PropTypes.string,
-	    arrowNavigation: React.PropTypes.bool
+	    arrowNavigation: React.PropTypes.bool,
+	    activeSection: React.PropTypes.number,
+	    touchNavigation: React.PropTypes.bool
 	};
 
 	SectionsContainer.childContextTypes = {

@@ -174,6 +174,9 @@ export default class SectionsContainer extends React.Component {
     }
 
     _handleArrowKeys(e) {
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            e.preventDefault(); // Prevent unwanted scrolling on Firefox
+        }
         const event = window.event ? window.event : e;
         const activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : (event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1);
 
