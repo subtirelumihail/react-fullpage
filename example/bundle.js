@@ -84,15 +84,22 @@
 	var Example = function (_React$Component) {
 	    _inherits(Example, _React$Component);
 
-	    function Example() {
+	    function Example(props) {
 	        _classCallCheck(this, Example);
 
-	        return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).call(this, props));
+
+	        _this.state = {
+	            current: 0
+	        };
+	        return _this;
 	    }
 
 	    _createClass(Example, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
 	            var options = {
 	                sectionClassName: 'section',
 	                anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
@@ -103,9 +110,12 @@
 	                sectionPaddingBottom: '50px',
 	                arrowNavigation: true,
 	                scrollCallback: function scrollCallback(states) {
-	                    return console.log(states);
+	                    return _this2.setState({ current: states.activeSection });
 	                }
 	            };
+
+	            var current = this.state.current;
+
 
 	            return React.createElement(
 	                'div',
@@ -150,7 +160,7 @@
 	                ),
 	                React.createElement(
 	                    _index.SectionsContainer,
-	                    _extends({ className: 'container' }, options),
+	                    _extends({ className: 'container' }, options, { activeSection: current }),
 	                    React.createElement(
 	                        _index.Section,
 	                        { className: 'custom-section', verticalAlign: 'true', color: '#69D2E7' },
@@ -165,6 +175,24 @@
 	                        _index.Section,
 	                        { color: '#E0E4CC' },
 	                        'Page 3'
+	                    )
+	                ),
+	                React.createElement(
+	                    'div',
+	                    { className: 'btnGroup' },
+	                    React.createElement(
+	                        'button',
+	                        { onClick: function onClick() {
+	                                return _this2.setState({ current: current - 1 });
+	                            }, disabled: current === 0 },
+	                        'pre'
+	                    ),
+	                    React.createElement(
+	                        'button',
+	                        { onClick: function onClick() {
+	                                return _this2.setState({ current: current + 1 });
+	                            }, disabled: current === 2 },
+	                        'next'
 	                    )
 	                )
 	            );
@@ -185,7 +213,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""]);
 
 	// exports
 
@@ -540,8 +568,15 @@
 /* 7 */
 /***/ function(module, exports) {
 
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
 	'use strict';
 	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -562,7 +597,7 @@
 			// Detect buggy property enumeration order in older V8 versions.
 
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -591,7 +626,7 @@
 			}
 
 			return true;
-		} catch (e) {
+		} catch (err) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -611,8 +646,8 @@
 				}
 			}
 
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -1019,12 +1054,18 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
+	var validateFormat = function validateFormat(format) {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  validateFormat = function validateFormat(format) {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
 	    }
-	  }
+	  };
+	}
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
 
 	  if (!condition) {
 	    var error;
@@ -21691,10 +21732,10 @@
 	        var _this = _possibleConstructorReturn(this, (SectionsContainer.__proto__ || Object.getPrototypeOf(SectionsContainer)).call(this, props));
 
 	        _this.state = {
-	            activeSection: 0,
+	            activeSection: props.activeSection,
 	            scrollingStarted: false,
 	            sectionScrolledPosition: 0,
-	            windowHeight: window.innerHeight
+	            windowHeight: 0
 	        };
 
 	        _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
@@ -21726,6 +21767,7 @@
 	        value: function componentDidMount() {
 	            this._childrenLength = this.props.children.length;
 
+	            this._handleResize();
 	            window.addEventListener('resize', this._handleResize);
 
 	            if (!this.props.scrollBar) {
@@ -21737,6 +21779,16 @@
 	                if (this.props.arrowNavigation) {
 	                    window.addEventListener('keydown', this._handleArrowKeys);
 	                }
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.activeSection !== nextProps.activeSection) {
+	                this.setState({ activeSection: nextProps.activeSection });
+	                this._setAnchor(nextProps.activeSection);
+	                this._handleSectionTransition(nextProps.activeSection);
+	                this._addActiveClass();
 	            }
 	        }
 	    }, {
@@ -21987,7 +22039,8 @@
 	    activeClass: 'active',
 	    sectionPaddingTop: '0',
 	    sectionPaddingBottom: '0',
-	    arrowNavigation: true
+	    arrowNavigation: true,
+	    activeSection: 0
 	};
 
 	SectionsContainer.propTypes = {
@@ -22003,7 +22056,8 @@
 	    activeClass: React.PropTypes.string,
 	    sectionPaddingTop: React.PropTypes.string,
 	    sectionPaddingBottom: React.PropTypes.string,
-	    arrowNavigation: React.PropTypes.bool
+	    arrowNavigation: React.PropTypes.bool,
+	    activeSection: React.PropTypes.number
 	};
 
 	SectionsContainer.childContextTypes = {
@@ -22078,7 +22132,7 @@
 	        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
 
 	        _this.state = {
-	            windowHeight: window.innerHeight
+	            windowHeight: 0
 	        };
 	        return _this;
 	    }
@@ -22095,6 +22149,7 @@
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            this.handleResize();
 	            window.addEventListener('resize', function () {
 	                return _this2.handleResize();
 	            });

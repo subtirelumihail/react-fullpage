@@ -30,7 +30,7 @@ var SectionsContainer = function (_React$Component) {
             activeSection: props.activeSection,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
-            windowHeight: window.innerHeight
+            windowHeight: 0
         };
 
         _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
@@ -62,6 +62,7 @@ var SectionsContainer = function (_React$Component) {
         value: function componentDidMount() {
             this._childrenLength = this.props.children.length;
 
+            this._handleResize();
             window.addEventListener('resize', this._handleResize);
 
             if (!this.props.scrollBar) {
