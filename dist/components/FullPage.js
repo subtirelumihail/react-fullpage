@@ -218,7 +218,7 @@ var _class = function (_React$Component) {
     }, {
         key: '_handleAnchor',
         value: function _handleAnchor() {
-            if (this._scrolling) {
+            if (this._scrolling && !window) {
                 return false;
             }
 
@@ -237,7 +237,7 @@ var _class = function (_React$Component) {
     }, {
         key: '_findAnchorCords',
         value: function _findAnchorCords(anchor) {
-            var anchors = this.props.anchors;
+            var anchors = this.props.anchors || [];
 
             for (var i = 0; i < anchors.length; i++) {
                 if (Array.isArray(anchors[i])) {

@@ -180,7 +180,7 @@ export default class extends React.Component {
     }
 
     _handleAnchor() {
-        if (this._scrolling) {
+        if (this._scrolling && !window) {
             return false;
         }
 
@@ -196,7 +196,7 @@ export default class extends React.Component {
 
     // Black magic! (really black, need refactoring)
     _findAnchorCords( anchor ) {
-        let anchors = this.props.anchors;
+        let anchors = this.props.anchors || [];
 
         for(let i = 0; i < anchors.length; i ++) {
             if (Array.isArray(anchors[i])) {

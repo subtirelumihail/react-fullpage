@@ -103,15 +103,15 @@ var SectionsContainer = function (_React$Component) {
 
         /*_addActiveClass() {
             this._removeActiveClass();
-             let hash = window.location.hash.substring(1);
+              let hash = window.location.hash.substring(1);
             let activeLinks = document.querySelectorAll(`a[href="#${hash}"]`);
-             for (let i = 0; i < activeLinks.length; i++) {
+              for (let i = 0; i < activeLinks.length; i++) {
                 activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + `${this.props.activeClass}`;
             }
         }
-         _removeActiveClass() {
+          _removeActiveClass() {
             let activeLinks = document.querySelectorAll(`a:not([href="#${this.props.anchors[this.state.activeSection]}"])`);
-             for (let i = 0; i < activeLinks.length; i++) {
+              for (let i = 0; i < activeLinks.length; i++) {
                 activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
             }
         }*/
@@ -185,7 +185,7 @@ var SectionsContainer = function (_React$Component) {
             console.log(hash);
             const subIndex = hash[1];
             const activeSection = this.props.anchors.indexOf(hash[0]);
-             if (this.state.activeSection !== activeSection) {
+              if (this.state.activeSection !== activeSection) {
                 this._handleSectionTransition(activeSection);
                 this._addActiveClass();
             }
@@ -194,9 +194,9 @@ var SectionsContainer = function (_React$Component) {
                 this.setState({});
             }
         }
-         _setAnchor(index, subIndex) {
+          _setAnchor(index, subIndex) {
             const hash = this.props.anchors[index];
-             if (!this.props.anchors.length || hash) {
+              if (!this.props.anchors.length || hash) {
                 window.location.hash = !!subIndex ? '#' + hash + ';' + subIndex : '#' + hash;
             }
         }*/
@@ -241,7 +241,7 @@ var SectionsContainer = function (_React$Component) {
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
             };
-             const anchors = this.props.anchors.map((link, index) => {
+              const anchors = this.props.anchors.map((link, index) => {
                 const anchorStyle = {
                     display: 'block',
                     margin: '10px',
@@ -251,27 +251,27 @@ var SectionsContainer = function (_React$Component) {
                     transition: 'all 0.2s',
                     transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
                 };
-                 return (
+                  return (
                     <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
                        style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
                 );
             });
-             return (
+              return (
                 <div className={this.props.navigationClass || 'Navigation'}
                      style={this.props.navigationClass ? null : navigationStyle}>
                     {anchors}
                 </div>
             );
         }
-         getChildrenWithProps() {
+          getChildrenWithProps() {
             return React.Children.map(this.props.children, (child, index) => {
                 let props = {
                     currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
                     subIndex: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
                     delay: this.props.delay
                 };
-                 if (index == this.state.activeSection) props.active = true;
-                 return React.cloneElement(child, props);
+                  if (index == this.state.activeSection) props.active = true;
+                  return React.cloneElement(child, props);
             });
         }*/
 
