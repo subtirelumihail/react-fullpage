@@ -12,7 +12,7 @@ const defaultOptions = {
     anchors: [],
     activeClass: 'active',
     activatedClass: 'activated',
-
+    bindToSelector: '.ovf-box',
     horizontalScroll: false
 };
 

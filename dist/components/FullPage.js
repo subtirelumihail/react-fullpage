@@ -55,7 +55,9 @@ var _class = function (_React$Component) {
             this.bindEvents();
             this._handleAnchor();
 
-            document.querySelector('body').style.overflow = 'hidden';
+            if (this.props.bindToSelector && this.props.bindToSelector.length > 0) {
+                document.querySelector(this.props.bindToSelector).style.overflow = 'hidden';
+            }
 
             //if( this.props.horizontalScroll ) this._generateKeyFrames();
         }
