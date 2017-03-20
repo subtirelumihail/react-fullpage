@@ -31,23 +31,32 @@ var _class = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
         _this._scrolling = false;
+        _this.state = {};
 
 
         _react2.default.Children.map(_this.props.children, function (child) {
             if (typeof child.type == 'function') _this._childrenLength += 1;
         });
-
+        _this.state = {
+            offset: 0,
+            wrapperHeight: 0
+        };
         _this._childrenLength = _this.props.children.length;
-        _this.state = {};
 
         _this._handleResize = _this._handleResize.bind(_this);
         _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
         _this._handleAnchor = _this._handleAnchor.bind(_this);
+        // this._getSectionClassName = this._getSectionClassName.bind(this);
         //this._generateKeyFrames = this._generateKeyFrames.bind(this);
         return _this;
     }
 
     _createClass(_class, [{
+        key: 'canUseDOM',
+        value: function canUseDOM() {
+            return !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+        }
+    }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
             this.state.wrapperHeight = this._calculateHeight();
@@ -55,9 +64,9 @@ var _class = function (_React$Component) {
             this.bindEvents();
             this._handleAnchor();
 
-            if (this.props.bindToSelector && this.props.bindToSelector.length > 0) {
-                document.querySelector(this.props.bindToSelector).style.overflow = 'hidden';
-            }
+            if (this.props.bindToSelector && this.props.bindToSelector.length > 0) {}
+            // document.querySelector(this.props.bindToSelector).style.overflow = 'hidden';
+
 
             //if( this.props.horizontalScroll ) this._generateKeyFrames();
         }
@@ -88,7 +97,7 @@ var _class = function (_React$Component) {
             window.addEventListener('resize', this._handleResize);
             window.addEventListener('mousewheel', this._handleMouseWheel, false);
             window.addEventListener('DOMMouseScroll', this._handleMouseWheel, false);
-            window.addEventListener('hashchange', this._handleAnchor, false);
+            // window.addEventListener('hashchange', this._handleAnchor, false);
         }
     }, {
         key: 'unbindEvents',
@@ -96,7 +105,7 @@ var _class = function (_React$Component) {
             window.removeEventListener('resize', this._handleMouseWheel);
             window.removeEventListener('mousewheel', this._handleMouseWheel);
             window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
-            window.removeEventListener('hashchange', this._handleAnchor);
+            // window.removeEventListener('hashchange', this._handleAnchor);
         }
 
         /*
@@ -109,9 +118,9 @@ var _class = function (_React$Component) {
             var _this2 = this;
 
             var height = 0;
-
             Object.keys(this.refs).forEach(function (key) {
-                height += (0, _reactDom.findDOMNode)(_this2.refs[key]).offsetHeight;
+                var node = (0, _reactDom.findDOMNode)(_this2.refs[key]);
+                height += node && node.offsetHeight;
             });
 
             // If we want to reserve for last block (need to add flag)
@@ -143,7 +152,8 @@ var _class = function (_React$Component) {
                 offset = 100 * currentSection;
             } else {
                 for (var i = 0; i < currentSection; i++) {
-                    offset += (0, _reactDom.findDOMNode)(this.refs[i]).offsetHeight;
+                    var node = (0, _reactDom.findDOMNode)(this.refs[i]);
+                    offset += node && node.offsetHeight;
                 }
 
                 if (offset > this.state.wrapperHeight - window.innerHeight) offset = this.state.wrapperHeight - window.innerHeight;
@@ -158,7 +168,8 @@ var _class = function (_React$Component) {
 
             if (Array.isArray(anchor)) anchor = anchor[slide];
 
-            window.location.hash = anchor;
+            // window.location.hash = anchor;
+            this.props.actions.replace(anchor);
         }
 
         /*    _generateKeyFrames( currentSection, direction ) {
@@ -206,16 +217,19 @@ var _class = function (_React$Component) {
             var e = window.event || event;
             var direction = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
 
-            if (this._isSlideAction()) {
-                this.props.actions.moveTo(direction, true);
+            // console.log('scroll', event, this.props);
+
+            if (this._canScroll(direction)) {
+                this.props.actions.moveTo(direction, false);
             } else {
-                if (this._canScroll(direction)) {
-                    this.props.actions.moveTo(direction, false);
-                } else {
-                    this._scrolling = false;
-                    return false;
-                }
+                this._scrolling = false;
+                return false;
             }
+            //     if (this._isSlideAction()) {
+            //         this.props.actions.moveTo( direction, true );
+            //     }
+            //     else {
+            //     }
         }
     }, {
         key: '_handleAnchor',
@@ -224,7 +238,7 @@ var _class = function (_React$Component) {
                 return false;
             }
 
-            var hash = window.location.hash.substring(1);
+            var hash = this.props.routing.location.pathname || "";
 
             var cords = this._findAnchorCords(hash);
 
@@ -252,62 +266,87 @@ var _class = function (_React$Component) {
             return false;
         }
     }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            this.bindEvents();
+        }
+    }, {
+        key: 'componentWillUpdate',
+        value: function componentWillUpdate() {
+            this.unbindEvents();
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this3 = this;
 
             var containerStyle = {};
+            var _props = this.props,
+                horizontalScroll = _props.horizontalScroll,
+                delay = _props.delay,
+                className = _props.className;
+            var _state = this.state,
+                offset = _state.offset,
+                wrapperHeight = _state.wrapperHeight;
 
-            if (this.props.horizontalScroll) {
+            if (horizontalScroll) {
                 containerStyle = {
-                    height: this.state.wrapperHeight,
+                    height: wrapperHeight,
                     width: this._childrenLength * 100 + 'vw',
                     position: 'relative',
 
-                    transform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    MozTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    msTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    WebkitTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
-                    OTransform: 'translate3d(-' + this.state.offset + 'vw, 0, 0)',
+                    transform: 'translate3d(-' + offset + 'vw, 0, 0)',
+                    MozTransform: 'translate3d(-' + offset + 'vw, 0, 0)',
+                    msTransform: 'translate3d(-' + offset + 'vw, 0, 0)',
+                    WebkitTransform: 'translate3d(-' + offset + 'vw, 0, 0)',
+                    OTransform: 'translate3d(-' + offset + 'vw, 0, 0)',
 
-                    transition: 'transform ' + this.props.delay + 'ms ease',
-                    WebkitTransition: 'transform ' + this.props.delay + 'ms ease',
-                    MozTransition: 'transform ' + this.props.delay + 'ms ease',
-                    OTransition: 'transform ' + this.props.delay + 'ms ease'
+                    transition: 'transform ' + delay + 'ms ease',
+                    WebkitTransition: 'transform ' + delay + 'ms ease',
+                    MozTransition: 'transform ' + delay + 'ms ease',
+                    OTransition: 'transform ' + delay + 'ms ease'
                 };
             } else {
                 containerStyle = {
-                    height: this.state.wrapperHeight,
+                    height: wrapperHeight,
                     width: '100%',
                     position: 'relative',
 
-                    transform: 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    MozTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    msTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    WebkitTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
-                    OTransform: 'translate3d(0,-' + this.state.offset + 'px,0)',
+                    transform: 'translate3d(0,-' + offset + 'px,0)',
+                    MozTransform: 'translate3d(0,-' + offset + 'px,0)',
+                    msTransform: 'translate3d(0,-' + offset + 'px,0)',
+                    WebkitTransform: 'translate3d(0,-' + offset + 'px,0)',
+                    OTransform: 'translate3d(0,-' + offset + 'px,0)',
 
-                    transition: 'transform ' + this.props.delay + 'ms ease',
-                    WebkitTransition: 'transform ' + this.props.delay + 'ms ease',
-                    MozTransition: 'transform ' + this.props.delay + 'ms ease',
-                    OTransition: 'transform ' + this.props.delay + 'ms ease'
+                    transition: 'transform ' + delay + 'ms ease',
+                    WebkitTransition: 'transform ' + delay + 'ms ease',
+                    MozTransition: 'transform ' + delay + 'ms ease',
+                    OTransition: 'transform ' + delay + 'ms ease'
                 };
             }
 
             var ignoredCount = 0;
             return _react2.default.createElement(
                 'div',
-                { className: this.props.className, style: containerStyle },
+                { className: className, style: containerStyle },
                 _react2.default.Children.map(this.props.children, function (child, id) {
+                    var _props2 = _this3.props,
+                        activeClass = _props2.activeClass,
+                        activatedClass = _props2.activatedClass,
+                        sectionClassName = _props2.sectionClassName,
+                        currentSection = _props2.currentSection,
+                        lastActivated = _props2.lastActivated;
+
                     if (typeof child.type == 'function') {
                         return _react2.default.cloneElement(child, {
+                            key: id,
                             ref: id - ignoredCount,
                             index: id - ignoredCount,
-                            activeClass: _this3.props.activeClass,
-                            activatedClass: _this3.props.activatedClass,
-                            sectionClassName: _this3.props.sectionClassName,
-                            currentSection: _this3.props.currentSection,
-                            lastActivated: _this3.props.lastActivated
+                            activeClass: activeClass,
+                            activatedClass: activatedClass,
+                            sectionClassName: sectionClassName,
+                            currentSection: currentSection,
+                            lastActivated: lastActivated
                         });
                     } else {
                         ignoredCount += 1;

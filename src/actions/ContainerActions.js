@@ -47,3 +47,5 @@ export function jumpTo(section, slide) {
         );
     }
 }
+
+export { push, replace, go, goBack, goForward } from 'react-router-redux';

@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * Created by yura on 04.01.17.
+                                                                                                                                                                                                                                                                   */
+
 var _reactRedux = require('react-redux');
 
 var _redux = require('redux');
@@ -20,12 +24,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Created by yura on 04.01.17.
- */
-
 var mapStateToProps = function mapStateToProps(state) {
-    return state;
+    return _extends({}, state.fullpage, {
+        routing: state.routing
+    });
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {

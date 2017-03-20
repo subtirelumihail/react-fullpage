@@ -4,12 +4,10 @@
 
 import { SCROLL_START, SCROLL_STOP, JUMP_START } from '../actions/ActionTypes';
 
-
 const defaultOptions = {
     delay: 1000,
     className: 'SectionContainer',
     sectionClassName: 'Section',
-    anchors: [],
     activeClass: 'active',
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
@@ -31,8 +29,8 @@ export default function( options ) {
 
     return function(state = initialState, action) {
         switch( action.type ) {
-            case SCROLL_START:
-                if ( action.isSlide ) {
+            case SCROLL_START: {
+                if (action.isSlide) {
                     return {
                         ...state,
                         currentSlide: state.currentSlide - action.direction,
@@ -49,8 +47,9 @@ export default function( options ) {
                         lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
                     };
                 }
+            } break;
 
-            case JUMP_START:
+            case JUMP_START: {
                 return {
                     ...state,
                     currentSection: action.section,
@@ -58,9 +57,11 @@ export default function( options ) {
                     scrolling: true,
                     lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
                 };
+            } break;
 
-            case SCROLL_STOP:
+            case SCROLL_STOP:{
                 return { ...state, scrolling: false };
+            } break;
 
             default: return state;
         }

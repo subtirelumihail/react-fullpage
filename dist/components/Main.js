@@ -20,6 +20,22 @@ var _FullPageContainer = require('../containers/FullPageContainer');
 
 var _FullPageContainer2 = _interopRequireDefault(_FullPageContainer);
 
+var _history = require('history');
+
+var _ConnectedRouter = require('./ConnectedRouter');
+
+var _ConnectedRouter2 = _interopRequireDefault(_ConnectedRouter);
+
+var _reactRouter = require('react-router');
+
+var _SectionInner = require('../components/SectionInner');
+
+var _SectionInner2 = _interopRequireDefault(_SectionInner);
+
+var _reactAddonsCssTransitionGroup = require('react-addons-css-transition-group');
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -38,20 +54,74 @@ var _class = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
-        _this.store = (0, _MainStore2.default)(_this.props.options);
+        var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+        _this.history = _this.props.history || (canUseDOM ? (0, _history.createBrowserHistory)() : (0, _history.createMemoryHistory)());
+        _this.store = (0, _MainStore2.default)(_this.props.options, _this.history);
+        _this.routes = [];
+        _react2.default.Children.forEach(_this.props.children, function (child, index) {
+            child.props && child.props.link && _this.routes.push(child.props.link);
+        });
         return _this;
     }
 
     _createClass(_class, [{
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
+            var routes = function routes(location) {
+                return _react2.default.Children.map(_this2.props.children, function (child, index) {
+                    if (child && child.props && child.props.link) {
+                        var path = child.props.link;
+                        return _react2.default.createElement(
+                            _reactAddonsCssTransitionGroup2.default,
+                            {
+                                key: index,
+                                component: _SectionInner2.default,
+                                className: child.props.className,
+                                transitionName: {
+                                    enter: 'section-enter',
+                                    enterActive: 'section-enter-active',
+                                    leave: 'section-leave',
+                                    leaveActive: 'section-leave-active'
+                                },
+                                transitionEnter: false,
+                                transitionEnterTimeout: 1000,
+                                transitionLeaveTimeout: 1000
+                            },
+                            _react2.default.createElement(_reactRouter.Route, {
+                                location: location,
+                                key: location.key,
+                                path: path,
+                                exact: true,
+                                render: function render() {
+                                    return child;
+                                }
+                            })
+                        );
+                    } else {
+                        return child;
+                    }
+                });
+            };
             return _react2.default.createElement(
-                _reactRedux.Provider,
-                { store: this.store },
+                'div',
+                null,
                 _react2.default.createElement(
-                    _FullPageContainer2.default,
-                    null,
-                    this.props.children
+                    _reactRedux.Provider,
+                    { store: this.store },
+                    _react2.default.createElement(
+                        _ConnectedRouter2.default,
+                        { history: this.history },
+                        _react2.default.createElement(_reactRouter.Route, { render: function render(_ref) {
+                                var location = _ref.location;
+                                return _react2.default.createElement(
+                                    _FullPageContainer2.default,
+                                    { anchors: _this2.routes },
+                                    routes(location)
+                                );
+                            } })
+                    )
                 )
             );
         }

@@ -3,11 +3,45 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = undefined;
 exports.startScroll = startScroll;
 exports.scrollStop = scrollStop;
 exports.startJump = startJump;
 exports.moveTo = moveTo;
 exports.jumpTo = jumpTo;
+
+var _reactRouterRedux = require('react-router-redux');
+
+Object.defineProperty(exports, 'push', {
+    enumerable: true,
+    get: function get() {
+        return _reactRouterRedux.push;
+    }
+});
+Object.defineProperty(exports, 'replace', {
+    enumerable: true,
+    get: function get() {
+        return _reactRouterRedux.replace;
+    }
+});
+Object.defineProperty(exports, 'go', {
+    enumerable: true,
+    get: function get() {
+        return _reactRouterRedux.go;
+    }
+});
+Object.defineProperty(exports, 'goBack', {
+    enumerable: true,
+    get: function get() {
+        return _reactRouterRedux.goBack;
+    }
+});
+Object.defineProperty(exports, 'goForward', {
+    enumerable: true,
+    get: function get() {
+        return _reactRouterRedux.goForward;
+    }
+});
 
 var _ActionTypes = require('./ActionTypes');
 

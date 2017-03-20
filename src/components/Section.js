@@ -1,22 +1,17 @@
 import * as React from 'react';
 
-
-export default class extends React.Component {
+class Section extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        let className = this.props.sectionClassName;
-
-        if ( this.props.className ) className += ` ${ this.props.className }`;
-        if ( this.props.index == this.props.currentSection ) className += ` ${ this.props.activeClass }`;
-        if ( this.props.index <= this.props.lastActivated ) className += ` ${ this.props.activatedClass }`;
-
         return (
-            <div className={ className }>
+            <div className={ this.props.className }>
                 { this.props.children }
             </div>
         )
     }
 }
+
+export default Section;

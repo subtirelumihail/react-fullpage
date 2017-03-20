@@ -18,27 +18,55 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Section = function (_React$Component) {
-    _inherits(Section, _React$Component);
+var SectionInner = function (_React$Component) {
+    _inherits(SectionInner, _React$Component);
 
-    function Section(props) {
-        _classCallCheck(this, Section);
+    function SectionInner(props) {
+        _classCallCheck(this, SectionInner);
 
-        return _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (SectionInner.__proto__ || Object.getPrototypeOf(SectionInner)).call(this, props));
+
+        _this.state = {
+            activated: false
+        };
+        return _this;
     }
 
-    _createClass(Section, [{
+    _createClass(SectionInner, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            var _this2 = this;
+
+            if (nextProps.currentSection === this.props.index) {
+                setTimeout(function () {
+                    _this2.setState({
+                        activated: true
+                    });
+                }, 10);
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var className = this.props.sectionClassName;
+            var _props = this.props,
+                index = _props.index,
+                currentSection = _props.currentSection,
+                activeClass = _props.activeClass,
+                activatedClass = _props.activatedClass;
+
+            if (this.props.className && this.props.className.length > 0) className += ' ' + this.props.className;
+            if (index == currentSection) className += ' ' + activeClass;
+            if (this.state.activated) className += ' ' + activatedClass;
             return React.createElement(
                 'div',
-                { className: this.props.className },
+                { className: className },
                 this.props.children
             );
         }
     }]);
 
-    return Section;
+    return SectionInner;
 }(React.Component);
 
-exports.default = Section;
+exports.default = SectionInner;

@@ -8,7 +8,10 @@ import FullPage from '../components/FullPage';
 import * as actions from '../actions/ContainerActions';
 
 const mapStateToProps = ( state ) => {
-    return state;
+    return {
+        ...state.fullpage,
+        routing: state.routing
+    };
 };
 
 const mapDispatchToProps = ( dispatch ) => {

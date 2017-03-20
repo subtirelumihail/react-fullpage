@@ -23,31 +23,37 @@ exports.default = function (options) {
 
         switch (action.type) {
             case _ActionTypes.SCROLL_START:
-                if (action.isSlide) {
-                    return _extends({}, state, {
-                        currentSlide: state.currentSlide - action.direction,
-                        scrolling: true
-                    });
-                } else {
-                    var nextSection = state.currentSection - action.direction;
+                {
+                    if (action.isSlide) {
+                        return _extends({}, state, {
+                            currentSlide: state.currentSlide - action.direction,
+                            scrolling: true
+                        });
+                    } else {
+                        var nextSection = state.currentSection - action.direction;
 
-                    return _extends({}, state, {
-                        currentSection: nextSection,
-                        scrolling: true,
-                        lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
-                    });
-                }
+                        return _extends({}, state, {
+                            currentSection: nextSection,
+                            scrolling: true,
+                            lastActivated: state.lastActivated < nextSection ? nextSection : state.lastActivated
+                        });
+                    }
+                }break;
 
             case _ActionTypes.JUMP_START:
-                return _extends({}, state, {
-                    currentSection: action.section,
-                    currentSlide: action.slide,
-                    scrolling: true,
-                    lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
-                });
+                {
+                    return _extends({}, state, {
+                        currentSection: action.section,
+                        currentSlide: action.slide,
+                        scrolling: true,
+                        lastActivated: state.lastActivated < action.section ? action.section : state.lastActivated
+                    });
+                }break;
 
             case _ActionTypes.SCROLL_STOP:
-                return _extends({}, state, { scrolling: false });
+                {
+                    return _extends({}, state, { scrolling: false });
+                }break;
 
             default:
                 return state;
@@ -61,7 +67,6 @@ var defaultOptions = {
     delay: 1000,
     className: 'SectionContainer',
     sectionClassName: 'Section',
-    anchors: [],
     activeClass: 'active',
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
