@@ -1,5 +1,12 @@
 import * as React from 'react';
 
+const fn = ( callback ) => {
+    setTimeout(callback, 1000 / 60);
+};
+const canUseDOM = ()=> !!(
+    (typeof window !== 'undefined' &&
+    window.document && window.document.createElement)
+);
 class SectionInner extends React.Component {
     state = {
         activated: false
@@ -10,11 +17,20 @@ class SectionInner extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if (nextProps.currentSection === this.props.index){
-            setTimeout(()=>{
+            let requestAnimFrame = undefined;
+            if (canUseDOM()){
+                requestAnimFrame = window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    fn;
+            } else {
+                requestAnimFrame = fn;
+            }
+            requestAnimFrame(()=> {
                 this.setState({
                     activated: true
                 });
-            }, 10);
+            });
         }
     }
 

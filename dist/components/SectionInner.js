@@ -18,6 +18,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var fn = function fn(callback) {
+    setTimeout(callback, 1000 / 60);
+};
+var canUseDOM = function canUseDOM() {
+    return !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+};
+
 var SectionInner = function (_React$Component) {
     _inherits(SectionInner, _React$Component);
 
@@ -38,11 +45,17 @@ var SectionInner = function (_React$Component) {
             var _this2 = this;
 
             if (nextProps.currentSection === this.props.index) {
-                setTimeout(function () {
+                var requestAnimFrame = undefined;
+                if (canUseDOM()) {
+                    requestAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || fn;
+                } else {
+                    requestAnimFrame = fn;
+                }
+                requestAnimFrame(function () {
                     _this2.setState({
                         activated: true
                     });
-                }, 10);
+                });
             }
         }
     }, {
