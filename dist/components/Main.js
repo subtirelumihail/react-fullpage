@@ -86,8 +86,9 @@ var _class = function (_React$Component) {
                                     leaveActive: 'section-leave-active'
                                 },
                                 transitionEnter: false,
+                                transitionLeave: true,
                                 transitionEnterTimeout: 1000,
-                                transitionLeaveTimeout: 1000
+                                transitionLeaveTimeout: 6000
                             },
                             _react2.default.createElement(_reactRouter.Route, {
                                 location: location,
@@ -95,7 +96,7 @@ var _class = function (_React$Component) {
                                 path: path,
                                 exact: true,
                                 render: function render() {
-                                    return child;
+                                    return _react2.default.cloneElement(child);
                                 }
                             })
                         );

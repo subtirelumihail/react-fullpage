@@ -15,7 +15,6 @@ import ReactCSSTransitionGroup  from 'react-addons-css-transition-group';
 export default class extends React.Component {
     store;
     history;
-
     constructor( props ) {
         super( props );
         const canUseDOM = !!(
@@ -46,8 +45,9 @@ export default class extends React.Component {
                                 leaveActive: 'section-leave-active',
                             } }
                             transitionEnter={false}
+                            transitionLeave={true}
                             transitionEnterTimeout={1000}
-                            transitionLeaveTimeout={1000}
+                            transitionLeaveTimeout={6000}
                         >
                             <Route
                                 location={location}
@@ -55,7 +55,7 @@ export default class extends React.Component {
                                 path={path}
                                 exact={true}
                                 render={()=>
-                                    child
+                                    React.cloneElement(child)
                                 }
                             />
                         </ReactCSSTransitionGroup>

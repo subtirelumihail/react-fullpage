@@ -235,9 +235,9 @@ export default class extends React.Component {
         let { offset, wrapperHeight } = this.state;
         if( horizontalScroll ) {
             containerStyle = {
-                height: wrapperHeight,
+                // height: wrapperHeight,
                 width: `${ this._childrenLength * 100 }vw`,
-                position: 'relative',
+                // position: 'relative',
 
                 transform: `translate3d(-${offset}vw, 0, 0)`,
                 MozTransform: `translate3d(-${offset}vw, 0, 0)`,
@@ -245,17 +245,17 @@ export default class extends React.Component {
                 WebkitTransform: `translate3d(-${offset}vw, 0, 0)`,
                 OTransform: `translate3d(-${offset}vw, 0, 0)`,
 
-                transition: `transform ${delay}ms ease`,
-                WebkitTransition: `transform ${delay}ms ease`,
-                MozTransition: `transform ${delay}ms ease`,
-                OTransition: `transform ${delay}ms ease`
+                // transition: `transform ${delay}ms ease`,
+                // WebkitTransition: `transform ${delay}ms ease`,
+                // MozTransition: `transform ${delay}ms ease`,
+                // OTransition: `transform ${delay}ms ease`
             };
         }
         else {
             containerStyle = {
-                height: wrapperHeight,
-                width: '100%',
-                position: 'relative',
+                // height: wrapperHeight,
+                // width: '100%',
+                // position: 'relative',
 
                 transform: `translate3d(0,-${offset}px,0)`,
                 MozTransform: `translate3d(0,-${offset}px,0)`,
@@ -263,10 +263,10 @@ export default class extends React.Component {
                 WebkitTransform: `translate3d(0,-${offset}px,0)`,
                 OTransform: `translate3d(0,-${offset}px,0)`,
 
-                transition: `transform ${delay}ms ease`,
-                WebkitTransition: `transform ${delay}ms ease`,
-                MozTransition: `transform ${delay}ms ease`,
-                OTransition: `transform ${delay}ms ease`,
+                // transition: `transform ${delay}ms ease`,
+                // WebkitTransition: `transform ${delay}ms ease`,
+                // MozTransition: `transform ${delay}ms ease`,
+                // OTransition: `transform ${delay}ms ease`,
             };
         }
 

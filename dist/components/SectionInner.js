@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _react = require('react');
 
-var React = _interopRequireWildcard(_react);
+var _react2 = _interopRequireDefault(_react);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -18,8 +18,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var fn = function fn(callback) {
-    setTimeout(callback, 1000 / 60);
+var fn = function fn(callback, time) {
+    setTimeout(callback, time || 1000 / 60);
 };
 var canUseDOM = function canUseDOM() {
     return !!(typeof window !== 'undefined' && window.document && window.document.createElement);
@@ -34,28 +34,44 @@ var SectionInner = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (SectionInner.__proto__ || Object.getPrototypeOf(SectionInner)).call(this, props));
 
         _this.state = {
-            activated: false
+            activated: false,
+            leave: false
         };
         return _this;
     }
 
     _createClass(SectionInner, [{
+        key: 'getChildContext',
+        value: function getChildContext() {
+            return {
+                isActivated: this.isActivated.bind(this)
+            };
+        }
+    }, {
+        key: 'isActivated',
+        value: function isActivated() {
+            return this.state.activated;
+        }
+    }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
             var _this2 = this;
 
             if (nextProps.currentSection === this.props.index) {
-                var requestAnimFrame = undefined;
-                if (canUseDOM()) {
-                    requestAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || fn;
-                } else {
-                    requestAnimFrame = fn;
-                }
-                requestAnimFrame(function () {
+                fn(function () {
                     _this2.setState({
-                        activated: true
+                        activated: true,
+                        leave: false
                     });
                 });
+            } else {
+                if (this.props.index === this.props.currentSection && nextProps.currentSection !== this.props.index) {
+                    fn(function () {
+                        _this2.setState({
+                            leave: true
+                        });
+                    }, 1000);
+                }
             }
         }
     }, {
@@ -71,7 +87,8 @@ var SectionInner = function (_React$Component) {
             if (this.props.className && this.props.className.length > 0) className += ' ' + this.props.className;
             if (index == currentSection) className += ' ' + activeClass;
             if (this.state.activated) className += ' ' + activatedClass;
-            return React.createElement(
+            if (this.state.leave) className += ' section-leave-finish';
+            return _react2.default.createElement(
                 'div',
                 { className: className },
                 this.props.children
@@ -80,6 +97,9 @@ var SectionInner = function (_React$Component) {
     }]);
 
     return SectionInner;
-}(React.Component);
+}(_react2.default.Component);
 
+SectionInner.childContextTypes = {
+    isActivated: _react.PropTypes.any.isRequired
+};
 exports.default = SectionInner;
