@@ -61,7 +61,7 @@ export default class extends React.Component {
                         </ReactCSSTransitionGroup>
                     );
                 } else {
-                    return child;
+                    return React.cloneElement(child);
                 }
 
             });

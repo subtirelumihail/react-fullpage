@@ -101,7 +101,7 @@ var _class = function (_React$Component) {
                             })
                         );
                     } else {
-                        return child;
+                        return _react2.default.cloneElement(child);
                     }
                 });
             };
