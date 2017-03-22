@@ -70,7 +70,8 @@ var defaultOptions = {
     activeClass: 'active',
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
-    horizontalScroll: false
+    horizontalScroll: false,
+    recalculateHeight: false
 };
 
 // Reducer creator. We can make some actions with state

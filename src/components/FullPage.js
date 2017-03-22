@@ -250,6 +250,11 @@ export default class extends React.Component {
                 // MozTransition: `transform ${delay}ms ease`,
                 // OTransition: `transform ${delay}ms ease`
             };
+
+            if (this.props.recalculateHeight){
+                containerStyle = {...containerStyle, height: wrapperHeight}
+            }
+
         }
         else {
             containerStyle = {
@@ -268,6 +273,9 @@ export default class extends React.Component {
                 // MozTransition: `transform ${delay}ms ease`,
                 // OTransition: `transform ${delay}ms ease`,
             };
+            if (this.props.recalculateHeight){
+                containerStyle = {...containerStyle, height: wrapperHeight}
+            }
         }
 
         let ignoredCount = 0;

@@ -11,7 +11,8 @@ const defaultOptions = {
     activeClass: 'active',
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
-    horizontalScroll: false
+    horizontalScroll: false,
+    recalculateHeight: false
 };
 
 
