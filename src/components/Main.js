@@ -8,7 +8,7 @@ import storeCreator from '../stores/MainStore';
 import FullPageContainer from '../containers/FullPageContainer';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import ConnectedRouter from './ConnectedRouter';
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 import SectionInner from '../components/SectionInner';
 import ReactCSSTransitionGroup  from 'react-addons-css-transition-group';
 
@@ -22,11 +22,11 @@ export default class extends React.Component {
             window.document && window.document.createElement)
         );
         this.history = this.props.history || (canUseDOM ? createBrowserHistory() : createMemoryHistory());
-        this.store = storeCreator( this.props.options, this.history );
         this.routes = [];
         React.Children.forEach(this.props.children, (child, index) => {
             child.props && child.props.link && this.routes.push(child.props.link);
         });
+        this.store = storeCreator( { ...this.props.options, routes: this.routes }, this.history );
     }
     render () {
         const routes = (location) => {
@@ -73,6 +73,7 @@ export default class extends React.Component {
                         <Route render={({location})=>
                             <FullPageContainer anchors={this.routes}>
                                 {routes(location)}
+                                { this.props.options.redirectToFirstSlide && this.routes.length > 0 ? <Redirect to={this.routes[0]}/> : null }
                             </FullPageContainer>
                         } />
                     </ConnectedRouter>

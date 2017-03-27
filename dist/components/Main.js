@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -56,11 +58,11 @@ var _class = function (_React$Component) {
 
         var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
         _this.history = _this.props.history || (canUseDOM ? (0, _history.createBrowserHistory)() : (0, _history.createMemoryHistory)());
-        _this.store = (0, _MainStore2.default)(_this.props.options, _this.history);
         _this.routes = [];
         _react2.default.Children.forEach(_this.props.children, function (child, index) {
             child.props && child.props.link && _this.routes.push(child.props.link);
         });
+        _this.store = (0, _MainStore2.default)(_extends({}, _this.props.options, { routes: _this.routes }), _this.history);
         return _this;
     }
 
@@ -119,7 +121,8 @@ var _class = function (_React$Component) {
                                 return _react2.default.createElement(
                                     _FullPageContainer2.default,
                                     { anchors: _this2.routes },
-                                    routes(location)
+                                    routes(location),
+                                    _this2.props.options.redirectToFirstSlide && _this2.routes.length > 0 ? _react2.default.createElement(_reactRouter.Redirect, { to: _this2.routes[0] }) : null
                                 );
                             } })
                     )

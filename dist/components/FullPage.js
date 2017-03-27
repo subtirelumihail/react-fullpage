@@ -37,7 +37,7 @@ var _class = function (_React$Component) {
 
 
         _react2.default.Children.map(_this.props.children, function (child) {
-            if (typeof child.type == 'function') _this._childrenLength += 1;
+            if (child !== null && typeof child.type == 'function') _this._childrenLength += 1;
         });
         _this.state = {
             offset: 0,
@@ -338,7 +338,7 @@ var _class = function (_React$Component) {
                         currentSection = _props2.currentSection,
                         lastActivated = _props2.lastActivated;
 
-                    if (typeof child.type == 'function') {
+                    if (child !== null && typeof child.type == 'function') {
                         return _react2.default.cloneElement(child, {
                             key: id,
                             ref: id - ignoredCount,

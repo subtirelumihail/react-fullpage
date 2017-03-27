@@ -13,7 +13,7 @@ export default class extends React.Component {
         super( props );
 
         React.Children.map(this.props.children, (child) => {
-            if(typeof child.type == 'function')
+            if(child !== null && typeof child.type == 'function')
                 this._childrenLength += 1;
         });
         this.state = {
@@ -283,7 +283,7 @@ export default class extends React.Component {
             <div className={className} style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
                     let {activeClass, activatedClass, sectionClassName, currentSection, lastActivated} = this.props;
-                    if(typeof child.type == 'function') {
+                    if( child !== null && typeof child.type == 'function') {
                         return React.cloneElement(child, {
                             key: id,
                             ref: id - ignoredCount,

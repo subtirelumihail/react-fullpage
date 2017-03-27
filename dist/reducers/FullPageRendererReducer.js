@@ -55,6 +55,20 @@ exports.default = function (options) {
                     return _extends({}, state, { scrolling: false });
                 }break;
 
+            // handle react-router url changes
+
+            case '@@router/LOCATION_CHANGE':
+                {
+                    var path = action.payload.pathname || "";
+                    if (state.routes.includes(path)) {
+                        return _extends({}, state, {
+                            currentSection: state.routes.indexOf(path)
+                        });
+                    } else {
+                        return _extends({}, state);
+                    }
+                }break;
+
             default:
                 return state;
         }
@@ -71,7 +85,9 @@ var defaultOptions = {
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
     horizontalScroll: false,
-    recalculateHeight: false
+    recalculateHeight: false,
+    redirectToFirstSlide: false,
+    routes: []
 };
 
 // Reducer creator. We can make some actions with state

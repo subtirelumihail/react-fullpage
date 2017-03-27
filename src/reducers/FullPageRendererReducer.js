@@ -12,7 +12,9 @@ const defaultOptions = {
     activatedClass: 'activated',
     bindToSelector: '.ovf-box',
     horizontalScroll: false,
-    recalculateHeight: false
+    recalculateHeight: false,
+    redirectToFirstSlide: false,
+    routes: []
 };
 
 
@@ -62,6 +64,22 @@ export default function( options ) {
 
             case SCROLL_STOP:{
                 return { ...state, scrolling: false };
+            } break;
+
+            // handle react-router url changes
+
+            case '@@router/LOCATION_CHANGE': {
+                let path = action.payload.pathname || "";
+                if (state.routes.includes(path)){
+                    return {
+                        ...state,
+                        currentSection: state.routes.indexOf(path)
+                    }
+                } else {
+                    return {
+                        ...state
+                    }
+                }
             } break;
 
             default: return state;
