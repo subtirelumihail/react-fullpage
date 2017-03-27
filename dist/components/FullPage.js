@@ -54,17 +54,17 @@ var _class = function (_React$Component) {
     }
 
     _createClass(_class, [{
-        key: 'canUseDOM',
-        value: function canUseDOM() {
-            return !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-        }
-    }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
             this.state.wrapperHeight = this._calculateHeight();
 
             this.bindEvents();
             this._handleAnchor();
+            if (this.state.offset === 0) {
+                this.setState({
+                    offset: this._calculateOffset(this.props.currentSection)
+                });
+            }
 
             if (this.props.bindToSelector && this.props.bindToSelector.length > 0) {}
             // document.querySelector(this.props.bindToSelector).style.overflow = 'hidden';

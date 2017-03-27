@@ -28,18 +28,16 @@ export default class extends React.Component {
         // this._getSectionClassName = this._getSectionClassName.bind(this);
         //this._generateKeyFrames = this._generateKeyFrames.bind(this);
     }
-    canUseDOM(){
-        return !!(
-            (typeof window !== 'undefined' &&
-            window.document && window.document.createElement)
-        );
-    }
     componentDidMount() {
         this.state.wrapperHeight = this._calculateHeight();
 
         this.bindEvents();
         this._handleAnchor();
-
+        if (this.state.offset === 0){
+            this.setState({
+                offset: this._calculateOffset(this.props.currentSection)
+            });
+        }
 
         if (this.props.bindToSelector && this.props.bindToSelector.length > 0){
             // document.querySelector(this.props.bindToSelector).style.overflow = 'hidden';
