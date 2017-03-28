@@ -64,6 +64,9 @@ var _class = function (_React$Component) {
                 this.setState({
                     offset: this._calculateOffset(this.props.currentSection)
                 });
+                if (this.props.currentSection > 0 && this.props.scrollCallback) {
+                    this.props.scrollCallback(this.props.currentSection);
+                }
             }
 
             if (this.props.bindToSelector && this.props.bindToSelector.length > 0) {}
