@@ -65,7 +65,7 @@ Some of this props can be referenced with the [fullpage.js options](https://gith
 let options = {
   activeClass:          'active', // the class that is appended to the sections links
   anchors:              [], // the anchors for each sections
-  arrowNavigation:      true // use arrow keys
+  arrowNavigation:      true, // use arrow keys
   className:            'SectionContainer', // the class name for the section container
   delay:                1000, // the scroll animation speed
   navigation:           true, // use dots navigatio
@@ -78,7 +78,7 @@ let options = {
 ```
 
 ## Full example
-You can find the full example [here](https://github.com/subtirelumihail/react-fullpage/tree/master/example)
+You can find the full example [here](https://github.com/subtirelumihail/react15-fullpage/tree/master/example)
 
 ````javascript
 import React    from 'react';
@@ -100,7 +100,7 @@ const Example = React.createClass({
       sectionPaddingBottom: '50px',
       arrowNavigation:      true
     };
-    
+
     return (
       <div>
         <Header>
