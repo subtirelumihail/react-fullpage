@@ -21,9 +21,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var fn = function fn(callback, time) {
     setTimeout(callback, time || 1000 / 60);
 };
-var canUseDOM = function canUseDOM() {
-    return !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-};
 
 var SectionInner = function (_React$Component) {
     _inherits(SectionInner, _React$Component);

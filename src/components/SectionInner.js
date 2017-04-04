@@ -3,10 +3,7 @@ import React, { Component, PropTypes } from 'react';
 const fn = ( callback, time ) => {
     setTimeout(callback, time || (1000 / 60));
 };
-const canUseDOM = ()=> !!(
-    (typeof window !== 'undefined' &&
-    window.document && window.document.createElement)
-);
+
 class SectionInner extends React.Component {
     state = {
         activated: false,

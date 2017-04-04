@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { findDOMNode } from 'react-dom';
+import _isEqual from 'lodash/isEqual';
 
 export default class extends React.Component {
     _childrenLength;
@@ -48,7 +49,9 @@ export default class extends React.Component {
 
         //if( this.props.horizontalScroll ) this._generateKeyFrames();
     }
-
+    shouldComponentUpdate(nextProps, nextState){
+        return !_isEqual(nextProps, this.props) || !_isEqual(this.state, nextState);
+    }
     componentWillReceiveProps(nextProps) {
         this._scrolling = nextProps.scrolling;
 
