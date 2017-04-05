@@ -18,6 +18,10 @@ var _isEqual2 = require('lodash/isEqual');
 
 var _isEqual3 = _interopRequireDefault(_isEqual2);
 
+var _throttle2 = require('lodash/throttle');
+
+var _throttle3 = _interopRequireDefault(_throttle2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49,11 +53,10 @@ var _class = function (_React$Component) {
         };
         _this._childrenLength = _this.props.children.length;
 
-        _this._handleResize = _this._handleResize.bind(_this);
-        _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
-        _this._handleAnchor = _this._handleAnchor.bind(_this);
-        // this._getSectionClassName = this._getSectionClassName.bind(this);
-        //this._generateKeyFrames = this._generateKeyFrames.bind(this);
+        _this._handleResize = (0, _throttle3.default)(_this._handleResize.bind(_this), 100);
+        _this._handleMouseWheel = (0, _throttle3.default)(_this._handleMouseWheel.bind(_this), 100);
+        _this._handleAnchor = (0, _throttle3.default)(_this._handleAnchor.bind(_this), 100);
+
         return _this;
     }
 

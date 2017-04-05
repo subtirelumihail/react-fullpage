@@ -5,7 +5,7 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import _isEqual from 'lodash/isEqual';
-
+import _throttle from 'lodash/throttle';
 export default class extends React.Component {
     _childrenLength;
     _scrolling = false;
@@ -23,11 +23,10 @@ export default class extends React.Component {
         };
         this._childrenLength = this.props.children.length;
 
-        this._handleResize = this._handleResize.bind(this);
-        this._handleMouseWheel = this._handleMouseWheel.bind(this);
-        this._handleAnchor = this._handleAnchor.bind(this);
-        // this._getSectionClassName = this._getSectionClassName.bind(this);
-        //this._generateKeyFrames = this._generateKeyFrames.bind(this);
+        this._handleResize = _throttle(this._handleResize.bind(this), 100);
+        this._handleMouseWheel = _throttle(this._handleMouseWheel.bind(this), 100);
+        this._handleAnchor = _throttle(this._handleAnchor.bind(this), 100);
+
     }
     componentDidMount() {
         this.state.wrapperHeight = this._calculateHeight();
