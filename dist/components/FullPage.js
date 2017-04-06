@@ -53,9 +53,9 @@ var _class = function (_React$Component) {
         };
         _this._childrenLength = _this.props.children.length;
 
-        _this._handleResize = (0, _throttle3.default)(_this._handleResize.bind(_this), 100);
-        _this._handleMouseWheel = (0, _throttle3.default)(_this._handleMouseWheel.bind(_this), 100);
-        _this._handleAnchor = (0, _throttle3.default)(_this._handleAnchor.bind(_this), 100);
+        _this._handleResize = (0, _throttle3.default)(_this._handleResize.bind(_this), 50);
+        _this._handleMouseWheel = (0, _throttle3.default)(_this._handleMouseWheel.bind(_this), 50);
+        _this._handleAnchor = (0, _throttle3.default)(_this._handleAnchor.bind(_this), 50);
 
         return _this;
     }

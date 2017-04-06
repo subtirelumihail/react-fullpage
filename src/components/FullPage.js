@@ -23,9 +23,9 @@ export default class extends React.Component {
         };
         this._childrenLength = this.props.children.length;
 
-        this._handleResize = _throttle(this._handleResize.bind(this), 100);
-        this._handleMouseWheel = _throttle(this._handleMouseWheel.bind(this), 100);
-        this._handleAnchor = _throttle(this._handleAnchor.bind(this), 100);
+        this._handleResize = _throttle(this._handleResize.bind(this), 50);
+        this._handleMouseWheel = _throttle(this._handleMouseWheel.bind(this), 50);
+        this._handleAnchor = _throttle(this._handleAnchor.bind(this), 50);
 
     }
     componentDidMount() {

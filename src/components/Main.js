@@ -11,6 +11,7 @@ import ConnectedRouter from './ConnectedRouter';
 import { Route, Redirect } from 'react-router';
 import SectionInner from '../components/SectionInner';
 import ReactCSSTransitionGroup  from 'react-addons-css-transition-group';
+import * as actions from '../actions/ContainerActions';
 
 export default class extends React.Component {
     store;
@@ -27,6 +28,9 @@ export default class extends React.Component {
             child.props && child.props.link && this.routes.push(child.props.link);
         });
         this.store = storeCreator( { ...this.props.options, routes: this.routes }, this.history );
+    }
+    goTo(section = 0, slide = 0){
+        this.store.dispatch(actions.jumpTo(section, slide));
     }
     render () {
         const routes = (location) => {
