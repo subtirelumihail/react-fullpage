@@ -58,14 +58,12 @@ export default class extends React.Component {
                                 key={location.key}
                                 path={path}
                                 exact={true}
-                                render={()=>
-                                    React.cloneElement(child)
-                                }
+                                render={()=> child}
                             />
                         </ReactCSSTransitionGroup>
                     );
                 } else {
-                    return React.cloneElement(child);
+                    return child;
                 }
 
             });

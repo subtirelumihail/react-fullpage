@@ -112,12 +112,12 @@ var _class = function (_React$Component) {
                                 path: path,
                                 exact: true,
                                 render: function render() {
-                                    return _react2.default.cloneElement(child);
+                                    return child;
                                 }
                             })
                         );
                     } else {
-                        return _react2.default.cloneElement(child);
+                        return child;
                     }
                 });
             };
