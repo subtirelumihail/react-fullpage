@@ -1,6 +1,6 @@
 {
   "name": "react-fullpage-ext",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "React full-page renderer with sliders and SSR",
   "main": "index.js",
   "scripts": {
