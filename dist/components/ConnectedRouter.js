@@ -47,8 +47,10 @@ var ConnectedRouter = function (_Component) {
         value: function componentWillMount() {
             var children = this.props.children;
 
-
-            (0, _invariant2.default)(children == null || _react2.default.Children.count(children) === 1, 'A <ConnectedRouter> may have only one child element');
+            // invariant(
+            //     children == null || React.Children.count(children) === 1,
+            //     'A <ConnectedRouter> may have only one child element'
+            // )
         }
     }, {
         key: 'render',

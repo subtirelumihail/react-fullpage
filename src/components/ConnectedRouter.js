@@ -23,10 +23,10 @@ class ConnectedRouter extends Component {
     componentWillMount() {
         const { children } = this.props;
 
-        invariant(
-            children == null || React.Children.count(children) === 1,
-            'A <ConnectedRouter> may have only one child element'
-        )
+        // invariant(
+        //     children == null || React.Children.count(children) === 1,
+        //     'A <ConnectedRouter> may have only one child element'
+        // )
     }
 
     render() {
