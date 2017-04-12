@@ -7,10 +7,11 @@ import { Provider } from 'react-redux';
 import storeCreator from '../stores/MainStore';
 import FullPageContainer from '../containers/FullPageContainer';
 import { createBrowserHistory, createMemoryHistory } from 'history';
-import ConnectedRouter from './ConnectedRouter';
-import { Route, Redirect } from 'react-router';
+// import ConnectedRouter from './ConnectedRouter';
+import { Route, Redirect, Router } from 'react-router';
 import SectionInner from '../components/SectionInner';
 import ReactCSSTransitionGroup  from 'react-addons-css-transition-group';
+import { ConnectedRouter } from 'react-router-redux';
 import * as actions from '../actions/ContainerActions';
 
 export default class extends React.Component {
@@ -69,18 +70,17 @@ export default class extends React.Component {
             });
         };
         return (
-            <div>
-                <Provider store={ this.store }>
-                    <ConnectedRouter history={this.history}>
+            <Provider store={ this.store }>
+                <ConnectedRouter history={this.history}>
+                    <div>
                         <Route render={({location})=>
                             <FullPageContainer anchors={this.routes}>
-                                {routes(location)}
-                                { this.props.options.redirectToFirstSlide && this.routes.length > 0 ? <Redirect to={this.routes[0]}/> : null }
+                                {[ ...routes(location), this.props.options.redirectToFirstSlide && this.routes.length > 0 ? <Redirect to={this.routes[0]}/> : null]}
                             </FullPageContainer>
                         } />
-                    </ConnectedRouter>
-                </Provider>
-            </div>
+                    </div>
+                </ConnectedRouter>
+            </Provider>
         )
     }
 }

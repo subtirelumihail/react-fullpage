@@ -24,10 +24,6 @@ var _FullPageContainer2 = _interopRequireDefault(_FullPageContainer);
 
 var _history = require('history');
 
-var _ConnectedRouter = require('./ConnectedRouter');
-
-var _ConnectedRouter2 = _interopRequireDefault(_ConnectedRouter);
-
 var _reactRouter = require('react-router');
 
 var _SectionInner = require('../components/SectionInner');
@@ -38,6 +34,8 @@ var _reactAddonsCssTransitionGroup = require('react-addons-css-transition-group'
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
+var _reactRouterRedux = require('react-router-redux');
+
 var _ContainerActions = require('../actions/ContainerActions');
 
 var actions = _interopRequireWildcard(_ContainerActions);
@@ -46,6 +44,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -53,6 +53,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Created by yura on 04.01.17.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
+
+// import ConnectedRouter from './ConnectedRouter';
+
 
 var _class = function (_React$Component) {
     _inherits(_class, _React$Component);
@@ -122,21 +125,20 @@ var _class = function (_React$Component) {
                 });
             };
             return _react2.default.createElement(
-                'div',
-                null,
+                _reactRedux.Provider,
+                { store: this.store },
                 _react2.default.createElement(
-                    _reactRedux.Provider,
-                    { store: this.store },
+                    _reactRouterRedux.ConnectedRouter,
+                    { history: this.history },
                     _react2.default.createElement(
-                        _ConnectedRouter2.default,
-                        { history: this.history },
+                        'div',
+                        null,
                         _react2.default.createElement(_reactRouter.Route, { render: function render(_ref) {
                                 var location = _ref.location;
                                 return _react2.default.createElement(
                                     _FullPageContainer2.default,
                                     { anchors: _this2.routes },
-                                    routes(location),
-                                    _this2.props.options.redirectToFirstSlide && _this2.routes.length > 0 ? _react2.default.createElement(_reactRouter.Redirect, { to: _this2.routes[0] }) : null
+                                    [].concat(_toConsumableArray(routes(location)), [_this2.props.options.redirectToFirstSlide && _this2.routes.length > 0 ? _react2.default.createElement(_reactRouter.Redirect, { to: _this2.routes[0] }) : null])
                                 );
                             } })
                     )

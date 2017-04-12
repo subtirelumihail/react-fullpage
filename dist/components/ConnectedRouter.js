@@ -36,10 +36,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConnectedRouter = function (_Component) {
     _inherits(ConnectedRouter, _Component);
 
-    function ConnectedRouter() {
+    function ConnectedRouter(props) {
         _classCallCheck(this, ConnectedRouter);
 
-        return _possibleConstructorReturn(this, (ConnectedRouter.__proto__ || Object.getPrototypeOf(ConnectedRouter)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ConnectedRouter.__proto__ || Object.getPrototypeOf(ConnectedRouter)).call(this, props));
     }
 
     _createClass(ConnectedRouter, [{
@@ -68,8 +68,15 @@ var ConnectedRouter = function (_Component) {
                 _extends({}, props, { history: history }),
                 _react2.default.createElement(_reactRouter.Route, { render: function render(_ref) {
                         var location = _ref.location;
-
-                        return _react2.default.createElement(MountedRoute, { store: store, location: location, children: children });
+                        return _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                MountedRoute,
+                                { store: store, location: location },
+                                children
+                            )
+                        );
                     } })
             );
         }
@@ -80,8 +87,7 @@ var ConnectedRouter = function (_Component) {
 
 ConnectedRouter.propTypes = {
     store: _react.PropTypes.object,
-    history: _react.PropTypes.object,
-    children: _react.PropTypes.node
+    history: _react.PropTypes.object
 };
 ConnectedRouter.contextTypes = {
     store: _react.PropTypes.object
@@ -90,10 +96,10 @@ ConnectedRouter.contextTypes = {
 var MountedRoute = function (_Component2) {
     _inherits(MountedRoute, _Component2);
 
-    function MountedRoute() {
+    function MountedRoute(props) {
         _classCallCheck(this, MountedRoute);
 
-        return _possibleConstructorReturn(this, (MountedRoute.__proto__ || Object.getPrototypeOf(MountedRoute)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (MountedRoute.__proto__ || Object.getPrototypeOf(MountedRoute)).call(this, props));
     }
 
     _createClass(MountedRoute, [{
@@ -123,7 +129,11 @@ var MountedRoute = function (_Component2) {
     }, {
         key: 'render',
         value: function render() {
-            return this.props.children;
+            return _react2.default.createElement(
+                'div',
+                null,
+                this.props.children
+            );
         }
     }]);
 

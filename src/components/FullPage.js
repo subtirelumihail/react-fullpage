@@ -14,8 +14,7 @@ export default class extends React.Component {
         super( props );
 
         React.Children.map(this.props.children, (child) => {
-            if(child !== null && typeof child.type == 'function')
-                this._childrenLength += 1;
+            if(React.isValidElement(child)) this._childrenLength += 1;
         });
         this.state = {
             offset: 0,
@@ -282,11 +281,15 @@ export default class extends React.Component {
         }
 
         let ignoredCount = 0;
+
+        console.log(this.props.children);
+
         return (
             <div className={className} style={ containerStyle }>
                 {React.Children.map(this.props.children, (child, id) => {
                     let {activeClass, activatedClass, sectionClassName, currentSection, lastActivated} = this.props;
-                    if( child !== null && typeof child.type == 'function') {
+
+                    if( React.isValidElement(child) && child.type !== 'div' ) {
                         return React.cloneElement(child, {
                             key: id,
                             ref: id - ignoredCount,

@@ -12,14 +12,15 @@ import { Router, Route } from 'react-router';
 class ConnectedRouter extends Component {
     static propTypes = {
         store: PropTypes.object,
-        history: PropTypes.object,
-        children: PropTypes.node
+        history: PropTypes.object
     };
 
     static contextTypes = {
         store: PropTypes.object
     };
-
+    constructor(props){
+        super(props);
+    }
     componentWillMount() {
         const { children } = this.props;
 
@@ -35,15 +36,22 @@ class ConnectedRouter extends Component {
 
         return (
             <Router {...props} history={history}>
-                <Route render={({ location }) => {
-                    return <MountedRoute store={store} location={location} children={children} />
-                }}/>
+                <Route render={({ location }) =>
+                    <div>
+                        <MountedRoute store={store} location={location}>
+                            {children}
+                        </MountedRoute>
+                    </div>
+                }/>
             </Router>
         )
     }
 }
 
 class MountedRoute extends Component {
+    constructor(props){
+        super(props);
+    }
     componentWillMount() {
         this.location = this.props.location;
         this.store = this.props.store;
@@ -67,7 +75,9 @@ class MountedRoute extends Component {
     }
 
     render() {
-        return this.props.children;
+        return (
+            <div>{this.props.children}</div>
+        );
     }
 }
 
