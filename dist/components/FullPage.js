@@ -343,7 +343,7 @@ var _class = function (_React$Component) {
 
             var ignoredCount = 0;
 
-            console.log(this.props.children);
+            // console.log(this.props.children);
 
             return _react2.default.createElement(
                 'div',

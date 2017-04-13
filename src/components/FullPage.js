@@ -282,7 +282,7 @@ export default class extends React.Component {
 
         let ignoredCount = 0;
 
-        console.log(this.props.children);
+        // console.log(this.props.children);
 
         return (
             <div className={className} style={ containerStyle }>
