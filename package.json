@@ -9,7 +9,7 @@
     "start": "node example/server.js",
     "dev": "babel src --out-dir dist --watch",
     "clean": "rm -rf dist && rm example/bundle.js",
-    "build": "npm run release && ./node_modules/webpack/bin/webpack.js --progress --colors --config example/webpack.config.js"
+    "build": "npm run release && node ./node_modules/webpack/bin/webpack.js --progress --colors --config example/webpack.config.js"
   },
   "repository": {
     "type": "git",

@@ -73,6 +73,10 @@ var SectionsContainer = function (_React$Component) {
                 if (this.props.arrowNavigation) {
                     window.addEventListener('keydown', this._handleArrowKeys);
                 }
+
+                if (this.props.touchNavigation) {
+                    this._handleTouchNav();
+                }
             }
         }
     }, {
@@ -209,6 +213,9 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_handleArrowKeys',
         value: function _handleArrowKeys(e) {
+            if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault(); // Prevent unwanted scrolling on Firefox
+            }
             var event = window.event ? window.event : e;
             var activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
 
@@ -219,6 +226,68 @@ var SectionsContainer = function (_React$Component) {
             this._setAnchor(activeSection);
             this._handleSectionTransition(activeSection);
             this._addActiveClass();
+        }
+    }, {
+        key: '_handleTouchNav',
+        value: function _handleTouchNav() {
+            var that = this;
+
+            var touchsurface = document.querySelector("." + this.props.className),
+                swipedir,
+                startX,
+                startY,
+                dist,
+                distX,
+                distY,
+                threshold = 50,
+                //required min distance traveled to be considered swipe
+            restraint = 100,
+                // maximum distance allowed at the same time in perpendicular direction
+            allowedTime = 1000,
+                // maximum time allowed to travel that distance
+            elapsedTime,
+                startTime,
+                handleswipe = function handleswipe(swipedir) {
+                console.log(swipedir);
+            };
+
+            touchsurface.addEventListener('touchstart', function (e) {
+                var touchobj = e.changedTouches[0];
+                swipedir = 'none';
+                dist = 0;
+                startX = touchobj.pageX;
+                startY = touchobj.pageY;
+                startTime = new Date().getTime(); // record time when finger first makes contact with surface
+                // e.preventDefault()
+            }, false);
+
+            touchsurface.addEventListener('touchmove', function (e) {
+                e.preventDefault(); // prevent scrolling when inside DIV
+            }, false);
+
+            touchsurface.addEventListener('touchend', function (e) {
+                var touchobj = e.changedTouches[0];
+                distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+                distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+                elapsedTime = new Date().getTime() - startTime; // get time elapsed
+                if (elapsedTime <= allowedTime) {
+                    // first condition for awipe met
+                    if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
+                        // 2nd condition for vertical swipe met
+                        swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
+                        var direction = swipedir === 'down' ? that.state.activeSection - 1 : swipedir === 'up' ? that.state.activeSection + 1 : -1;
+                        var hash = that.props.anchors[direction];
+
+                        if (!that.props.anchors.length || hash) {
+                            window.location.hash = '#' + hash;
+                        }
+
+                        that._handleSectionTransition(direction);
+                    }
+                }
+                handleswipe(swipedir);
+                // e.preventDefault()
+            }, false);
         }
     }, {
         key: '_handleAnchor',
@@ -348,7 +417,8 @@ SectionsContainer.defaultProps = {
     sectionPaddingTop: '0',
     sectionPaddingBottom: '0',
     arrowNavigation: true,
-    activeSection: 0
+    activeSection: 0,
+    touchNavigation: true
 };
 
 SectionsContainer.propTypes = {
@@ -365,7 +435,8 @@ SectionsContainer.propTypes = {
     sectionPaddingTop: React.PropTypes.string,
     sectionPaddingBottom: React.PropTypes.string,
     arrowNavigation: React.PropTypes.bool,
-    activeSection: React.PropTypes.number
+    activeSection: React.PropTypes.number,
+    touchNavigation: React.PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
