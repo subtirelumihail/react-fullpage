@@ -108,7 +108,6 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_addActiveClass',
         value: function _addActiveClass() {
-            this._removeActiveClass();
 
             var hash = window.location.hash.substring(1);
             var activeLinks = document.querySelectorAll('a[href="#' + hash + '"]');
@@ -247,9 +246,7 @@ var SectionsContainer = function (_React$Component) {
                 // maximum time allowed to travel that distance
             elapsedTime,
                 startTime,
-                handleswipe = function handleswipe(swipedir) {
-                console.log(swipedir);
-            };
+                handleswipe = function handleswipe(swipedir) {};
 
             touchsurface.addEventListener('touchstart', function (e) {
                 var touchobj = e.changedTouches[0];
@@ -348,24 +345,40 @@ var SectionsContainer = function (_React$Component) {
             var navigationStyle = {
                 position: 'fixed',
                 zIndex: '10',
-                right: '20px',
+                right: '0',
                 top: '50%',
-                transform: 'translate(-50%, -50%)'
+                transform: 'translate(0, -50%)'
             };
 
             var anchors = this.props.anchors.map(function (link, index) {
                 var anchorStyle = {
+                    color: _this5.state.activeSection === index ? 'white' : 'rgba(255,255,255,0.2)',
+                    fontWeight: 'bold',
                     display: 'block',
-                    margin: '10px',
-                    borderRadius: '100%',
-                    backgroundColor: '#556270',
-                    padding: '5px',
-                    transition: 'all 0.2s',
-                    transform: _this5.state.activeSection === index ? 'scale(1.3)' : 'none'
+                    margin: '10px 0',
+                    transition: 'all 0.5s',
+                    fontSize: '14px',
+                    textDecoration: 'none',
+                    textAlign: 'right',
+                    transform: _this5.state.activeSection === index ? 'scale(1.1)' : 'none'
+
                 };
 
-                return React.createElement('a', { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
-                    style: _this5.props.navigationAnchorClass ? null : anchorStyle });
+                var lineStyle = {
+                    marginLeft: '10px'
+                };
+
+                return React.createElement(
+                    'a',
+                    { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
+                        style: _this5.props.navigationAnchorClass ? null : anchorStyle },
+                    '0' + (index + 1),
+                    React.createElement(
+                        'span',
+                        { style: lineStyle },
+                        '\u2014'
+                    )
+                );
             });
 
             return React.createElement(

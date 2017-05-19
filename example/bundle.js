@@ -213,7 +213,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\r\nbody {\r\n\tmargin: 0;\r\n  font-family: arial,helvetica;\r\n}\r\n\r\nhtml {\r\n  box-sizing: border-box;\r\n}\r\n*, *:before, *:after {\r\n  box-sizing: inherit;\r\n}\r\n\r\nfooter,\r\nheader {\r\n  color: #fff;\r\n  text-align: center;\r\n  padding: 10px;\r\n}\r\n\r\nheader {\r\n  background-color:rgba(0, 0, 0, 0.3);\r\n  border-bottom: 1px solid #556270;\r\n}\r\n\r\nfooter {\r\n   color: #000;\r\n}\r\n\r\na {\r\n  display: inline-block;\r\n  color: inherit;\r\n  text-decoration: none;\r\n  margin: 0px 25px;\r\n  \r\n  -webkit-transition: all 0.2s;\r\n  -o-transition: all 0.2s;\r\n  transition: all 0.2s;\r\n}\r\n\r\na.active,\r\na:hover {\r\n  color: #C44D58;\r\n}\r\n\r\nbutton {\r\n  width: 50px;\r\n  padding: 8px;\r\n}\r\n\r\n.btnGroup {\r\n  position: absolute;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  z-index: 9;\r\n}", ""]);
+	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""]);
 
 	// exports
 
@@ -552,6 +552,10 @@
 	process.removeListener = noop;
 	process.removeAllListeners = noop;
 	process.emit = noop;
+	process.prependListener = noop;
+	process.prependOnceListener = noop;
+
+	process.listeners = function (name) { return [] }
 
 	process.binding = function (name) {
 	    throw new Error('process.binding is not supported');
@@ -568,8 +572,15 @@
 /* 7 */
 /***/ function(module, exports) {
 
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
 	'use strict';
 	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -590,7 +601,7 @@
 			// Detect buggy property enumeration order in older V8 versions.
 
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -619,7 +630,7 @@
 			}
 
 			return true;
-		} catch (e) {
+		} catch (err) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -639,8 +650,8 @@
 				}
 			}
 
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -18127,10 +18138,10 @@
 	 */
 
 	function getUnboundedScrollPosition(scrollable) {
-	  if (scrollable === window) {
+	  if (scrollable.Window && scrollable instanceof scrollable.Window) {
 	    return {
-	      x: window.pageXOffset || document.documentElement.scrollLeft,
-	      y: window.pageYOffset || document.documentElement.scrollTop
+	      x: scrollable.pageXOffset || scrollable.document.documentElement.scrollLeft,
+	      y: scrollable.pageYOffset || scrollable.document.documentElement.scrollTop
 	    };
 	  }
 	  return {
@@ -18886,7 +18897,9 @@
 	 * @return {boolean} Whether or not the object is a DOM node.
 	 */
 	function isNode(object) {
-	  return !!(object && (typeof Node === 'function' ? object instanceof Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
+	  var doc = object ? object.ownerDocument || object : document;
+	  var defaultView = doc.defaultView || window;
+	  return !!(object && (typeof defaultView.Node === 'function' ? object instanceof defaultView.Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
 	}
 
 	module.exports = isNode;
@@ -18916,15 +18929,19 @@
 	 *
 	 * The activeElement will be null only if the document or document body is not
 	 * yet defined.
+	 *
+	 * @param {?DOMDocument} doc Defaults to current document.
+	 * @return {?DOMElement}
 	 */
-	function getActiveElement() /*?DOMElement*/{
-	  if (typeof document === 'undefined') {
+	function getActiveElement(doc) /*?DOMElement*/{
+	  doc = doc || (typeof document !== 'undefined' ? document : undefined);
+	  if (typeof doc === 'undefined') {
 	    return null;
 	  }
 	  try {
-	    return document.activeElement || document.body;
+	    return doc.activeElement || doc.body;
 	  } catch (e) {
-	    return document.body;
+	    return doc.body;
 	  }
 	}
 
@@ -21806,7 +21823,6 @@
 	    }, {
 	        key: '_addActiveClass',
 	        value: function _addActiveClass() {
-	            this._removeActiveClass();
 
 	            var hash = window.location.hash.substring(1);
 	            var activeLinks = document.querySelectorAll('a[href="#' + hash + '"]');
@@ -21948,9 +21964,7 @@
 	            // maximum time allowed to travel that distance
 	            elapsedTime,
 	                startTime,
-	                handleswipe = function handleswipe(swipedir) {
-	                console.log(swipedir);
-	            };
+	                handleswipe = function handleswipe(swipedir) {};
 
 	            touchsurface.addEventListener('touchstart', function (e) {
 	                var touchobj = e.changedTouches[0];
@@ -22049,24 +22063,31 @@
 	            var navigationStyle = {
 	                position: 'fixed',
 	                zIndex: '10',
-	                right: '20px',
+	                right: '0',
 	                top: '50%',
-	                transform: 'translate(-50%, -50%)'
+	                transform: 'translate(0, -50%)'
 	            };
 
 	            var anchors = this.props.anchors.map(function (link, index) {
 	                var anchorStyle = {
+	                    color: _this5.state.activeSection === index ? 'white' : 'rgba(255,255,255,0.2)',
+	                    fontWeight: 'bold',
 	                    display: 'block',
-	                    margin: '10px',
-	                    borderRadius: '100%',
-	                    backgroundColor: '#556270',
-	                    padding: '5px',
-	                    transition: 'all 0.2s',
-	                    transform: _this5.state.activeSection === index ? 'scale(1.3)' : 'none'
+	                    margin: '10px 0',
+	                    transition: 'all 0.5s',
+	                    fontSize: '14px',
+	                    textDecoration: 'none',
+	                    textAlign: 'right',
+	                    transform: _this5.state.activeSection === index ? 'scale(1.1)' : 'none'
+
+	                };
+
+	                var lineStyle = {
+	                    marginLeft: '10px'
 	                };
 
 	                return React.createElement('a', { href: '#' + link, key: index, className: _this5.props.navigationAnchorClass || 'Navigation-Anchor',
-	                    style: _this5.props.navigationAnchorClass ? null : anchorStyle });
+	                    style: _this5.props.navigationAnchorClass ? null : anchorStyle }, '0' + (index + 1), React.createElement('span', { style: lineStyle }, "\u2014"));
 	            });
 
 	            return React.createElement('div', { className: this.props.navigationClass || 'Navigation',
