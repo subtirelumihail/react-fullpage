@@ -80,7 +80,6 @@ export default class SectionsContainer extends React.Component {
     }
 
     _addActiveClass() {
-        this._removeActiveClass();
 
         let hash = window.location.hash.substring(1);
         let activeLinks = document.querySelectorAll(`a[href="#${hash}"]`);
@@ -204,7 +203,7 @@ export default class SectionsContainer extends React.Component {
     allowedTime = 1000, // maximum time allowed to travel that distance
     elapsedTime,
     startTime,
-    handleswipe = function(swipedir){console.log(swipedir);}
+    handleswipe = function(swipedir){}
   
     touchsurface.addEventListener('touchstart', function(e){
         var touchobj = e.changedTouches[0]
@@ -287,25 +286,38 @@ export default class SectionsContainer extends React.Component {
         let navigationStyle = {
             position: 'fixed',
             zIndex: '10',
-            right: '20px',
+            right: '0',
             top: '50%',
-            transform: 'translate(-50%, -50%)',
+            transform: 'translate(0, -50%)'
         };
 
         const anchors = this.props.anchors.map((link, index) => {
             const anchorStyle = {
+                color: this.state.activeSection === index ? 'white' : 'rgba(255,255,255,0.2)',
+                fontWeight: 'bold',
                 display: 'block',
-                margin: '10px',
-                borderRadius: '100%',
-                backgroundColor: '#556270',
-                padding: '5px',
-                transition: 'all 0.2s',
-                transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
+                margin: '10px 0',
+                transition: 'all 0.5s',
+                fontSize: '14px',
+                textDecoration: 'none',
+                textAlign: 'right',
+                transform: this.state.activeSection === index ? 'scale(1.1)' : 'none'
+
             };
+
+            const lineStyle = {
+                marginLeft: '10px'
+            }
 
             return (
                 <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
-                   style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
+                   style={this.props.navigationAnchorClass ? null : anchorStyle}>
+
+                    {`0${(index+1)}`}
+
+                    <span style={lineStyle}>—</span>
+
+                   </a>
             );
         });
 
