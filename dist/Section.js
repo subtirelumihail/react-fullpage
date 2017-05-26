@@ -27,7 +27,7 @@ var Section = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
 
         _this.state = {
-            windowHeight: window.innerHeight
+            windowHeight: 0
         };
         return _this;
     }
@@ -44,6 +44,7 @@ var Section = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
+            this.handleResize();
             window.addEventListener('resize', function () {
                 return _this2.handleResize();
             });

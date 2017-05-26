@@ -213,8 +213,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\r\nbody {\r\n\tmargin: 0;\r\n  font-family: arial,helvetica;\r\n}\r\n\r\nhtml {\r\n  box-sizing: border-box;\r\n}\r\n*, *:before, *:after {\r\n  box-sizing: inherit;\r\n}\r\n\r\nfooter,\r\nheader {\r\n  color: #fff;\r\n  text-align: center;\r\n  padding: 10px;\r\n}\r\n\r\nheader {\r\n  background-color:rgba(0, 0, 0, 0.3);\r\n  border-bottom: 1px solid #556270;\r\n}\r\n\r\nfooter {\r\n   color: #000;\r\n}\r\n\r\na {\r\n  display: inline-block;\r\n  color: inherit;\r\n  text-decoration: none;\r\n  margin: 0px 25px;\r\n  \r\n  -webkit-transition: all 0.2s;\r\n  -o-transition: all 0.2s;\r\n  transition: all 0.2s;\r\n}\r\n\r\na.active,\r\na:hover {\r\n  color: #C44D58;\r\n}\r\n\r\nbutton {\r\n  width: 50px;\r\n  padding: 8px;\r\n}\r\n\r\n.btnGroup {\r\n  position: absolute;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  z-index: 9;\r\n}", ""]);
-
+	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""])
 	// exports
 
 
@@ -568,8 +567,15 @@
 /* 7 */
 /***/ function(module, exports) {
 
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
 	'use strict';
 	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -590,7 +596,7 @@
 			// Detect buggy property enumeration order in older V8 versions.
 
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -619,7 +625,7 @@
 			}
 
 			return true;
-		} catch (e) {
+		} catch (err) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -639,8 +645,8 @@
 				}
 			}
 
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -21728,7 +21734,7 @@
 	            activeSection: props.activeSection,
 	            scrollingStarted: false,
 	            sectionScrolledPosition: 0,
-	            windowHeight: window.innerHeight
+	            windowHeight: 0
 	        };
 
 	        _this._handleMouseWheel = _this._handleMouseWheel.bind(_this);
@@ -21760,6 +21766,7 @@
 	        value: function componentDidMount() {
 	            this._childrenLength = this.props.children.length;
 
+	            this._handleResize();
 	            window.addEventListener('resize', this._handleResize);
 
 	            if (!this.props.scrollBar) {
@@ -21775,6 +21782,16 @@
 	                if (this.props.touchNavigation) {
 	                    this._handleTouchNav();
 	                }
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.activeSection !== nextProps.activeSection) {
+	                this.setState({ activeSection: nextProps.activeSection });
+	                this._setAnchor(nextProps.activeSection);
+	                this._handleSectionTransition(nextProps.activeSection);
+	                this._addActiveClass();
 	            }
 	        }
 	    }, {
@@ -22198,7 +22215,7 @@
 	        var _this = _possibleConstructorReturn(this, (Section.__proto__ || Object.getPrototypeOf(Section)).call(this));
 
 	        _this.state = {
-	            windowHeight: window.innerHeight
+	            windowHeight: 0
 	        };
 	        return _this;
 	    }
@@ -22215,6 +22232,7 @@
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            this.handleResize();
 	            window.addEventListener('resize', function () {
 	                return _this2.handleResize();
 	            });
