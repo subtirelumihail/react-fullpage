@@ -213,8 +213,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""]);
-
+	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""])
 	// exports
 
 
@@ -21779,6 +21778,20 @@
 	                if (this.props.arrowNavigation) {
 	                    window.addEventListener('keydown', this._handleArrowKeys);
 	                }
+
+	                if (this.props.touchNavigation) {
+	                    this._handleTouchNav();
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.activeSection !== nextProps.activeSection) {
+	                this.setState({ activeSection: nextProps.activeSection });
+	                this._setAnchor(nextProps.activeSection);
+	                this._handleSectionTransition(nextProps.activeSection);
+	                this._addActiveClass();
 	            }
 	        }
 	    }, {
@@ -21915,6 +21928,9 @@
 	    }, {
 	        key: '_handleArrowKeys',
 	        value: function _handleArrowKeys(e) {
+	            if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+	                e.preventDefault(); // Prevent unwanted scrolling on Firefox
+	            }
 	            var event = window.event ? window.event : e;
 	            var activeSection = event.keyCode === 38 || event.keyCode === 37 ? this.state.activeSection - 1 : event.keyCode === 40 || event.keyCode === 39 ? this.state.activeSection + 1 : -1;
 
@@ -21925,6 +21941,71 @@
 	            this._setAnchor(activeSection);
 	            this._handleSectionTransition(activeSection);
 	            this._addActiveClass();
+	        }
+	    }, {
+	        key: '_handleTouchNav',
+	        value: function _handleTouchNav() {
+	            var that = this;
+
+	            var touchsurface = document.querySelector("." + this.props.className),
+	                swipedir,
+	                startX,
+	                startY,
+	                dist,
+	                distX,
+	                distY,
+	                threshold = 50,
+
+	            //required min distance traveled to be considered swipe
+	            restraint = 100,
+
+	            // maximum distance allowed at the same time in perpendicular direction
+	            allowedTime = 1000,
+
+	            // maximum time allowed to travel that distance
+	            elapsedTime,
+	                startTime,
+	                handleswipe = function handleswipe(swipedir) {
+	                console.log(swipedir);
+	            };
+
+	            touchsurface.addEventListener('touchstart', function (e) {
+	                var touchobj = e.changedTouches[0];
+	                swipedir = 'none';
+	                dist = 0;
+	                startX = touchobj.pageX;
+	                startY = touchobj.pageY;
+	                startTime = new Date().getTime(); // record time when finger first makes contact with surface
+	                // e.preventDefault()
+	            }, false);
+
+	            touchsurface.addEventListener('touchmove', function (e) {
+	                e.preventDefault(); // prevent scrolling when inside DIV
+	            }, false);
+
+	            touchsurface.addEventListener('touchend', function (e) {
+	                var touchobj = e.changedTouches[0];
+	                distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+	                distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+	                elapsedTime = new Date().getTime() - startTime; // get time elapsed
+	                if (elapsedTime <= allowedTime) {
+	                    // first condition for awipe met
+	                    if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
+	                        // 2nd condition for vertical swipe met
+	                        swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
+	                        var direction = swipedir === 'down' ? that.state.activeSection - 1 : swipedir === 'up' ? that.state.activeSection + 1 : -1;
+	                        var hash = that.props.anchors[direction];
+
+	                        if (!that.props.anchors.length || hash) {
+	                            window.location.hash = '#' + hash;
+	                        }
+
+	                        that._handleSectionTransition(direction);
+	                    }
+	                }
+	                handleswipe(swipedir);
+	                // e.preventDefault()
+	            }, false);
 	        }
 	    }, {
 	        key: '_handleAnchor',
@@ -22040,7 +22121,8 @@
 	    sectionPaddingTop: '0',
 	    sectionPaddingBottom: '0',
 	    arrowNavigation: true,
-	    activeSection: 0
+	    activeSection: 0,
+	    touchNavigation: true
 	};
 
 	SectionsContainer.propTypes = {
@@ -22057,7 +22139,8 @@
 	    sectionPaddingTop: React.PropTypes.string,
 	    sectionPaddingBottom: React.PropTypes.string,
 	    arrowNavigation: React.PropTypes.bool,
-	    activeSection: React.PropTypes.number
+	    activeSection: React.PropTypes.number,
+	    touchNavigation: React.PropTypes.bool
 	};
 
 	SectionsContainer.childContextTypes = {
