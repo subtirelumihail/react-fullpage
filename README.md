@@ -125,3 +125,31 @@ const Example = React.createClass({
 
 ReactDOM.render(<Example/>, app);
 ````
+
+## Scroll Restoration with React Router
+When using react-fullpage with [react-router](https://github.com/ReactTraining/react-router), you may want to use the `ScrollToTopOnMount` helper component to restore scroll position when switching between routes. More information can be found [here](https://reacttraining.com/react-router/web/guides/scroll-restoration).
+
+````javascript
+import React from 'react';
+import {ScrollToTopOnMount, SectionsContainer, Section} from 'react-fullpage';
+
+export default class extends React.Component {
+  render() {
+    let options = {
+      ...
+    };
+
+    return (
+      <div>
+        <ScrollToTopOnMount />
+        <SectionsContainer {...options}>
+          <Section>Page 1</Section>
+          <Section>Page 2</Section>
+          <Section>Page 3</Section>
+        </SectionsContainer>
+      </div>
+    );
+  }
+};
+
+````
