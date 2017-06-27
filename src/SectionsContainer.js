@@ -32,6 +32,7 @@ export default class SectionsContainer extends React.Component {
         this._clearResetScrollTimer();
         this._removeDefaultEventListeners();
         this._removeMouseWheelEventHandlers();
+        this._removeOverflowFromBody();
     }
 
     componentDidMount() {
@@ -119,6 +120,10 @@ export default class SectionsContainer extends React.Component {
 
     _addOverflowToBody() {
         document.querySelector('body').style.overflow = 'hidden';
+    }
+
+     _removeOverflowFromBody() {
+        document.querySelector('body').style.overflow = 'initial';
     }
 
     _addMouseWheelEventHandlers() {

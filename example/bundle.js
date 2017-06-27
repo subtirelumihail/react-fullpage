@@ -213,7 +213,8 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""])
+	exports.push([module.id, "html,\nbody {\n\tmargin: 0;\n  font-family: arial,helvetica;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nfooter,\nheader {\n  color: #fff;\n  text-align: center;\n  padding: 10px;\n}\n\nheader {\n  background-color:rgba(0, 0, 0, 0.3);\n  border-bottom: 1px solid #556270;\n}\n\nfooter {\n   color: #000;\n}\n\na {\n  display: inline-block;\n  color: inherit;\n  text-decoration: none;\n  margin: 0px 25px;\n  \n  -webkit-transition: all 0.2s;\n  -o-transition: all 0.2s;\n  transition: all 0.2s;\n}\n\na.active,\na:hover {\n  color: #C44D58;\n}\n\nbutton {\n  width: 50px;\n  padding: 8px;\n}\n\n.btnGroup {\n  position: absolute;\n  bottom: 20px;\n  right: 20px;\n  z-index: 9;\n}", ""]);
+
 	// exports
 
 
@@ -551,6 +552,10 @@
 	process.removeListener = noop;
 	process.removeAllListeners = noop;
 	process.emit = noop;
+	process.prependListener = noop;
+	process.prependOnceListener = noop;
+
+	process.listeners = function (name) { return [] }
 
 	process.binding = function (name) {
 	    throw new Error('process.binding is not supported');
@@ -18133,10 +18138,10 @@
 	 */
 
 	function getUnboundedScrollPosition(scrollable) {
-	  if (scrollable === window) {
+	  if (scrollable.Window && scrollable instanceof scrollable.Window) {
 	    return {
-	      x: window.pageXOffset || document.documentElement.scrollLeft,
-	      y: window.pageYOffset || document.documentElement.scrollTop
+	      x: scrollable.pageXOffset || scrollable.document.documentElement.scrollLeft,
+	      y: scrollable.pageYOffset || scrollable.document.documentElement.scrollTop
 	    };
 	  }
 	  return {
@@ -18892,7 +18897,9 @@
 	 * @return {boolean} Whether or not the object is a DOM node.
 	 */
 	function isNode(object) {
-	  return !!(object && (typeof Node === 'function' ? object instanceof Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
+	  var doc = object ? object.ownerDocument || object : document;
+	  var defaultView = doc.defaultView || window;
+	  return !!(object && (typeof defaultView.Node === 'function' ? object instanceof defaultView.Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
 	}
 
 	module.exports = isNode;
@@ -18922,15 +18929,19 @@
 	 *
 	 * The activeElement will be null only if the document or document body is not
 	 * yet defined.
+	 *
+	 * @param {?DOMDocument} doc Defaults to current document.
+	 * @return {?DOMElement}
 	 */
-	function getActiveElement() /*?DOMElement*/{
-	  if (typeof document === 'undefined') {
+	function getActiveElement(doc) /*?DOMElement*/{
+	  doc = doc || (typeof document !== 'undefined' ? document : undefined);
+	  if (typeof doc === 'undefined') {
 	    return null;
 	  }
 	  try {
-	    return document.activeElement || document.body;
+	    return doc.activeElement || doc.body;
 	  } catch (e) {
-	    return document.body;
+	    return doc.body;
 	  }
 	}
 
@@ -21662,8 +21673,9 @@
 	module.exports = {
 	  SectionsContainer: __webpack_require__(176).default,
 	  Section: __webpack_require__(177).default,
-	  Header: __webpack_require__(178).default,
-	  Footer: __webpack_require__(179).default
+	  ScrollToTopOnMount: __webpack_require__(178).default,
+	  Header: __webpack_require__(179).default,
+	  Footer: __webpack_require__(180).default
 	};
 
 /***/ },
@@ -21760,6 +21772,7 @@
 	            this._clearResetScrollTimer();
 	            this._removeDefaultEventListeners();
 	            this._removeMouseWheelEventHandlers();
+	            this._removeOverflowFromBody();
 	        }
 	    }, {
 	        key: 'componentDidMount',
@@ -21782,16 +21795,6 @@
 	                if (this.props.touchNavigation) {
 	                    this._handleTouchNav();
 	                }
-	            }
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            if (this.props.activeSection !== nextProps.activeSection) {
-	                this.setState({ activeSection: nextProps.activeSection });
-	                this._setAnchor(nextProps.activeSection);
-	                this._handleSectionTransition(nextProps.activeSection);
-	                this._addActiveClass();
 	            }
 	        }
 	    }, {
@@ -21866,6 +21869,11 @@
 	        key: '_addOverflowToBody',
 	        value: function _addOverflowToBody() {
 	            document.querySelector('body').style.overflow = 'hidden';
+	        }
+	    }, {
+	        key: '_removeOverflowFromBody',
+	        value: function _removeOverflowFromBody() {
+	            document.querySelector('body').style.overflow = 'initial';
 	        }
 	    }, {
 	        key: '_addMouseWheelEventHandlers',
@@ -22303,6 +22311,88 @@
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () {
+	  function defineProperties(target, props) {
+	    for (var i = 0; i < props.length; i++) {
+	      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	    }
+	  }return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	  };
+	}();
+
+	var _react = __webpack_require__(4);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) {
+	  if (obj && obj.__esModule) {
+	    return obj;
+	  } else {
+	    var newObj = {};if (obj != null) {
+	      for (var key in obj) {
+	        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+	      }
+	    }newObj.default = obj;return newObj;
+	  }
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	}
+
+	function _possibleConstructorReturn(self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+
+	function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var ScrollToTopOnMount = function (_React$Component) {
+	  _inherits(ScrollToTopOnMount, _React$Component);
+
+	  function ScrollToTopOnMount() {
+	    _classCallCheck(this, ScrollToTopOnMount);
+
+	    return _possibleConstructorReturn(this, (ScrollToTopOnMount.__proto__ || Object.getPrototypeOf(ScrollToTopOnMount)).apply(this, arguments));
+	  }
+
+	  _createClass(ScrollToTopOnMount, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount(prevProps) {
+	      window.scrollTo(0, 0);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return null;
+	    }
+	  }]);
+
+	  return ScrollToTopOnMount;
+	}(React.Component);
+
+	exports.default = ScrollToTopOnMount;
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
@@ -22379,7 +22469,7 @@
 	exports.default = Header;
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
