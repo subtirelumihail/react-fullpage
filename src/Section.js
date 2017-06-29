@@ -1,27 +1,26 @@
 import * as React from 'react';
 
 class Section extends React.Component {
-    constructor() {
+   constructor() {
         super();
 
         this.state = {
             windowHeight: 0
         };
-    }
-
-    handleResize() {
-        this.setState({
-            windowHeight: window.innerHeight
-        });
+        this.handleResize = () => {
+            this.setState({
+                windowHeight: window.innerHeight
+            });
+        }
     }
 
     componentDidMount() {
         this.handleResize();
-        window.addEventListener('resize', () => this.handleResize());
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', () => this.handleResize());
+        window.removeEventListener('resize', this.handleResize);
     }
 
     render() {
