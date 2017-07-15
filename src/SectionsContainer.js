@@ -254,8 +254,10 @@ export default class SectionsContainer extends React.Component {
         const activeSection = this.props.anchors.indexOf(hash);
 
         if (this.state.activeSection !== activeSection) {
-            this._handleSectionTransition(activeSection);
-            this._addActiveClass();
+            setTimeout(() => {
+                this._handleSectionTransition(activeSection);
+                this._addActiveClass();
+            });
         }
     }
 
