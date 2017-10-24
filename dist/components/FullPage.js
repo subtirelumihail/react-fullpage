@@ -318,6 +318,10 @@ var _class = function (_React$Component) {
                     WebkitTransform: 'translate3d(-' + offset + 'vw, 0, 0)',
                     OTransform: 'translate3d(-' + offset + 'vw, 0, 0)'
 
+                    // transition: `transform ${delay}ms ease`,
+                    // WebkitTransition: `transform ${delay}ms ease`,
+                    // MozTransition: `transform ${delay}ms ease`,
+                    // OTransition: `transform ${delay}ms ease`
                 };
 
                 if (this.props.recalculateHeight) {
@@ -335,6 +339,10 @@ var _class = function (_React$Component) {
                     WebkitTransform: 'translate3d(0,-' + offset + 'px,0)',
                     OTransform: 'translate3d(0,-' + offset + 'px,0)'
 
+                    // transition: `transform ${delay}ms ease`,
+                    // WebkitTransition: `transform ${delay}ms ease`,
+                    // MozTransition: `transform ${delay}ms ease`,
+                    // OTransition: `transform ${delay}ms ease`,
                 };
                 if (this.props.recalculateHeight) {
                     containerStyle = _extends({}, containerStyle, { height: wrapperHeight });

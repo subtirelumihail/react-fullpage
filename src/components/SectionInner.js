@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const fn = ( callback, time ) => {
     setTimeout(callback, time || (1000 / 60));
