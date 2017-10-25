@@ -10,7 +10,13 @@ var _react = require('react');
 
 var React = _interopRequireWildcard(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _reactDom = require('react-dom');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -103,15 +109,15 @@ var SectionsContainer = function (_React$Component) {
 
         /*_addActiveClass() {
             this._removeActiveClass();
-              let hash = window.location.hash.substring(1);
+             let hash = window.location.hash.substring(1);
             let activeLinks = document.querySelectorAll(`a[href="#${hash}"]`);
-              for (let i = 0; i < activeLinks.length; i++) {
+             for (let i = 0; i < activeLinks.length; i++) {
                 activeLinks[i].className = activeLinks[i].className + (activeLinks[i].className.length > 0 ? ' ' : '') + `${this.props.activeClass}`;
             }
         }
-          _removeActiveClass() {
+         _removeActiveClass() {
             let activeLinks = document.querySelectorAll(`a:not([href="#${this.props.anchors[this.state.activeSection]}"])`);
-              for (let i = 0; i < activeLinks.length; i++) {
+             for (let i = 0; i < activeLinks.length; i++) {
                 activeLinks[i].className = activeLinks[i].className.replace(/\b ?active/g, '');
             }
         }*/
@@ -185,7 +191,7 @@ var SectionsContainer = function (_React$Component) {
             console.log(hash);
             const subIndex = hash[1];
             const activeSection = this.props.anchors.indexOf(hash[0]);
-              if (this.state.activeSection !== activeSection) {
+             if (this.state.activeSection !== activeSection) {
                 this._handleSectionTransition(activeSection);
                 this._addActiveClass();
             }
@@ -194,9 +200,9 @@ var SectionsContainer = function (_React$Component) {
                 this.setState({});
             }
         }
-          _setAnchor(index, subIndex) {
+         _setAnchor(index, subIndex) {
             const hash = this.props.anchors[index];
-              if (!this.props.anchors.length || hash) {
+             if (!this.props.anchors.length || hash) {
                 window.location.hash = !!subIndex ? '#' + hash + ';' + subIndex : '#' + hash;
             }
         }*/
@@ -241,7 +247,7 @@ var SectionsContainer = function (_React$Component) {
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
             };
-              const anchors = this.props.anchors.map((link, index) => {
+             const anchors = this.props.anchors.map((link, index) => {
                 const anchorStyle = {
                     display: 'block',
                     margin: '10px',
@@ -251,27 +257,27 @@ var SectionsContainer = function (_React$Component) {
                     transition: 'all 0.2s',
                     transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
                 };
-                  return (
+                 return (
                     <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
                        style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
                 );
             });
-              return (
+             return (
                 <div className={this.props.navigationClass || 'Navigation'}
                      style={this.props.navigationClass ? null : navigationStyle}>
                     {anchors}
                 </div>
             );
         }
-          getChildrenWithProps() {
+         getChildrenWithProps() {
             return React.Children.map(this.props.children, (child, index) => {
                 let props = {
                     currentSection: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
                     subIndex: this._childrenSliders[ index ] ? this._childrenSliders[ index ].current : 0,
                     delay: this.props.delay
                 };
-                  if (index == this.state.activeSection) props.active = true;
-                  return React.cloneElement(child, props);
+                 if (index == this.state.activeSection) props.active = true;
+                 return React.cloneElement(child, props);
             });
         }*/
 
@@ -321,15 +327,15 @@ SectionsContainer.defaultProps = {
 };
 
 SectionsContainer.propTypes = {
-    scrollCallback: React.PropTypes.func,
-    delay: React.PropTypes.number,
-    className: React.PropTypes.string,
-    sectionClassName: React.PropTypes.string,
-    activeClass: React.PropTypes.string,
-    slider: React.PropTypes.bool,
-    scrollBar: React.PropTypes.bool
+    scrollCallback: _propTypes2.default.func,
+    delay: _propTypes2.default.number,
+    className: _propTypes2.default.string,
+    sectionClassName: _propTypes2.default.string,
+    activeClass: _propTypes2.default.string,
+    slider: _propTypes2.default.bool,
+    scrollBar: _propTypes2.default.bool
 };
 
 SectionsContainer.childContextTypes = {
-    sectionClassName: React.PropTypes.string
+    sectionClassName: _propTypes2.default.string
 };

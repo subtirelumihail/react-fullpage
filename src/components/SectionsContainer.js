@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { findDOMNode } from 'react-dom';
 
 
@@ -277,15 +278,15 @@ SectionsContainer.defaultProps = {
 };
 
 SectionsContainer.propTypes = {
-    scrollCallback: React.PropTypes.func,
-    delay: React.PropTypes.number,
-    className: React.PropTypes.string,
-    sectionClassName: React.PropTypes.string,
-    activeClass: React.PropTypes.string,
-    slider: React.PropTypes.bool,
-    scrollBar: React.PropTypes.bool
+    scrollCallback: PropTypes.func,
+    delay: PropTypes.number,
+    className: PropTypes.string,
+    sectionClassName: PropTypes.string,
+    activeClass: PropTypes.string,
+    slider: PropTypes.bool,
+    scrollBar: PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
-    sectionClassName: React.PropTypes.string
+    sectionClassName: PropTypes.string
 };

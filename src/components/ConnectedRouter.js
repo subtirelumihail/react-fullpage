@@ -6,7 +6,8 @@
 // get it from https://github.com/ReactTraining/react-router/issues/4713
 
 import invariant from 'invariant';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route } from 'react-router';
 
 class ConnectedRouter extends Component {

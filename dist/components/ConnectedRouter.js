@@ -16,6 +16,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -86,11 +90,11 @@ var ConnectedRouter = function (_Component) {
 }(_react.Component);
 
 ConnectedRouter.propTypes = {
-    store: _react.PropTypes.object,
-    history: _react.PropTypes.object
+    store: _propTypes2.default.object,
+    history: _propTypes2.default.object
 };
 ConnectedRouter.contextTypes = {
-    store: _react.PropTypes.object
+    store: _propTypes2.default.object
 };
 
 var MountedRoute = function (_Component2) {

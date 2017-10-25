@@ -1,6 +1,6 @@
 {
   "name": "react-fullpage-ext",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "React full-page renderer with sliders and SSR",
   "main": "index.js",
   "scripts": {
@@ -30,15 +30,16 @@
     "history": "^4.6.0",
     "invariant": "^2.2.2",
     "lodash": "^4.17.4",
-    "react": "^15.5.3",
+    "react": "^16.0.0",
     "react-addons-css-transition-group": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
-    "react-dom": "^15.5.3",
+    "react-dom": "^16.0.0",
     "react-redux": "^5.0.1",
     "react-router": "^4.0.0",
     "react-router-redux": "^5.0.0-alpha.5",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "prop-types": "^15.5.10"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",
