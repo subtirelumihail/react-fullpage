@@ -41,7 +41,7 @@ export default class SectionsContainer extends React.Component {
         this._handleResize();
         window.addEventListener('resize', this._handleResize);
 
-        if (!this.props.scrollBar) {
+        if (!this.props.scrollBar & this.props.allowScrolling) {
             this._addCSS3Scroll();
             this._handleAnchor(); //Go to anchor in case we found it in the URL
 
@@ -357,6 +357,7 @@ SectionsContainer.defaultProps = {
     arrowNavigation: true,
     activeSection: 0,
     touchNavigation: true,
+    allowScrolling: true,
 };
 
 SectionsContainer.propTypes = {
@@ -375,6 +376,7 @@ SectionsContainer.propTypes = {
     arrowNavigation: React.PropTypes.bool,
     activeSection: React.PropTypes.number,
     touchNavigation: React.PropTypes.bool,
+    allowScrolling: React.PropTypes.bool,
 };
 
 SectionsContainer.childContextTypes = {
