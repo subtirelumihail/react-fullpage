@@ -21722,6 +21722,7 @@
 
 	            this._handleResize();
 	            window.addEventListener('resize', this._handleResize);
+	            window.location.hash = this.props.anchors[this.props.activeSection];
 
 	            if (!this.props.scrollBar & this.props.allowScrolling) {
 	                this._addCSS3Scroll();
