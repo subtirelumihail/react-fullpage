@@ -389,9 +389,10 @@ var SectionsContainer = function (_React$Component) {
             var containerStyle = {
                 height: '100%',
                 width: '100%',
-                position: 'relative',
-                transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
-                transition: 'all ' + this.props.delay + 'ms ease'
+                position: 'relative'
+                // Commented out so Section was doing the animation not SectionContainer
+                // transform: `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
+                // transition: `all ${this.props.delay}ms ease`,
             };
             return React.createElement(
                 'div',
