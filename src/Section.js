@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 class Section extends React.Component {
     constructor() {
@@ -62,14 +63,14 @@ class Section extends React.Component {
 }
 
 Section.propTypes = {
-    color: React.PropTypes.string
+    color: PropTypes.string
 };
 
 Section.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
+    verticalAlign: PropTypes.bool,
+    sectionClassName: PropTypes.string,
+    sectionPaddingTop: PropTypes.string,
+    sectionPaddingBottom: PropTypes.string,
 };
 
 export default Section;
