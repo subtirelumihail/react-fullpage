@@ -29,41 +29,32 @@ var Section = function (_React$Component) {
         _this.state = {
             windowHeight: 0
         };
+        _this.handleResize = function () {
+            _this.setState({
+                windowHeight: window.innerHeight
+            });
+        };
         return _this;
     }
 
     _createClass(Section, [{
-        key: 'handleResize',
-        value: function handleResize() {
-            this.setState({
-                windowHeight: window.innerHeight
-            });
-        }
-    }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this2 = this;
-
             this.handleResize();
-            window.addEventListener('resize', function () {
-                return _this2.handleResize();
-            });
+            window.addEventListener('resize', this.handleResize);
         }
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var _this3 = this;
-
-            window.removeEventListener('resize', function () {
-                return _this3.handleResize();
-            });
+            window.removeEventListener('resize', this.handleResize);
         }
     }, {
         key: 'render',
         value: function render() {
             var alignVertical = this.props.verticalAlign || this.context.verticalAlign;
-
-            var sectionStyle = {
+            var pix = '-' + this.state.windowHeight;
+            var style = {
+                zIndex: this.props.style.zIndex,
                 width: '100%',
                 display: alignVertical ? 'table' : 'block',
                 height: this.state.windowHeight,
@@ -73,7 +64,20 @@ var Section = function (_React$Component) {
                 paddingTop: this.context.sectionPaddingTop,
                 paddingBottom: this.context.sectionPaddingBottom
             };
-
+            var transformStyle = {
+                zIndex: this.props.style.zIndex,
+                width: '100%',
+                display: alignVertical ? 'table' : 'block',
+                height: this.state.windowHeight,
+                maxHeight: this.state.windowHeight,
+                overflow: 'auto',
+                backgroundColor: this.props.color,
+                paddingTop: this.context.sectionPaddingTop,
+                paddingBottom: this.context.sectionPaddingBottom,
+                transform: 'translate3d(0px, ' + pix + 'px, 0px)',
+                transition: 'all 1000ms ease'
+            };
+            var sectionStyle = this.props.animate ? transformStyle : style;
             return React.createElement(
                 'div',
                 { className: this.context.sectionClassName + (this.props.className ? ' ' + this.props.className : ''),

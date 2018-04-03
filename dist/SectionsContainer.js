@@ -65,8 +65,9 @@ var SectionsContainer = function (_React$Component) {
 
             this._handleResize();
             window.addEventListener('resize', this._handleResize);
+            window.location.hash = this.props.anchors[this.props.activeSection];
 
-            if (!this.props.scrollBar) {
+            if (!this.props.scrollBar & this.props.allowScrolling) {
                 this._addCSS3Scroll();
                 this._handleAnchor(); //Go to anchor in case we found it in the URL
 
@@ -388,9 +389,10 @@ var SectionsContainer = function (_React$Component) {
             var containerStyle = {
                 height: '100%',
                 width: '100%',
-                position: 'relative',
-                transform: 'translate3d(0px, ' + this.state.sectionScrolledPosition + 'px, 0px)',
-                transition: 'all ' + this.props.delay + 'ms ease'
+                position: 'relative'
+                // Commented out so Section was doing the animation not SectionContainer
+                // transform: `translate3d(0px, ${this.state.sectionScrolledPosition}px, 0px)`,
+                // transition: `all ${this.props.delay}ms ease`,
             };
             return React.createElement(
                 'div',
@@ -425,7 +427,8 @@ SectionsContainer.defaultProps = {
     sectionPaddingBottom: '0',
     arrowNavigation: true,
     activeSection: 0,
-    touchNavigation: true
+    touchNavigation: true,
+    allowScrolling: true
 };
 
 SectionsContainer.propTypes = {
@@ -443,7 +446,8 @@ SectionsContainer.propTypes = {
     sectionPaddingBottom: React.PropTypes.string,
     arrowNavigation: React.PropTypes.bool,
     activeSection: React.PropTypes.number,
-    touchNavigation: React.PropTypes.bool
+    touchNavigation: React.PropTypes.bool,
+    allowScrolling: React.PropTypes.bool
 };
 
 SectionsContainer.childContextTypes = {
