@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 export default class SectionsContainer extends React.Component {
     _resetScrollTimer;
@@ -194,7 +195,7 @@ export default class SectionsContainer extends React.Component {
         this._handleSectionTransition(activeSection);
         this._addActiveClass();
     }
-    
+
     _handleTouchNav() {
     var that = this;
 
@@ -211,7 +212,7 @@ export default class SectionsContainer extends React.Component {
     elapsedTime,
     startTime,
     handleswipe = function(swipedir){console.log(swipedir);}
-  
+
     touchsurface.addEventListener('touchstart', function(e){
         var touchobj = e.changedTouches[0]
         swipedir = 'none'
@@ -221,11 +222,11 @@ export default class SectionsContainer extends React.Component {
         startTime = new Date().getTime() // record time when finger first makes contact with surface
         // e.preventDefault()
     }, false)
-  
+
     touchsurface.addEventListener('touchmove', function(e){
         e.preventDefault() // prevent scrolling when inside DIV
     }, false)
-  
+
     touchsurface.addEventListener('touchend', function(e){
         var touchobj = e.changedTouches[0]
         distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
@@ -360,26 +361,26 @@ SectionsContainer.defaultProps = {
 };
 
 SectionsContainer.propTypes = {
-    scrollCallback: React.PropTypes.func,
-    delay: React.PropTypes.number,
-    verticalAlign: React.PropTypes.bool,
-    scrollBar: React.PropTypes.bool,
-    navigation: React.PropTypes.bool,
-    className: React.PropTypes.string,
-    sectionClassName: React.PropTypes.string,
-    navigationClass: React.PropTypes.string,
-    navigationAnchorClass: React.PropTypes.string,
-    activeClass: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
-    arrowNavigation: React.PropTypes.bool,
-    activeSection: React.PropTypes.number,
-    touchNavigation: React.PropTypes.bool,
+    scrollCallback: PropTypes.func,
+    delay: PropTypes.number,
+    verticalAlign: PropTypes.bool,
+    scrollBar: PropTypes.bool,
+    navigation: PropTypes.bool,
+    className: PropTypes.string,
+    sectionClassName: PropTypes.string,
+    navigationClass: PropTypes.string,
+    navigationAnchorClass: PropTypes.string,
+    activeClass: PropTypes.string,
+    sectionPaddingTop: PropTypes.string,
+    sectionPaddingBottom: PropTypes.string,
+    arrowNavigation: PropTypes.bool,
+    activeSection: PropTypes.number,
+    touchNavigation: PropTypes.bool,
 };
 
 SectionsContainer.childContextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string,
+    verticalAlign: PropTypes.bool,
+    sectionClassName: PropTypes.string,
+    sectionPaddingTop: PropTypes.string,
+    sectionPaddingBottom: PropTypes.string,
 };
