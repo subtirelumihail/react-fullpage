@@ -29,6 +29,8 @@ var Section = function (_React$Component) {
         _this.state = {
             windowHeight: 0
         };
+
+        _this.handleResize = _this.handleResize.bind(_this);
         return _this;
     }
 
@@ -42,21 +44,13 @@ var Section = function (_React$Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this2 = this;
-
             this.handleResize();
-            window.addEventListener('resize', function () {
-                return _this2.handleResize();
-            });
+            window.addEventListener('resize', this.handleResize);
         }
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var _this3 = this;
-
-            window.removeEventListener('resize', function () {
-                return _this3.handleResize();
-            });
+            window.removeEventListener('resize', this.handleResize);
         }
     }, {
         key: 'render',

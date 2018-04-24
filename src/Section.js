@@ -7,6 +7,8 @@ class Section extends React.Component {
         this.state = {
             windowHeight: 0
         };
+
+        this.handleResize = this.handleResize.bind(this);
     }
 
     handleResize() {
@@ -17,11 +19,11 @@ class Section extends React.Component {
 
     componentDidMount() {
         this.handleResize();
-        window.addEventListener('resize', () => this.handleResize());
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', () => this.handleResize());
+        window.removeEventListener('resize', this.handleResize);
     }
 
     render() {
