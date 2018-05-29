@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var PropTypes = require('prop-types');
+
 var _react = require('react');
 
 var React = _interopRequireWildcard(_react);
@@ -102,14 +104,14 @@ var Section = function (_React$Component) {
 }(React.Component);
 
 Section.propTypes = {
-    color: React.PropTypes.string
+    color: PropTypes.string
 };
 
 Section.contextTypes = {
-    verticalAlign: React.PropTypes.bool,
-    sectionClassName: React.PropTypes.string,
-    sectionPaddingTop: React.PropTypes.string,
-    sectionPaddingBottom: React.PropTypes.string
+    verticalAlign: PropTypes.bool,
+    sectionClassName: PropTypes.string,
+    sectionPaddingTop: PropTypes.string,
+    sectionPaddingBottom: PropTypes.string
 };
 
 exports.default = Section;
