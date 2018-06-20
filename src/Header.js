@@ -10,7 +10,7 @@ class Header extends React.Component {
         };
 
         return (
-            <header style={headerStyle}>
+            <header className={this.props.className} style={headerStyle}>
                 {this.props.children}
             </header>
         );

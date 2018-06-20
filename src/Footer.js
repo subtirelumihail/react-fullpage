@@ -10,7 +10,7 @@ class Footer extends React.Component {
         };
 
         return (
-            <footer style={footerStyle}>
+            <footer className={this.props.className} style={footerStyle}>
                 {this.props.children}
             </footer>
         );
