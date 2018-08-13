@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _react = require('react');
 
-var React = _interopRequireWildcard(_react);
+var _react2 = _interopRequireDefault(_react);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -18,8 +18,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ScrollToTopOnMount = function (_React$Component) {
-  _inherits(ScrollToTopOnMount, _React$Component);
+var ScrollToTopOnMount = function (_Component) {
+  _inherits(ScrollToTopOnMount, _Component);
 
   function ScrollToTopOnMount() {
     _classCallCheck(this, ScrollToTopOnMount);
@@ -29,7 +29,7 @@ var ScrollToTopOnMount = function (_React$Component) {
 
   _createClass(ScrollToTopOnMount, [{
     key: 'componentDidMount',
-    value: function componentDidMount(prevProps) {
+    value: function componentDidMount() {
       window.scrollTo(0, 0);
     }
   }, {
@@ -40,6 +40,6 @@ var ScrollToTopOnMount = function (_React$Component) {
   }]);
 
   return ScrollToTopOnMount;
-}(React.Component);
+}(_react.Component);
 
 exports.default = ScrollToTopOnMount;

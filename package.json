@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/subtirelumihail/react-fullpage",
   "dependencies": {
+    "babel-preset-stage-2": "^6.24.1",
     "react": "16.4.2",
     "react-dom": "16.4.2"
   },
