@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { Component } from 'react';
 
-class Footer extends React.Component {
+class Footer extends Component {
     render() {
         const footerStyle = {
             position: 'fixed',

@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/subtirelumihail/react-fullpage",
   "dependencies": {
-    "react": "15.3.2",
-    "react-dom": "15.3.2"
+    "react": "16.4.2",
+    "react-dom": "16.4.2"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",
