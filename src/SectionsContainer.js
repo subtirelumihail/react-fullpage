@@ -8,16 +8,19 @@ export default class SectionsContainer extends React.Component {
         super(props);
         this.state = {
             activeSection: props.activeSection,
+            allowInlineScroll: props.allowInlineScroll,
             scrollingStarted: false,
             sectionScrolledPosition: 0,
             windowHeight: 0
         };
 
         this._handleMouseWheel = this._handleMouseWheel.bind(this);
+        this._isInlineScroll = this._isInlineScroll.bind(this);
         this._handleAnchor = this._handleAnchor.bind(this);
         this._handleResize = this._handleResize.bind(this);
         this._handleArrowKeys = this._handleArrowKeys.bind(this);
     }
+
 
     getChildContext() {
         return {
@@ -136,12 +139,49 @@ export default class SectionsContainer extends React.Component {
         window.removeEventListener('DOMMouseScroll', this._handleMouseWheel);
     }
 
+    _isInlineScroll(delta = 1) {
+        if(!this.state.allowInlineScroll) {
+          return false;
+        }
+        const { className, sectionClassName } = this.props;
+        const { activeSection } = this.state;
+        const $container = document.getElementsByClassName(className)[0];
+        if (!$container) {
+            return;
+        }
+        const $section = $container.getElementsByClassName(sectionClassName)[activeSection];
+        const offsetHeight = $section.offsetHeight;
+        const scrollHeight = $section.scrollHeight;
+        const scrollTop = $section.scrollTop;
+
+        // without inline-scroll
+        if (scrollHeight === offsetHeight) {
+            return false;
+        }
+
+        // reach the container bottom
+        if (delta === -1 && offsetHeight + scrollTop >= scrollHeight) {
+            return false;
+        }
+
+        // reach the container top
+        if (delta === 1 && scrollTop === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     _handleMouseWheel(event) {
         const e = window.event || event; // old IE support
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         const activeSection = this.state.activeSection - delta;
 
-        if (this.state.scrollingStarted || activeSection < 0 || this._childrenLength === activeSection) {
+        if (
+            this.state.scrollingStarted
+            || activeSection < 0
+            || this._childrenLength === activeSection
+            || this._isInlineScroll(delta)) {
             return false;
         }
 
@@ -227,6 +267,9 @@ export default class SectionsContainer extends React.Component {
     }, false)
   
     touchsurface.addEventListener('touchend', function(e){
+        if (that._isInlineScroll()) {
+          return;
+        }
         var touchobj = e.changedTouches[0]
         distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
         distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
