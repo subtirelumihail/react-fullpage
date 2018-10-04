@@ -1,3 +1,9 @@
+## Help wanted
+
+Hey, because I am very limited with my time, I am unable to keep maitaining this project, so I am hoping to organize a group of collaborators to help me turn this into a great project.
+
+So everyone who wants to join, please send me an email at **mihail[@]subtirelu.info** and I will get back to you asap.
+
 ## React Full Page
 
 This is an implementation of [fullpage.js](https://github.com/alvarotrigo/fullPage.js) in react.
