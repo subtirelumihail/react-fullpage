@@ -1,74 +1,76 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import join from 'classnames'
 
-class Section extends Component {
+export default class Section extends Component {
+
+  static contextTypes = {
+    verticalAlign: PropTypes.bool,
+    sectionClassName: PropTypes.string,
+    sectionPaddingTop: PropTypes.string,
+    sectionPaddingBottom: PropTypes.string
+  }
+
+  static propTypes = {
+    color: PropTypes.string
+  }
+
   state = {
     windowHeight: 0
-  };
+  }
 
-  handleResize() {
+  componentDidMount() {
+    this.handleResize();
+    addEventListener('resize', this.handleResize);
+    addEventListener('orientationchange', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    removeEventListener('resize', this.handleResize);
+    removeEventListener('orientationchange', this.handleResize);
+  }
+
+  handleResize = () => {
     this.setState({
       windowHeight: window.innerHeight
     });
   }
 
-  componentDidMount() {
-    this.handleResize();
-    window.addEventListener('resize', () => this.handleResize());
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', () => this.handleResize());
-  }
-
-  renderVerticalAlign = () => {
-    const verticalAlignStyle = {
-      display: 'table-cell',
-      verticalAlign: 'middle',
-      width: '100%'
-    };
-
-    return <div style={verticalAlignStyle}>{this.props.children}</div>;
-  };
-
   render() {
-    const alignVertical =
-      this.props.verticalAlign || this.context.verticalAlign;
-
-    const sectionStyle = {
-      width: '100%',
-      display: alignVertical ? 'table' : 'block',
-      height: this.state.windowHeight,
-      maxHeight: this.state.windowHeight,
-      overflow: 'auto',
-      backgroundColor: this.props.color,
-      paddingTop: this.context.sectionPaddingTop,
-      paddingBottom: this.context.sectionPaddingBottom
-    };
+    const { verticalAlign, color, children, id, className } = this.props
+    const { windowHeight } = this.state
+    const alignVertical = verticalAlign || this.context.verticalAlign;
 
     return (
       <div
-        className={
-          this.context.sectionClassName +
-          (this.props.className ? ` ${this.props.className}` : '')
+        id={id}
+        style={{
+          width: '100%',
+          overflow: 'auto',
+          display: alignVertical ? 'table' : 'block',
+          height: windowHeight,
+          maxHeight: windowHeight,
+          backgroundColor: color,
+          paddingTop: this.context.sectionPaddingTop,
+          paddingBottom: this.context.sectionPaddingBottom
+        }}
+        className={join(
+          this.context.sectionClassName,
+          className
+        )}
+      >
+        {alignVertical
+          ? <div style={{
+              display: 'table-cell',
+              verticalAlign: 'middle',
+              width: '100%'
+            }}>
+              {children}
+            </div>
+          : children
         }
-        id={this.props.id}
-        style={sectionStyle}>
-        {alignVertical ? this.renderVerticalAlign() : this.props.children}
       </div>
     );
   }
 }
 
-Section.propTypes = {
-  color: PropTypes.string
-};
-
-Section.contextTypes = {
-  verticalAlign: PropTypes.bool,
-  sectionClassName: PropTypes.string,
-  sectionPaddingTop: PropTypes.string,
-  sectionPaddingBottom: PropTypes.string
-};
-
-export default Section;
