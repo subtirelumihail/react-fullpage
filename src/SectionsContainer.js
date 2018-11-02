@@ -1,6 +1,10 @@
 import React, { Component, Children, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 
+const threshold = 50
+const restraint = 100
+const allowedTime = 1000
+
 class SectionsContainer extends Component {
   state = {
     activeSection: this.props.activeSection,
@@ -8,7 +12,7 @@ class SectionsContainer extends Component {
     sectionScrolledPosition: 0,
     windowHeight: 0
   };
-  
+
   resetScrollTimer;
   childrenLength;
   getChildContext() {
@@ -35,17 +39,11 @@ class SectionsContainer extends Component {
 
     if (!this.props.scrollBar) {
       this.addCSS3Scroll();
-      this.handleAnchor(); 
+      this.handleAnchor();
 
-      window.addEventListener('hashchange', this.handleAnchor, false); 
+      window.addEventListener('hashchange', this.handleAnchor, false);
+      window.addEventListener('keydown', this.handleArrowKeys, true);
 
-      if (this.props.arrowNavigation) {
-        window.addEventListener('keydown', this.handleArrowKeys);
-      }
-
-      if (this.props.touchNavigation) {
-        this.handleTouchNav();
-      }
     }
   }
 
@@ -60,11 +58,8 @@ class SectionsContainer extends Component {
 
   removeDefaultEventListeners = () => {
     window.removeEventListener('resize', this.handleResize);
-    window.removeEventListener('hashchange', this.handleAnchor);
-
-    if (this.props.arrowNavigation) {
-      window.removeEventListener('keydown', this.handleArrowKeys);
-    }
+    window.removeEventListener('hashchange', this.handleAnchor, false);
+    window.removeEventListener('keydown', this.handleArrowKeys, true);
   }
 
   addCSS3Scroll = () => {
@@ -136,7 +131,7 @@ class SectionsContainer extends Component {
   }
 
   handleMouseWheel = event => {
-    const e = window.event || event; 
+    const e = window.event || event;
     const delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
     const activeSection = this.state.activeSection - delta;
 
@@ -186,12 +181,11 @@ class SectionsContainer extends Component {
     this.handleScrollCallback();
   }
 
-  handleArrowKeys = (e) => {
-    
-    
-    
-    const event = window.event ? window.event : e;
-    const activeSection =
+  handleArrowKeys = (event) => {
+    const { arrowNavigation } = this.props
+    if (!arrowNavigation) return false;
+
+    const targetSection =
       event.keyCode === 38 || event.keyCode === 37
         ? this.state.activeSection - 1
         : event.keyCode === 40 || event.keyCode === 39
@@ -200,113 +194,97 @@ class SectionsContainer extends Component {
 
     if (
       this.state.scrollingStarted ||
-      activeSection < 0 ||
-      this.childrenLength === activeSection
+      targetSection < 0 ||
+      this.childrenLength === targetSection
     ) {
       return false;
     }
 
-    this.setAnchor(activeSection);
-    this.handleSectionTransition(activeSection);
+    this.setAnchor(targetSection);
+    this.handleSectionTransition(targetSection);
     this.addActiveClass();
   }
 
-  handleTouchNav = () => {
-    let that = this;
+  handleRef = (node) => {
+    this.containerElement = node
+  }
 
-    let touchsurface = document.querySelector('.' + this.props.className),
-      swipedir,
-      startX,
-      startY,
-      dist,
-      distX,
-      distY,
-      threshold = 50, 
-      restraint = 100, 
-      allowedTime = 1000, 
-      elapsedTime,
-      startTime,
-      handleswipe = function(swipedir) {
-        console.log(swipedir);
-      };
+  handleTouchStart = (event) => {
+    const { touchNavigation } = this.props
+    if (!touchNavigation) return false;
 
-    touchsurface.addEventListener(
-      'touchstart',
-      function(e) {
-        let touchobj = e.changedTouches[0];
-        swipedir = 'none';
-        dist = 0;
-        startX = touchobj.pageX;
-        startY = touchobj.pageY;
-        startTime = new Date().getTime(); 
-        
-      },
-      false
-    );
+    const { pageX, pageY } = event.changedTouches[0];
+    this.startX = pageX;
+    this.startY = pageY;
+    this.startTime = new Date().getTime();
+  }
 
-    touchsurface.addEventListener(
-      'touchmove',
-      function(e) {
-        e.preventDefault(); 
-      },
-      false
-    );
+  handleTouchMove = (event) => {
+    const { touchNavigation } = this.props
+    if (!touchNavigation) return false;
 
-    touchsurface.addEventListener(
-      'touchend',
-      function(e) {
-        let touchobj = e.changedTouches[0];
-        distX = touchobj.pageX - startX; 
-        distY = touchobj.pageY - startY; 
-        elapsedTime = new Date().getTime() - startTime; 
-        if (elapsedTime <= allowedTime) {
-          
-          if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
-            
-            swipedir = distY < 0 ? 'up' : 'down'; 
-            let direction =
-              swipedir === 'down'
-                ? that.state.activeSection - 1
-                : swipedir === 'up'
-                  ? that.state.activeSection + 1
-                  : -1;
-            let hash = that.props.anchors[direction];
+    event.preventDefault();
+  }
 
-            if (!that.props.anchors.length || hash) {
-              window.location.hash = '#' + hash;
-            }
+  handleTouchEnd = (event) => {
+    const { touchNavigation } = this.props
+    if (!touchNavigation) return false;
 
-            that.handleSectionTransition(direction);
-          }
-        }
-        handleswipe(swipedir);
-        
-      },
-      false
-    );
+    const { pageX, pageY } = event.changedTouches[0];
+    const distX = pageX - this.startX;
+    const distY = pageY - this.startY;
+    const elapsedTime = new Date().getTime() - this.startTime;
+    const isValidSwipe = (
+      elapsedTime <= allowedTime &&
+      Math.abs(distY) >= threshold &&
+      Math.abs(distX) <= restraint
+    )
+
+    if (isValidSwipe) {
+      const { anchors } = this.props
+      const { activeSection } = this.state
+
+      const swipedir = distY < 0 ? 'up' : 'down';
+      const targetSection = swipedir === 'down'
+        ? activeSection - 1
+        : swipedir === 'up'
+          ? activeSection + 1
+          : -1;
+
+      const hash = anchors[targetSection];
+      if (hash) {
+        window.location.hash = '#' + hash;
+      }
+
+      this.handleSectionTransition(targetSection);
+    }
   }
 
   handleAnchor = () => {
+    const { anchors } = this.props
+    const { activeSection } = this.state
     const hash = window.location.hash.substring(1);
-    const activeSection = this.props.anchors.indexOf(hash);
+    const targetSection = anchors.indexOf(hash);
 
-    if (this.state.activeSection !== activeSection) {
-      this.handleSectionTransition(activeSection);
+    if (activeSection !== targetSection) {
+      this.handleSectionTransition(targetSection);
       this.addActiveClass();
     }
   }
 
   setAnchor = (index) => {
-    const hash = this.props.anchors[index];
+    const { anchors } = this.props
+    const hash = anchors[index];
 
-    if (!this.props.anchors.length || hash) {
+    if (hash) {
       window.location.hash = '#' + hash;
     }
   }
 
   handleScrollCallback = () => {
-    if (this.props.scrollCallback) {
-      setTimeout(() => this.props.scrollCallback(this.state), 0);
+    const { scrollCallback } = this.props
+    if (scrollCallback) {
+      setTimeout(() => scrollCallback(this.state), 0);
     }
   }
 
@@ -377,7 +355,14 @@ class SectionsContainer extends Component {
     };
     return (
       <div>
-        <div className={this.props.className} style={containerStyle}>
+        <div
+          ref={this.handleRef}
+          onTouchStart={this.handleTouchStart}
+          onTouchMove={this.handleTouchMove}
+          onTouchEnd={this.handleTouchEnd}
+          className={this.props.className}
+          style={containerStyle}
+        >
           {this.props.scrollBar
             ? this.addChildrenWithAnchorId()
             : this.props.children}
