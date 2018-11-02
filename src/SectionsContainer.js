@@ -305,6 +305,9 @@ class SectionsContainer extends Component {
   }
 
   renderNavigation = () => {
+    const { anchors, navigationClass, navigationAnchorClass } = this.props
+    const { activeSection } = this.state
+
     let navigationStyle = {
       position: 'fixed',
       zIndex: '10',
@@ -313,32 +316,30 @@ class SectionsContainer extends Component {
       transform: 'translate(-50%, -50%)'
     };
 
-    const anchors = this.props.anchors.map((link, index) => {
-      const anchorStyle = {
-        display: 'block',
-        margin: '10px',
-        borderRadius: '100%',
-        backgroundColor: '#556270',
-        padding: '5px',
-        transition: 'all 0.2s',
-        transform: this.state.activeSection === index ? 'scale(1.3)' : 'none'
-      };
-
-      return (
-        <a
-          href={`#${link}`}
-          key={index}
-          className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
-          style={this.props.navigationAnchorClass ? null : anchorStyle}
-        />
-      );
-    });
-
     return (
       <div
-        className={this.props.navigationClass || 'Navigation'}
-        style={this.props.navigationClass ? null : navigationStyle}>
-        {anchors}
+        className={navigationClass || 'Navigation'}
+        style={navigationClass ? null : navigationStyle}
+      >
+        {anchors.map((link, index) => {
+          const anchorStyle = {
+            display: 'block',
+            margin: '10px',
+            borderRadius: '100%',
+            backgroundColor: '#556270',
+            padding: '5px',
+            transition: 'all 0.2s',
+            transform: activeSection === index ? 'scale(1.3)' : 'none'
+          };
+          return (
+            <a
+              href={`#${link}`}
+              key={index}
+              className={navigationAnchorClass || 'Navigation-Anchor'}
+              style={navigationAnchorClass ? null : anchorStyle}
+            />
+          );
+        })}
       </div>
     );
   }
