@@ -2,18 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import join from 'classnames'
 
-export default class Section extends Component {
-
-  static contextTypes = {
-    verticalAlign: PropTypes.bool,
-    sectionClassName: PropTypes.string,
-    sectionPaddingTop: PropTypes.string,
-    sectionPaddingBottom: PropTypes.string
-  }
-
-  static propTypes = {
-    color: PropTypes.string
-  }
+class Section extends Component {
 
   state = {
     windowHeight: 0
@@ -73,4 +62,18 @@ export default class Section extends Component {
     );
   }
 }
+
+Section.contextTypes = {
+  verticalAlign: PropTypes.bool,
+  sectionClassName: PropTypes.string,
+  sectionPaddingTop: PropTypes.string,
+  sectionPaddingBottom: PropTypes.string
+}
+
+Section.propTypes = {
+  color: PropTypes.string
+}
+
+
+export default Section
 
