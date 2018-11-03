@@ -121,18 +121,21 @@ class SectionsContainer extends Component {
   }
 
   addMouseWheelEventHandlers = () => {
-    window.addEventListener('mousewheel', this.handleMouseWheel, false);
-    window.addEventListener('DOMMouseScroll', this.handleMouseWheel, false);
+    window.addEventListener('mousewheel', this.handleMouseWheel, true);
   }
 
   removeMouseWheelEventHandlers = () => {
-    window.removeEventListener('mousewheel', this.handleMouseWheel);
-    window.removeEventListener('DOMMouseScroll', this.handleMouseWheel);
+    window.removeEventListener('mousewheel', this.handleMouseWheel, true);
   }
 
   handleMouseWheel = event => {
-    const e = window.event || event;
-    const delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+    if (
+      !this.containerElement ||
+      !event.target.contains(this.containerElement) ||
+      this.containerElement.contains(event.target)
+    ) return false
+
+    const delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
     const activeSection = this.state.activeSection - delta;
 
     if (
