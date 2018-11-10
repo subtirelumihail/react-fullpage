@@ -6,7 +6,7 @@ class Section extends Component {
     windowHeight: 0
   };
 
-  handleResize() {
+  handleResize = () => {
     this.setState({
       windowHeight: window.innerHeight
     });
@@ -14,11 +14,11 @@ class Section extends Component {
 
   componentDidMount() {
     this.handleResize();
-    window.addEventListener('resize', () => this.handleResize());
+    window.addEventListener('resize', this.handleResize);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', () => this.handleResize());
+    window.removeEventListener('resize', this.handleResize);
   }
 
   renderVerticalAlign = () => {
