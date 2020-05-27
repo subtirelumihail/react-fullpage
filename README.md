@@ -52,7 +52,7 @@ return (
     <a href="#sectionThree">Section Three</a>
   </Header>
   <Footer>
-    <a href="" className="opa">Dcoumentation</a>
+    <a href="" className="opa">Documentation</a>
     <a href="">Example Source</a>
     <a href="">About</a>
   </Footer>
@@ -115,7 +115,7 @@ const Example = React.createClass({
           <a href="#sectionThree">Section Three</a>
         </Header>
         <Footer>
-          <a href="">Dcoumentation</a>
+          <a href="">Documentation</a>
           <a href="">Example Source</a>
           <a href="">About</a>
         </Footer>
